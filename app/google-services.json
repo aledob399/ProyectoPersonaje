@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1059361817214",
+    "project_id": "proyecto-personaje",
+    "storage_bucket": "proyecto-personaje.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1059361817214:android:86fac968e59674fc6f4e2f",
+        "android_client_info": {
+          "package_name": "com.example.proyectopersonaje"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsR6wNLGfCPDAYopZtmHyqjb_JdzN0JcQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

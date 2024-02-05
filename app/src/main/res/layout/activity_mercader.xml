@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Mercader">
+
+    <Button
+        android:id="@+id/comprar"
+        style="@style/Widget.Material3.ExtendedFloatingActionButton.Icon.Surface"
+        android:layout_width="125dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="254dp"
+        android:text="Comprar"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/vender"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+
+    <Button
+        android:id="@+id/vender"
+        style="@style/Widget.Material3.ExtendedFloatingActionButton.Icon.Surface"
+        android:layout_width="125dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="81dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="81dp"
+        android:layout_marginBottom="252dp"
+        android:text="Vender"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/comprar"
+        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+
+    <Button
+        android:id="@+id/cancelar"
+        style="@style/Widget.Material3.ExtendedFloatingActionButton.Icon.Surface"
+        android:layout_width="125dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="156dp"
+        android:text="Cancelar"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/continuar"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+
+    <Button
+        android:id="@+id/continuar"
+        style="@style/Widget.Material3.ExtendedFloatingActionButton.Icon.Surface"
+        android:layout_width="126dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="59dp"
+        android:layout_marginBottom="256dp"
+        android:text="Continuar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/comerciar"
+        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+
+    <Button
+        android:id="@+id/comerciar"
+        style="@style/Widget.Material3.ExtendedFloatingActionButton.Icon.Surface"
+        android:layout_width="125dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="81dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="130dp"
+        android:layout_marginBottom="256dp"
+        android:text="Comerciar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/continuar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+
+    <ImageView
+        android:id="@+id/mercader"
+        android:layout_width="230dp"
+        android:layout_height="306dp"
+        android:layout_marginStart="114dp"
+        android:layout_marginTop="29dp"
+        android:layout_marginEnd="96dp"
+        android:layout_marginBottom="396dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.827"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/mercader" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="54dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:text="Te has encontrado un mercader,¿Qué quieres hacer?"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+
+    <TextView
+        android:id="@+id/precioTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="182dp"
+        android:layout_marginTop="21dp"
+        android:layout_marginEnd="182dp"
+        android:layout_marginBottom="356dp"
+        android:text="Precio: "
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mercader" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

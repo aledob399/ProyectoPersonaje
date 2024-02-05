@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="Raza">
+        <item>Humano</item>
+        <item>Elfo</item>
+        <item>Enano</item>
+        <item>Maldito</item>
+    </array>
+    <array name="Clase">
+        <item>Brujo</item>
+        <item>Mago</item>
+        <item>Guerrero</item>
+    </array>
+    <array name="EstadoVital">
+        <item>Anciano</item>
+        <item>Joven</item>
+        <item>Adulto</item>
+    </array>
+</resources>
