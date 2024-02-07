@@ -20,13 +20,17 @@ class Mercader : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mercader)
-        val personaje=Personaje("Julian",Personaje.Raza.Elfo,Personaje.Clase.Guerrero,Personaje.EstadoVital.Adulto)
+        val personaje=intent.getParcelableExtra<Personaje>("personaje")
         val btnComerciar=findViewById<Button>(R.id.comerciar)
         val btnContinuar=findViewById<Button>(R.id.continuar)
         val btnComprar = findViewById<Button>(R.id.comprar)
         val btnVender = findViewById<Button>(R.id.vender)
         val btnCancelar = findViewById<Button>(R.id.cancelar)
         val precio = findViewById<TextView>(R.id.precioTextView)
+        val btnIzquierda = findViewById<Button>(R.id.izquierda)
+        val btnDerecha = findViewById<Button>(R.id.derecha)
+        var posicionObjeto=0
+        val objetoPersonaje =findViewById<ImageView>(R.id.objetoPersonaje)
         val dbHelper = Objeto.DatabaseHelper(this)
         val objeto1=Articulo(Articulo.TipoArticulo.ARMA,Articulo.Nombre.DAGA,2,34,R.drawable.objeto)
         val objeto2=Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,3,24,R.drawable.objetodos)
@@ -38,8 +42,12 @@ class Mercader : AppCompatActivity() {
         val objeto8=Articulo(Articulo.TipoArticulo.PROTECCION,Articulo.Nombre.ESCUDO,3,36,R.drawable.objetoocho)
         val objeto9=Articulo(Articulo.TipoArticulo.ARMA,Articulo.Nombre.MARTILLO,2,83,R.drawable.objetodos)
         val objeto10=Articulo(Articulo.TipoArticulo.ARMA,Articulo.Nombre.GARRAS,4,34,R.drawable.objetotres)
-        personaje.getMochila().addArticulo(objeto1)
-        personaje.getMochila().addArticulo(objeto2)
+
+        personaje?.getMochila()?.addArticulo(objeto1)
+
+
+        personaje?.getMochila()?.addArticulo(objeto2)
+
         dbHelper.insertarArticulo(objeto1)
         dbHelper.insertarArticulo(objeto2)
         dbHelper.insertarArticulo(objeto3)
@@ -58,12 +66,10 @@ class Mercader : AppCompatActivity() {
 
         val articuloActual=mochilaDb.getContenido().get(numRand)
         btnComerciar.setOnClickListener {
+
             btnComerciar.visibility = View.GONE
             btnContinuar.visibility = View.GONE
-
             precio.visibility=View.VISIBLE
-
-
 
             btnComprar.visibility = View.VISIBLE
             btnVender.visibility = View.VISIBLE
@@ -86,14 +92,28 @@ class Mercader : AppCompatActivity() {
         }
 
         btnVender.setOnClickListener {
-            if (personaje.getMochila().getContenido().isNotEmpty()) {
+            if (personaje?.getMochila()?.getContenido()?.isNotEmpty() == true) {
 
-                cambiarImagenYMostrarPrecio(personaje.getMochila().getContenido()[0])
-                personaje.getMochila().getContenido().removeAt(0)
+                btnComprar.visibility = View.GONE
+                btnVender.visibility = View.GONE
+                btnIzquierda.visibility= View.VISIBLE
+                objetoPersonaje.setImageResource(personaje.getMochila().getContenido().get(0).getUrl())
+
+                cambiarImagenYMostrarPrecio(personaje?.getMochila()?.getContenido()!![posicionObjeto])
+                personaje?.getMochila()?.getContenido()?.removeAt(0)
 
                 Toast.makeText(this, "Primer objeto de tu inventario vendido", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(this, "No tienes objetos en la mochila para vender", Toast.LENGTH_SHORT).show()
+            }
+        }
+        btnIzquierda.setOnClickListener {
+            if(posicionObjeto==0){
+                posicionObjeto= personaje!!.getMochila().getContenido().size
+                cambiarImagenYMostrarPrecio(personaje?.getMochila()?.getContenido()!![posicionObjeto])
+            }else{
+                posicionObjeto--
+                cambiarImagenYMostrarPrecio(personaje?.getMochila()?.getContenido()!![posicionObjeto])
             }
         }
 

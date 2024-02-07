@@ -145,12 +145,8 @@ class CreacionPersonaje : AppCompatActivity() {
 
             intent.putExtra("personaje", p)
 
-
-
             val imagen = imagenes["$razaFinal-$claseFinal-$estadoVitalFinal"] ?: R.drawable.malditobrujoanciano
             intent.putExtra("img",imagen)
-
-
 
             startActivity(intent)
 
