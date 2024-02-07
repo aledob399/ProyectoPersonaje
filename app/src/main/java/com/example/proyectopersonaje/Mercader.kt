@@ -103,7 +103,7 @@ class Mercader : AppCompatActivity() {
 
                 cambiarImagenYMostrarPrecio(
                     personaje?.getMochila()?.getContenido()!!.get(posicionObjeto))
-                personaje?.getMochila()?.getContenido()?.removeAt(0)
+                personaje?.getMochila()?.getContenido()?.removeAt(posicionObjeto)
 
 
             } else {
