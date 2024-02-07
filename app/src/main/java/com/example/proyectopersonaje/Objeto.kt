@@ -61,8 +61,8 @@ class Objeto : AppCompatActivity() {
             }else Toast.makeText(this, "El objeto no se puede recoger", Toast.LENGTH_SHORT).show()
         }
         btnContinuar.setOnClickListener {
-            val intent = Intent(this, Aventura::class.java)
-            startActivity(intent)
+            val intent =
+                Intent(/* packageContext = */ this, /* cls = */ Aventura::class.java).also(::startActivity)
         }
     }
 

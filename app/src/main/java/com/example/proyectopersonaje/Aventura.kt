@@ -17,7 +17,7 @@ class Aventura : AppCompatActivity() {
     @SuppressLint("ResourceType", "WrongViewCast", "MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_aventura)
         val btn=findViewById<ImageButton>(R.id.btn)
         val dado=Dado()
         var num2=0

@@ -1,7 +1,5 @@
 package com.example.proyectopersonaje
 
-
-
 import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +10,9 @@ import androidx.appcompat.app.AlertDialog
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 
+enum class ProviderType{
+    BASIC
+}
 
 class MainActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
@@ -39,6 +40,7 @@ class MainActivity : AppCompatActivity() {
                     if(it.isSuccessful){
                         val intent=Intent(this,CreacionPersonaje::class.java)
                         startActivity(intent)
+                        //showHome(it.result?.user?.email?:"",ProviderType.BASIC)
                     }else{
                         showAlert()
                     }
@@ -68,4 +70,11 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
     }
 
+    private fun showHome(email:String,provider:ProviderType){
+        val homeIntent=Intent(this,CreacionPersonaje::class.java).apply{
+            putExtra("email",email)
+            putExtra("provider",provider.name)
+        }
+        startActivity(homeIntent)
+    }
 }

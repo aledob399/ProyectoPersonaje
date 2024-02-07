@@ -20,7 +20,10 @@ class PersonajeCreado : AppCompatActivity() {
         val p = intent.getParcelableExtra<Personaje>("personaje")
         var datos : TextView =findViewById(R.id.datos)
         var img : ImageView =findViewById(R.id.img)
+
         datos.text=p.toString()
+
+
         val idImagen = intent.getIntExtra("img", 0)
         img.setImageResource(idImagen);
         btnVolver.setOnClickListener {
@@ -32,8 +35,8 @@ class PersonajeCreado : AppCompatActivity() {
         }
         btnEmpezar.setOnClickListener {
             val intent = Intent(this,Aventura::class.java)
+            intent.putExtra("personaje",p)
 
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
 
         }

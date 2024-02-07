@@ -26,19 +26,6 @@ class Personaje(
     private var arma: Articulo? = null
     private var proteccion: Articulo? = null
 
-    constructor(parcel: Parcel) : this(
-        parcel.readString(),
-        TODO("raza"),
-        TODO("clase"),
-        TODO("estadoVital")
-    ) {
-        salud = parcel.readInt()
-        ataque = parcel.readInt()
-        experiencia = parcel.readInt()
-        nivel = parcel.readInt()
-        suerte = parcel.readInt()
-        defensa = parcel.readInt()
-    }
 
     // Inicialización de los atributos tras la construcción del objeto Personaje
     init {
@@ -380,8 +367,25 @@ class Personaje(
         return "Personaje: Nombre: $nombre, Nivel: $nivel, Salud: $salud, Ataque: $ataque, Defensa: $defensa, Suerte: $suerte, Raza: $raza, Clase: $clase, Estado Vital: $estadoVital Mochila: $mochila"
     }
 
+    constructor(parcel: Parcel) : this(
+        parcel.readString(),
+        parcel.readSerializable() as Raza,
+        parcel.readSerializable() as Clase,
+        parcel.readSerializable() as EstadoVital
+    ) {
+        salud = parcel.readInt()
+        ataque = parcel.readInt()
+        experiencia = parcel.readInt()
+        nivel = parcel.readInt()
+        suerte = parcel.readInt()
+        defensa = parcel.readInt()
+    }
+
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(nombre)
+        parcel.writeSerializable(raza)
+        parcel.writeSerializable(clase)
+        parcel.writeSerializable(estadoVital)
         parcel.writeInt(salud)
         parcel.writeInt(ataque)
         parcel.writeInt(experiencia)

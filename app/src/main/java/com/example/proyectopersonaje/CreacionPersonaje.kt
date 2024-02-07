@@ -20,13 +20,13 @@ class CreacionPersonaje : AppCompatActivity() {
     private lateinit var spinnerClase: Spinner
     private lateinit var spinnerEstadoVital: Spinner
 
-    // Define a map
+
     private val imagenes = mutableMapOf<String, Int>()
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_creacion_personaje)
 
         img = findViewById(R.id.img)
         spinnerRaza = findViewById(R.id.raza)
@@ -141,12 +141,19 @@ class CreacionPersonaje : AppCompatActivity() {
             val p = Personaje(nombre,razaFinal, claseFinal, estadoVitalFinal)
 
             val intent = Intent(this, PersonajeCreado::class.java)
+
+
             intent.putExtra("personaje", p)
-            val imagen = imagenes["$raza-$clase-$estadoVital"] ?: R.drawable.malditobrujoanciano
+
+
+
+            val imagen = imagenes["$razaFinal-$claseFinal-$estadoVitalFinal"] ?: R.drawable.malditobrujoanciano
             intent.putExtra("img",imagen)
 
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+
             startActivity(intent)
+
         }
     }
 }
