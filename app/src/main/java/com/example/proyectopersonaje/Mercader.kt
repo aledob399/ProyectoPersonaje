@@ -79,6 +79,7 @@ class Mercader : AppCompatActivity() {
         }
         btnContinuar.setOnClickListener {
             val intent= Intent(this,Aventura::class.java)
+            intent.putExtra("personaje",personaje)
             startActivity(intent)
         }
         btnComprar.setOnClickListener {
@@ -97,25 +98,36 @@ class Mercader : AppCompatActivity() {
                 btnComprar.visibility = View.GONE
                 btnVender.visibility = View.GONE
                 btnIzquierda.visibility= View.VISIBLE
+                btnDerecha.visibility= View.VISIBLE
                 objetoPersonaje.setImageResource(personaje.getMochila().getContenido().get(0).getUrl())
 
-                cambiarImagenYMostrarPrecio(personaje?.getMochila()?.getContenido()!![posicionObjeto])
-                personaje?.getMochila()?.getContenido()?.removeAt(0)
+                cambiarImagenYMostrarPrecio(
+                    personaje?.getMochila()?.getContenido()!!.get(posicionObjeto))
+                personaje?.getMochila()?.getContenido()?.removeAt(posicionObjeto)
 
-                Toast.makeText(this, "Primer objeto de tu inventario vendido", Toast.LENGTH_SHORT).show()
+
             } else {
                 Toast.makeText(this, "No tienes objetos en la mochila para vender", Toast.LENGTH_SHORT).show()
             }
         }
         btnIzquierda.setOnClickListener {
-            if(posicionObjeto==0){
-                posicionObjeto= personaje!!.getMochila().getContenido().size
-                cambiarImagenYMostrarPrecio(personaje?.getMochila()?.getContenido()!![posicionObjeto])
-            }else{
+            if (posicionObjeto == 0) {
+                posicionObjeto = personaje!!.getMochila().getContenido().size
+            } else {
                 posicionObjeto--
-                cambiarImagenYMostrarPrecio(personaje?.getMochila()?.getContenido()!![posicionObjeto])
             }
+            cambiarImagenYMostrarPrecio(personaje?.getMochila()?.getContenido()!!.get(posicionObjeto))
         }
+
+        btnDerecha.setOnClickListener {
+            if (posicionObjeto == personaje!!.getMochila().getContenido().size - 1) {
+                posicionObjeto = 0
+            } else {
+                posicionObjeto++
+            }
+            cambiarImagenYMostrarPrecio(personaje?.getMochila()?.getContenido()!!.get(posicionObjeto))
+        }
+
 
         btnCancelar.setOnClickListener {
 

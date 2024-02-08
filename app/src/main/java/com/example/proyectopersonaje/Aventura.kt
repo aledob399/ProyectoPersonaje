@@ -19,8 +19,8 @@ class Aventura : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_aventura)
         val btn=findViewById<ImageButton>(R.id.btn)
+        val personaje=intent.getParcelableExtra<Personaje>("personaje")
         val dado=Dado()
-        val p = intent.getParcelableExtra<Personaje>("personaje")
         var num2=0
         var num1=0
         val strings = mutableListOf<String>()
@@ -53,42 +53,42 @@ class Aventura : AppCompatActivity() {
 
                     btn.setImageResource(R.drawable.uno)
                     val intent = Intent(this,Objeto::class.java)
-                    intent.putExtra("personaje", p)
+                    intent.putExtra("personaje",personaje)
                     startActivity(intent)
                 }
                 2 -> {
 
                     btn.setImageResource(R.drawable.dos)
                     val intent = Intent(this,Ciudad::class.java)
-                    intent.putExtra("personaje", p)
+                    intent.putExtra("personaje",personaje)
                     startActivity(intent)
                 }
                 3 -> {
 
                     btn.setImageResource(R.drawable.tres)
                     val intent = Intent(this,Enemigo::class.java)
-                    intent.putExtra("personaje", p)
+                    intent.putExtra("personaje",personaje)
                     startActivity(intent)
                 }
                 4 -> {
 
                     btn.setImageResource(R.drawable.cuatro)
                     val intent = Intent(this,Mercader::class.java)
-                    intent.putExtra("personaje", p)
+                    intent.putExtra("personaje",personaje)
                     startActivity(intent)
                 }
                 5 -> {
 
                     btn.setImageResource(R.drawable.cinco)
                     val intent = Intent(this,Objeto::class.java)
-                    intent.putExtra("personaje", p)
+                    intent.putExtra("personaje",personaje)
                     startActivity(intent)
                 }
                 6 -> {
 
                     btn.setImageResource(R.drawable.seis)
                     val intent = Intent(this,Objeto::class.java)
-                    intent.putExtra("personaje", p)
+                    intent.putExtra("personaje",personaje)
                     startActivity(intent)
                 }
             }

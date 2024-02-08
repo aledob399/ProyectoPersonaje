@@ -13,12 +13,15 @@ class Enemigo : AppCompatActivity() {
         setContentView(R.layout.activity_enemigo)
         val btnPelear=findViewById<Button>(R.id.pelear)
         val btnContinuar=findViewById<Button>(R.id.continuar)
+        val personaje=intent.getParcelableExtra<Personaje>("personaje")
         btnPelear.setOnClickListener {
             val intent= Intent(this,Aventura::class.java)
+            intent.putExtra("personaje",personaje)
             startActivity(intent)
         }
         btnContinuar.setOnClickListener {
             val intent= Intent(this,Aventura::class.java)
+            intent.putExtra("personaje",personaje)
             startActivity(intent)
         }
     }

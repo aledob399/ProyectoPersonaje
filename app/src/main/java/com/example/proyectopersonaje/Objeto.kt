@@ -19,7 +19,7 @@ class Objeto : AppCompatActivity() {
         setContentView(R.layout.activity_objeto)
         val btnRecoger = findViewById<Button>(R.id.recoger)
         val btnContinuar = findViewById<Button>(R.id.continuar)
-        val personaje=Personaje("Julian",Personaje.Raza.Elfo,Personaje.Clase.Guerrero,Personaje.EstadoVital.Adulto)
+        val personaje=intent.getParcelableExtra<Personaje>("personaje")
         val dbHelper = DatabaseHelper(this)
         val objeto1=Articulo(Articulo.TipoArticulo.ARMA,Articulo.Nombre.DAGA,2,34,R.drawable.objeto)
         val objeto2=Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,3,24,R.drawable.objetodos)
@@ -55,14 +55,15 @@ class Objeto : AppCompatActivity() {
 
         btnRecoger.setOnClickListener {
 
-            if(personaje.getMochila().getPesoMochila()>mochilaDb.getContenido().get(numRand).getPeso()){
-                personaje.getMochila().addArticulo(mochilaDb.getContenido().get(numRand))
+            if(personaje!!.getMochila().getPesoMochila()>mochilaDb.getContenido().get(numRand).getPeso()){
+                personaje!!.getMochila().addArticulo(mochilaDb.getContenido().get(numRand))
                 Toast.makeText(this, "Objeto recogido correctamente", Toast.LENGTH_SHORT).show()
             }else Toast.makeText(this, "El objeto no se puede recoger", Toast.LENGTH_SHORT).show()
         }
         btnContinuar.setOnClickListener {
-            val intent =
-                Intent(/* packageContext = */ this, /* cls = */ Aventura::class.java).also(::startActivity)
+            val intent=Intent(this,Aventura::class.java)
+            intent.putExtra("personaje",personaje)
+            startActivity(intent)
         }
     }
 
