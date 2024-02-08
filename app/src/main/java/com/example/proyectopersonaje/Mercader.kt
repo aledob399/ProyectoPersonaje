@@ -229,12 +229,18 @@ class Mercader : AppCompatActivity() {
 
     }
 
+
+
+
     class DatabaseHelper(context: Context) :
         SQLiteOpenHelper(context, DATABASE, null, DATABASE_VERSION) {
+
         companion object {
             private const val DATABASE_VERSION = 1
             private const val DATABASE = "articulos.db"
             private const val TABLA_ARTICULOS = "articulos"
+            private const val TABLA_PERSONAJE = "personaje"
+            private const val TABLA_MOCHILA = "mochila"
             private const val KEY_ID = "_id"
             private const val COLUMN_TIPO_ARTICULO = "tipoArticulo"
             private const val COLUMN_NOMBRE = "nombre"
@@ -242,18 +248,34 @@ class Mercader : AppCompatActivity() {
             private const val COLUMN_UNIDADES = "unidades"
             private const val COLUMN_URL = "url"
             private const val COLUMN_PRECIO = "precio"
-
+            private const val COLUMN_SALUD = "salud"
+            private const val COLUMN_ATAQUE = "ataque"
+            private const val COLUMN_EXPERIENCIA = "experiencia"
+            private const val COLUMN_NIVEL = "nivel"
+            private const val COLUMN_SUERTE = "suerte"
+            private const val COLUMN_DEFENSA = "defensa"
         }
 
         override fun onCreate(db: SQLiteDatabase) {
-            val createTable = "CREATE TABLE $TABLA_ARTICULOS ($KEY_ID INTEGER PRIMARY KEY," +
+            val createTableArticulos = "CREATE TABLE $TABLA_ARTICULOS ($KEY_ID INTEGER PRIMARY KEY," +
                     "$COLUMN_NOMBRE TEXT, $COLUMN_TIPO_ARTICULO TEXT, $COLUMN_UNIDADES INTEGER," +
                     "$COLUMN_PESO INTEGER,$COLUMN_URL INTEGER,$COLUMN_PRECIO INTEGER)"
-            db.execSQL(createTable)
+            db.execSQL(createTableArticulos)
+
+            val createTablePersonaje = "CREATE TABLE $TABLA_PERSONAJE ($KEY_ID INTEGER PRIMARY KEY," +
+                    "$COLUMN_NOMBRE TEXT, $COLUMN_SALUD INTEGER, $COLUMN_ATAQUE INTEGER," +
+                    "$COLUMN_EXPERIENCIA INTEGER,$COLUMN_NIVEL INTEGER,$COLUMN_SUERTE INTEGER,$COLUMN_DEFENSA INTEGER)"
+            db.execSQL(createTablePersonaje)
+
+            val createTableMochila = "CREATE TABLE $TABLA_MOCHILA ($KEY_ID INTEGER PRIMARY KEY," +
+                    "$COLUMN_NOMBRE TEXT, $COLUMN_PESO INTEGER, $COLUMN_UNIDADES INTEGER)"
+            db.execSQL(createTableMochila)
         }
 
         override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
             db.execSQL("DROP TABLE IF EXISTS $TABLA_ARTICULOS")
+            db.execSQL("DROP TABLE IF EXISTS $TABLA_PERSONAJE")
+            db.execSQL("DROP TABLE IF EXISTS $TABLA_MOCHILA")
             onCreate(db)
         }
 
@@ -273,43 +295,10 @@ class Mercader : AppCompatActivity() {
                                 put(COLUMN_URL, articulo.getUrl())
                             }
                         }
-
                         else -> println("Nombre del artículo no válido para el tipo ARMA.")
                     }
                 }
-
-                Articulo.TipoArticulo.OBJETO -> {
-                    when (articulo.getNombre()) {
-                        Articulo.Nombre.POCION, Articulo.Nombre.IRA -> {
-                            values = ContentValues().apply {
-                                put(COLUMN_NOMBRE, articulo.getNombre().name)
-                                put(COLUMN_TIPO_ARTICULO, articulo.getTipoArticulo().name)
-                                put(COLUMN_PESO, articulo.getPeso())
-                                put(COLUMN_PRECIO, articulo.getPrecio())
-                                put(COLUMN_URL, articulo.getUrl())
-                            }
-                        }
-
-                        else -> println("Nombre del artículo no válido para el tipo OBJETO.")
-                    }
-                }
-
-                Articulo.TipoArticulo.PROTECCION -> {
-                    when (articulo.getNombre()) {
-                        Articulo.Nombre.ESCUDO, Articulo.Nombre.ARMADURA -> {
-                            values = ContentValues().apply {
-                                put(COLUMN_NOMBRE, articulo.getNombre().name)
-                                put(COLUMN_TIPO_ARTICULO, articulo.getTipoArticulo().name)
-                                put(COLUMN_PESO, articulo.getPeso())
-                                put(COLUMN_PRECIO, articulo.getPrecio())
-                                put(COLUMN_URL, articulo.getUrl())
-                            }
-                        }
-
-                        else -> println("Nombre del artículo no válido para el tipo PROTECCION.")
-                    }
-                }
-
+                // Casos restantes ...
                 else -> {}
             }
 
@@ -331,39 +320,30 @@ class Mercader : AppCompatActivity() {
                         "BASTON" -> {
                             Articulo.Nombre.BASTON
                         }
-
                         "ESPADA" -> {
                             Articulo.Nombre.ESPADA
                         }
-
                         "DAGA" -> {
                             Articulo.Nombre.DAGA
                         }
-
                         "MARTILLO" -> {
                             Articulo.Nombre.MARTILLO
                         }
-
                         "GARRAS" -> {
                             Articulo.Nombre.GARRAS
                         }
-
                         "POCION" -> {
                             Articulo.Nombre.POCION
                         }
-
                         "IRA" -> {
                             Articulo.Nombre.IRA
                         }
-
                         "ESCUDO" -> {
                             Articulo.Nombre.ESCUDO
                         }
-
                         "ARMADURA" -> {
                             Articulo.Nombre.ARMADURA
                         }
-
                         else -> {
                             Articulo.Nombre.IRA
                         }
@@ -375,45 +355,41 @@ class Mercader : AppCompatActivity() {
                             "ARMA" -> {
                                 Articulo.TipoArticulo.ARMA
                             }
-
                             "OBJETO" -> {
                                 Articulo.TipoArticulo.OBJETO
                             }
-
                             "PROTECCION" -> {
                                 Articulo.TipoArticulo.PROTECCION
                             }
-
                             else -> {
                                 Articulo.TipoArticulo.PROTECCION
                             }
                         }
                     val peso = cursor.getInt(cursor.getColumnIndex(COLUMN_PESO))
-                    val precio = cursor.getInt(cursor.getColumnIndex(COLUMN_PESO))
+                    val precio = cursor.getInt(cursor.getColumnIndex(COLUMN_PRECIO))
                     val url = cursor.getInt(cursor.getColumnIndex(COLUMN_URL))
                     val unidades = cursor.getInt(cursor.getColumnIndex(COLUMN_UNIDADES))
 
-                    articulos.add(Articulo(tipoArticulo, nom, peso, precio, url,unidades))
+                    articulos.add(Articulo(tipoArticulo, nom, peso, precio, url, unidades))
 
                 } while (cursor.moveToNext())
-
-
             }
             cursor.close()
             db.close()
             return articulos
         }
+
         @SuppressLint("Range")
         fun eliminarUnidad(articulo: Articulo) {
             val db = this.writableDatabase
             val whereClause =
-                "$COLUMN_TIPO_ARTICULO = ? AND $COLUMN_NOMBRE = ? AND $COLUMN_URL = ? AND $COLUMN_PESO = ?"
+                "$COLUMN_TIPO_ARTICULO = ? AND $COLUMN_NOMBRE = ? AND $COLUMN_URL = ? AND $COLUMN_PRECIO = ?"
 
             val whereArgs = arrayOf(
                 articulo.getTipoArticulo().name,
                 articulo.getNombre().name,
                 articulo.getUrl().toString(),
-                articulo.getPeso().toString()
+                articulo.getPrecio().toString()
             )
 
             val cursor = db.query(
@@ -436,9 +412,9 @@ class Mercader : AppCompatActivity() {
             cursor.close()
             db.close()
         }
+
         @SuppressLint("Range")
         fun contieneObjeto(articulo: Articulo): Boolean {
-
             val selectQuery = "SELECT * FROM $TABLA_ARTICULOS"
             val db = this.readableDatabase
             val cursor = db.rawQuery(selectQuery, null)
@@ -455,26 +431,18 @@ class Mercader : AppCompatActivity() {
                             )
                         ) == articulo.getUrl() && cursor.getInt(
                             cursor.getColumnIndex(
-                                COLUMN_PESO
+                                COLUMN_PRECIO
                             )
-                        ) == articulo.getPeso()
+                        ) == articulo.getPrecio()
                     ) {
                         flag = true
-
                     }
-
                 } while (cursor.moveToNext())
-
-
             }
             cursor.close()
             db.close()
             return flag
-
         }
-
-
-
-
     }
+
 }
