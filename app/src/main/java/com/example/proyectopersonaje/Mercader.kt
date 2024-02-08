@@ -28,8 +28,10 @@ class Mercader : AppCompatActivity() {
         val btnCancelar = findViewById<Button>(R.id.cancelar)
         val precio = findViewById<TextView>(R.id.precioTextView)
         val btnIzquierda = findViewById<Button>(R.id.izquierda)
+        var unidadestextView=findViewById<TextView>(R.id.unidadesTextView)
         val btnDerecha = findViewById<Button>(R.id.derecha)
         var posicionObjeto = 0
+        var posiciondb=0
         val objetoPersonaje = findViewById<ImageView>(R.id.objetoPersonaje)
         val dbHelper = Objeto.DatabaseHelper(this)
         val objeto1 =
@@ -147,7 +149,10 @@ class Mercader : AppCompatActivity() {
                 numRand = (1..max).random()
 
                 articuloActual = dbHelper.getArticulos().get(numRand)
+
+
                 cambiarImagenYMostrarPrecio(articuloActual!!)
+                unidadestextView.text="Unidades: ${dbHelper.getArticulos()[numRand].getUn}"
 
                 Toast.makeText(this, "Objeto comprado correctamente", Toast.LENGTH_SHORT)
                     .show()
@@ -218,7 +223,7 @@ class Mercader : AppCompatActivity() {
 
         val precioTextView = findViewById<TextView>(R.id.precioTextView)
 
-        precioTextView.text = "Precio: ${articulo.getPrecio()}"
+        precioTextView.text = "Precio: ${articulo.getPrecio()} Unidades: ${}"
         precioTextView.visibility = View.VISIBLE
 
 

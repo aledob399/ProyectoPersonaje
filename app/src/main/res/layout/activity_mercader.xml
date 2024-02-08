@@ -62,14 +62,12 @@
         android:layout_width="126dp"
         android:layout_height="60dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="80dp"
         android:layout_marginEnd="59dp"
-        android:layout_marginBottom="256dp"
+        android:layout_marginBottom="116dp"
         android:text="Continuar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/comerciar"
-        app:layout_constraintTop_toBottomOf="@+id/objetoPersonaje" />
+        app:layout_constraintStart_toEndOf="@+id/comerciar" />
 
     <Button
         android:id="@+id/comerciar"
@@ -77,14 +75,12 @@
         android:layout_width="125dp"
         android:layout_height="62dp"
         android:layout_marginStart="81dp"
-        android:layout_marginTop="80dp"
         android:layout_marginEnd="130dp"
-        android:layout_marginBottom="256dp"
+        android:layout_marginBottom="116dp"
         android:text="Comerciar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/continuar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/objetoPersonaje" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/mercader"
@@ -129,6 +125,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mercader" />
+
+    <TextView
+        android:id="@+id/unidadesTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="182dp"
+        android:layout_marginEnd="182dp"
+        android:layout_marginBottom="320dp"
+        android:text="Unidades: "
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/objetoPersonaje"
