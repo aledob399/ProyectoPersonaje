@@ -43,21 +43,21 @@ class Mercader : AppCompatActivity() {
             Articulo.Nombre.ARMADURA,
             2,
             34,
-            R.drawable.objetotres,1
+            R.drawable.objetotres,6
         )
         val objeto4 = Articulo(
             Articulo.TipoArticulo.ARMA,
             Articulo.Nombre.BASTON,
             5,
             42,
-            R.drawable.objetocinco,1
+            R.drawable.objetocinco,5
         )
         val objeto5 = Articulo(
             Articulo.TipoArticulo.ARMA,
             Articulo.Nombre.GARRAS,
             7,
             74,
-            R.drawable.objetocuatro,1
+            R.drawable.objetocuatro,3
         )
         val objeto6 =
             Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.DAGA, 9, 94, R.drawable.objetoseis,1)
