@@ -133,7 +133,7 @@ class Mercader : AppCompatActivity() {
             if (articuloActual != null && personaje!!.misMonedas() > articuloActual.getPrecio()) {
 
                 personaje.restarMonedas(articuloActual)
-                
+
                 Toast.makeText(this, "Objeto comprado correctamente", Toast.LENGTH_SHORT)
                     .show()
             } else {
