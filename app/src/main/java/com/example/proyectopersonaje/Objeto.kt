@@ -220,5 +220,41 @@ class Objeto : AppCompatActivity() {
             db.close()
             return articulos
         }
+
+        @SuppressLint("Range")
+        fun eliminarUnidad(articulo: Articulo) {
+            val db = this.writableDatabase
+            val whereClause =
+                "$COLUMN_TIPO_ARTICULO = ? AND $COLUMN_NOMBRE = ? AND $COLUMN_URL = ? AND $COLUMN_PESO = ?"
+
+            val whereArgs = arrayOf(
+                articulo.getTipoArticulo().name,
+                articulo.getNombre().name,
+                articulo.getUrl().toString(),
+                articulo.getPeso().toString()
+            )
+
+            val cursor = db.query(
+                TABLA_ARTICULOS, null, whereClause, whereArgs,
+                null, null, null
+            )
+
+            if (cursor.moveToFirst()) {
+                val unidades = cursor.getInt(cursor.getColumnIndex(COLUMN_UNIDADES))
+                if (unidades <= 1) {
+                    db.delete(TABLA_ARTICULOS, whereClause, whereArgs)
+                } else {
+                    val updatedUnits = unidades - 1
+                    val contentValues = ContentValues().apply {
+                        put(COLUMN_UNIDADES, updatedUnits)
+                    }
+                    db.update(TABLA_ARTICULOS, contentValues, whereClause, whereArgs)
+                }
+            }
+            cursor.close()
+            db.close()
+        }
+
+
     }
 }

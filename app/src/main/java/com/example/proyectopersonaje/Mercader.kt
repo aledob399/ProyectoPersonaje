@@ -35,7 +35,7 @@ class Mercader : AppCompatActivity() {
         val objeto1 =
             Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.DAGA, 2, 34, R.drawable.objeto)
         val objeto2 =
-            Articulo(Articulo.TipoArticulo.ORO, Articulo.Nombre.MONEDA, 3, 24, R.drawable.objetodos)
+            Articulo(Articulo.TipoArticulo.ORO, Articulo.Nombre.MONEDA, 3, 15, R.drawable.moneda)
         val objeto3 = Articulo(
             Articulo.TipoArticulo.PROTECCION,
             Articulo.Nombre.ARMADURA,
@@ -105,13 +105,21 @@ class Mercader : AppCompatActivity() {
         dbHelper.insertarArticulo(objeto10)
 
 
+
         val mochilaDb = Mochila(10)
         val max = dbHelper.getArticulos().size
-        val numRand = (1..max).random()
+        var numRand = (1..max).random()
 
         mochilaDb.setContenido(dbHelper.getArticulos())
-
-        val articuloActual = dbHelper.getArticulos().get(numRand)
+        var moneda=Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,0,15,R.drawable.moneda)
+        personaje!!.getMochila().addArticulo(moneda)
+        personaje!!.getMochila().addArticulo(moneda)
+        personaje!!.getMochila().addArticulo(moneda)
+        personaje!!.getMochila().addArticulo(moneda)
+        personaje!!.getMochila().addArticulo(moneda)
+        personaje!!.getMochila().addArticulo(moneda)
+        personaje!!.getMochila().addArticulo(moneda)
+        var articuloActual = dbHelper.getArticulos().get(numRand)
         btnComerciar.setOnClickListener {
 
             btnComerciar.visibility = View.GONE
@@ -133,6 +141,12 @@ class Mercader : AppCompatActivity() {
             if (articuloActual != null && personaje!!.misMonedas() > articuloActual.getPrecio()) {
 
                 personaje.restarMonedas(articuloActual)
+                dbHelper.eliminarUnidad(articuloActual)
+                val max = dbHelper.getArticulos().size
+
+                numRand = (1..max).random()
+
+                articuloActual = dbHelper.getArticulos().get(numRand)
 
                 Toast.makeText(this, "Objeto comprado correctamente", Toast.LENGTH_SHORT)
                     .show()
@@ -382,7 +396,39 @@ class Mercader : AppCompatActivity() {
             db.close()
             return articulos
         }
+        @SuppressLint("Range")
+        fun eliminarUnidad(articulo: Articulo) {
+            val db = this.writableDatabase
+            val whereClause =
+                "$COLUMN_TIPO_ARTICULO = ? AND $COLUMN_NOMBRE = ? AND $COLUMN_URL = ? AND $COLUMN_PESO = ?"
 
+            val whereArgs = arrayOf(
+                articulo.getTipoArticulo().name,
+                articulo.getNombre().name,
+                articulo.getUrl().toString(),
+                articulo.getPeso().toString()
+            )
+
+            val cursor = db.query(
+                TABLA_ARTICULOS, null, whereClause, whereArgs,
+                null, null, null
+            )
+
+            if (cursor.moveToFirst()) {
+                val unidades = cursor.getInt(cursor.getColumnIndex(COLUMN_UNIDADES))
+                if (unidades <= 1) {
+                    db.delete(TABLA_ARTICULOS, whereClause, whereArgs)
+                } else {
+                    val updatedUnits = unidades - 1
+                    val contentValues = ContentValues().apply {
+                        put(COLUMN_UNIDADES, updatedUnits)
+                    }
+                    db.update(TABLA_ARTICULOS, contentValues, whereClause, whereArgs)
+                }
+            }
+            cursor.close()
+            db.close()
+        }
         @SuppressLint("Range")
         fun contieneObjeto(articulo: Articulo): Boolean {
 
@@ -420,41 +466,8 @@ class Mercader : AppCompatActivity() {
 
         }
 
-        @SuppressLint("Range")
-        fun eliminarUnidad(articulo: Articulo) {
-            val db = this.writableDatabase
-            val whereClause =
-                "$COLUMN_TIPO_ARTICULO = ? AND $COLUMN_NOMBRE = ? AND $COLUMN_URL = ? AND $COLUMN_PESO = ?"
 
-            val whereArgs = arrayOf(
-                articulo.getTipoArticulo().name,
-                articulo.getNombre().name,
-                articulo.getUrl().toString(),
-                articulo.getPeso().toString()
-            )
 
-            val cursor = db.query(
-                TABLA_ARTICULOS, null, whereClause, whereArgs,
-                null, null, null
-            )
-
-            if (cursor.moveToFirst()) {
-                val unidades = cursor.getInt(cursor.getColumnIndex(COLUMN_UNIDADES))
-                if (unidades <= 1) {
-                    // Si hay 1 unidad o menos, eliminamos el artículo
-                    db.delete(TABLA_ARTICULOS, whereClause, whereArgs)
-                } else {
-                    // Si hay más de 1 unidad, disminuimos el número de unidades en 1
-                    val updatedUnits = unidades - 1
-                    val contentValues = ContentValues().apply {
-                        put(COLUMN_UNIDADES, updatedUnits)
-                    }
-                    db.update(TABLA_ARTICULOS, contentValues, whereClause, whereArgs)
-                }
-            }
-            cursor.close()
-            db.close()
-        }
 
     }
 }
