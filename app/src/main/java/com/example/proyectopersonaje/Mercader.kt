@@ -138,7 +138,7 @@ class Mercader : AppCompatActivity() {
             startActivity(intent)
         }
         btnComprar.setOnClickListener {
-            if (articuloActual != null && personaje!!.misMonedas() > articuloActual.getPrecio()) {
+            if (personaje!!.misMonedas() < articuloActual.getPrecio()) {
 
                 personaje.restarMonedas(articuloActual)
                 dbHelper.eliminarUnidad(articuloActual)
@@ -147,6 +147,7 @@ class Mercader : AppCompatActivity() {
                 numRand = (1..max).random()
 
                 articuloActual = dbHelper.getArticulos().get(numRand)
+                cambiarImagenYMostrarPrecio(articuloActual!!)
 
                 Toast.makeText(this, "Objeto comprado correctamente", Toast.LENGTH_SHORT)
                     .show()

@@ -362,8 +362,8 @@ class Personaje(
     fun misMonedas():Int{
         var monedas=0
         repeat(getMochila().getContenido().size){
-            if(getMochila().getContenido().get(it).getNombre()==Articulo.Nombre.MONEDA){
-                monedas=monedas+getMochila().getContenido().get(it).getPrecio()
+            if(getMochila().getContenido()[it].getNombre()==Articulo.Nombre.MONEDA){
+                monedas += getMochila().getContenido()[it].getPrecio()
             }
         }
         return monedas
