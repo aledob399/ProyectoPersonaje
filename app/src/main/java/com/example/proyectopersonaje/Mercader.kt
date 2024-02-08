@@ -43,21 +43,21 @@ class Mercader : AppCompatActivity() {
             Articulo.Nombre.ARMADURA,
             2,
             34,
-            R.drawable.objetotres
+            R.drawable.objetotres,1
         )
         val objeto4 = Articulo(
             Articulo.TipoArticulo.ARMA,
             Articulo.Nombre.BASTON,
             5,
             42,
-            R.drawable.objetocinco
+            R.drawable.objetocinco,1
         )
         val objeto5 = Articulo(
             Articulo.TipoArticulo.ARMA,
             Articulo.Nombre.GARRAS,
             7,
             74,
-            R.drawable.objetocuatro
+            R.drawable.objetocuatro,1
         )
         val objeto6 =
             Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.DAGA, 9, 94, R.drawable.objetoseis)
@@ -66,28 +66,28 @@ class Mercader : AppCompatActivity() {
             Articulo.Nombre.IRA,
             1,
             32,
-            R.drawable.objetosiete
+            R.drawable.objetosiete,1
         )
         val objeto8 = Articulo(
             Articulo.TipoArticulo.PROTECCION,
             Articulo.Nombre.ESCUDO,
             3,
             36,
-            R.drawable.objetoocho
+            R.drawable.objetoocho,1
         )
         val objeto9 = Articulo(
             Articulo.TipoArticulo.ARMA,
             Articulo.Nombre.MARTILLO,
             2,
             83,
-            R.drawable.objetodos
+            R.drawable.objetodos,1
         )
         val objeto10 = Articulo(
             Articulo.TipoArticulo.ARMA,
             Articulo.Nombre.GARRAS,
             4,
             34,
-            R.drawable.objetotres
+            R.drawable.objetotres,1
         )
 
         personaje?.getMochila()?.addArticulo(objeto1)
@@ -113,7 +113,7 @@ class Mercader : AppCompatActivity() {
         var numRand = (1..max).random()
 
         mochilaDb.setContenido(dbHelper.getArticulos())
-        var moneda=Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,0,15,R.drawable.moneda)
+        var moneda=Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,0,15,R.drawable.moneda,1)
         personaje!!.getMochila().addArticulo(moneda)
         personaje!!.getMochila().addArticulo(moneda)
         personaje!!.getMochila().addArticulo(moneda)
@@ -152,7 +152,7 @@ class Mercader : AppCompatActivity() {
 
 
                 cambiarImagenYMostrarPrecio(articuloActual!!)
-                unidadestextView.text="Unidades: ${dbHelper.getArticulos()[numRand].getUn}"
+                unidadestextView.text="Unidades: ${dbHelper.getArticulos()[numRand].getUnidades()}"
 
                 Toast.makeText(this, "Objeto comprado correctamente", Toast.LENGTH_SHORT)
                     .show()

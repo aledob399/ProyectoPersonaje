@@ -369,7 +369,7 @@ class Personaje(
         return monedas
     }
     fun restarMonedas(articuloComprar:Articulo){
-        var moneda=Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,0,15,R.drawable.moneda)
+        var moneda=Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,0,15,R.drawable.moneda,1)
         var monedasGastar=articuloComprar.getPrecio()
         var monedas=misMonedas()
 
@@ -384,7 +384,7 @@ class Personaje(
             monedas -= 15
         }
         if(monedas>0){
-            getMochila().addArticulo(Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,0,monedas,R.drawable.moneda))
+            getMochila().addArticulo(Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,0,monedas,R.drawable.moneda,1))
         }
 
 
@@ -549,7 +549,7 @@ class Mochila(private var pesoMochila: Int){
  *
  **********************************************************************************************************************/
 
-class Articulo(private var tipoArticulo: TipoArticulo, private var nombre: Nombre, private var peso: Int,private var precio:Int,private var url:Int) {
+class Articulo(private var tipoArticulo: TipoArticulo, private var nombre: Nombre, private var peso: Int,private var precio:Int,private var url:Int,private var unidades:Int) {
 
     enum class TipoArticulo { ARMA, OBJETO, PROTECCION,ORO }
     enum class Nombre { BASTON, ESPADA, DAGA, MARTILLO, GARRAS, POCION, IRA, ESCUDO, ARMADURA ,MONEDA}
@@ -568,6 +568,9 @@ class Articulo(private var tipoArticulo: TipoArticulo, private var nombre: Nombr
     }
     fun getTipoArticulo(): TipoArticulo {
         return tipoArticulo
+    }
+    fun getUnidades():Int{
+        return unidades
     }
     fun getAumentoAtaque(): Int {
         return when (nombre) {
