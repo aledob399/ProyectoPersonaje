@@ -359,6 +359,43 @@ class Personaje(
             }
         }
     }
+    fun misMonedas():Int{
+        var monedas=0
+        repeat(getMochila().getContenido().size){
+            if(getMochila().getContenido().get(it).getNombre()==Articulo.Nombre.MONEDA){
+                monedas=monedas+getMochila().getContenido().get(it).getPrecio()
+            }
+        }
+        return monedas
+    }
+    fun restarMonedas(articuloComprar:Articulo){
+        var moneda=Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,0,15,R.drawable.moneda)
+        var monedasGastar=articuloComprar.getPrecio()
+        var monedas=misMonedas()
+
+        if(monedas>monedasGastar){
+            monedas -= monedasGastar
+            removerArticuloNombre(Articulo.Nombre.MONEDA)
+        }
+        while(monedas>=15){
+            if(monedas>=15){
+                getMochila().addArticulo(moneda)
+            }
+            monedas -= 15
+        }
+        if(monedas>0){
+            getMochila().addArticulo(Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,0,monedas,R.drawable.moneda))
+        }
+
+
+    }
+    fun removerArticuloNombre(nombre:Articulo.Nombre){
+        repeat(getMochila().getContenido().size){
+            if(getMochila().getContenido().get(it).getNombre()==nombre){
+                getMochila().getContenido().removeAt(it)
+            }
+        }
+    }
     fun getMochila(): Mochila {
         return this.mochila
     }
