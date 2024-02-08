@@ -35,9 +35,9 @@ class Mercader : AppCompatActivity() {
         val objetoPersonaje = findViewById<ImageView>(R.id.objetoPersonaje)
         val dbHelper = Objeto.DatabaseHelper(this)
         val objeto1 =
-            Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.DAGA, 2, 34, R.drawable.objeto)
+            Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.DAGA, 2, 34, R.drawable.objeto,1)
         val objeto2 =
-            Articulo(Articulo.TipoArticulo.ORO, Articulo.Nombre.MONEDA, 3, 15, R.drawable.moneda)
+            Articulo(Articulo.TipoArticulo.ORO, Articulo.Nombre.MONEDA, 3, 15, R.drawable.moneda,1)
         val objeto3 = Articulo(
             Articulo.TipoArticulo.PROTECCION,
             Articulo.Nombre.ARMADURA,
@@ -60,20 +60,20 @@ class Mercader : AppCompatActivity() {
             R.drawable.objetocuatro,1
         )
         val objeto6 =
-            Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.DAGA, 9, 94, R.drawable.objetoseis)
+            Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.DAGA, 9, 94, R.drawable.objetoseis,1)
         val objeto7 = Articulo(
             Articulo.TipoArticulo.OBJETO,
             Articulo.Nombre.IRA,
             1,
             32,
-            R.drawable.objetosiete,1
+            R.drawable.objetosiete,3
         )
         val objeto8 = Articulo(
             Articulo.TipoArticulo.PROTECCION,
             Articulo.Nombre.ESCUDO,
             3,
             36,
-            R.drawable.objetoocho,1
+            R.drawable.objetoocho,4
         )
         val objeto9 = Articulo(
             Articulo.TipoArticulo.ARMA,
@@ -87,7 +87,7 @@ class Mercader : AppCompatActivity() {
             Articulo.Nombre.GARRAS,
             4,
             34,
-            R.drawable.objetotres,1
+            R.drawable.objetotres,10
         )
 
         personaje?.getMochila()?.addArticulo(objeto1)
@@ -223,7 +223,7 @@ class Mercader : AppCompatActivity() {
 
         val precioTextView = findViewById<TextView>(R.id.precioTextView)
 
-        precioTextView.text = "Precio: ${articulo.getPrecio()} Unidades: ${}"
+        precioTextView.text = "Precio: ${articulo.getPrecio()} Unidades: ${articulo.getUnidades()}"
         precioTextView.visibility = View.VISIBLE
 
 
@@ -391,8 +391,9 @@ class Mercader : AppCompatActivity() {
                     val peso = cursor.getInt(cursor.getColumnIndex(COLUMN_PESO))
                     val precio = cursor.getInt(cursor.getColumnIndex(COLUMN_PESO))
                     val url = cursor.getInt(cursor.getColumnIndex(COLUMN_URL))
+                    val unidades = cursor.getInt(cursor.getColumnIndex(COLUMN_UNIDADES))
 
-                    articulos.add(Articulo(tipoArticulo, nom, peso, precio, url))
+                    articulos.add(Articulo(tipoArticulo, nom, peso, precio, url,unidades))
 
                 } while (cursor.moveToNext())
 
