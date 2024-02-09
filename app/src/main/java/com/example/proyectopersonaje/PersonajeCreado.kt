@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
 
 class PersonajeCreado : AppCompatActivity() {
 
@@ -21,14 +23,23 @@ class PersonajeCreado : AppCompatActivity() {
 
         val btnVolver = findViewById<Button>(R.id.btnVolver)
         val btnEmpezar = findViewById<Button>(R.id.btnEmpezar)
-        personaje = intent.getParcelableExtra("personaje")
+
+
+        val modoRegistro = intent.getBooleanExtra("modoRegistro", false)
+
+        // Guardar el personaje en la base de datos si es nuevo o si se reanuda la actividad
+        personaje = guardarPersonajeEnBaseDeDatos(intent.getParcelableExtra("personaje"), modoRegistro)
+
+
+
+
         var datos: TextView = findViewById(R.id.datos)
         var img: ImageView = findViewById(R.id.img)
 
         // Guardar el personaje en la base de datos si es nuevo o si se reanuda la actividad
-        guardarPersonajeEnBaseDeDatos()
 
-        datos.text = personaje.toString()
+
+        datos.text =personaje.toString()
 
         val idImagen = intent.getIntExtra("img", 0)
         img.setImageResource(idImagen)
@@ -46,23 +57,24 @@ class PersonajeCreado : AppCompatActivity() {
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        guardarPersonajeEnBaseDeDatos()
-    }
 
-    private fun guardarPersonajeEnBaseDeDatos() {
-        personaje?.let {
-            if (!dbHelper.contienePersonaje()) {
-                dbHelper.insertarPersonaje(it)
-            } else {
-                dbHelper.actualizarPersonaje(it)
+
+    private fun guardarPersonajeEnBaseDeDatos(personaje: Personaje?, modoRegistro: Boolean): Personaje? {
+        val idUsuarioAuth = FirebaseAuth.getInstance().uid
+        var personajeGuardado: Personaje? = null
+
+        if (personaje != null && modoRegistro) {
+            dbHelper.insertarPersonaje(personaje)
+            Toast.makeText(this, "Objeto comprado correctamente", Toast.LENGTH_SHORT).show()
+            personajeGuardado = personaje
+        } else {
+            idUsuarioAuth?.let {
+                personajeGuardado = dbHelper.obtenerPersonaje(it)
             }
         }
+
+        return personajeGuardado
     }
 
-    override fun onDestroy() {
-        dbHelper.close()
-        super.onDestroy()
-    }
+
 }
