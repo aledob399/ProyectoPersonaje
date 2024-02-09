@@ -1,6 +1,5 @@
 package com.example.proyectopersonaje
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -26,9 +25,14 @@ class PersonajeCreado : AppCompatActivity() {
 
 
         val modoRegistro = intent.getBooleanExtra("modoRegistro", false)
+        if (modoRegistro) {
+            personaje = guardarPersonajeEnBaseDeDatos(intent.getParcelableExtra("personaje"))
+        } else {
+            personaje = cargarPersonajeDesdeBaseDeDatos(intent.getParcelableExtra("personaje"))
+        }
 
-        // Guardar el personaje en la base de datos si es nuevo o si se reanuda la actividad
-        personaje = guardarPersonajeEnBaseDeDatos(intent.getParcelableExtra("personaje"), modoRegistro)
+
+
 
 
 
@@ -59,13 +63,13 @@ class PersonajeCreado : AppCompatActivity() {
 
 
 
-    private fun guardarPersonajeEnBaseDeDatos(personaje: Personaje?, modoRegistro: Boolean): Personaje? {
+    private fun guardarPersonajeEnBaseDeDatos(personaje: Personaje?): Personaje? {
         val idUsuarioAuth = FirebaseAuth.getInstance().uid
         var personajeGuardado: Personaje? = null
 
-        if (personaje != null && modoRegistro) {
+        if (personaje != null) {
             dbHelper.insertarPersonaje(personaje)
-            Toast.makeText(this, "Objeto comprado correctamente", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Personaje guardado correctamente", Toast.LENGTH_SHORT).show()
             personajeGuardado = personaje
         } else {
             idUsuarioAuth?.let {
@@ -74,6 +78,16 @@ class PersonajeCreado : AppCompatActivity() {
         }
 
         return personajeGuardado
+    }
+    private fun cargarPersonajeDesdeBaseDeDatos(personaje: Personaje?): Personaje? {
+        val idUsuarioAuth = FirebaseAuth.getInstance().uid
+
+        return if (personaje != null) {
+
+            dbHelper.obtenerPersonaje(idUsuarioAuth!!)
+        } else {
+            null
+        }
     }
 
 

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
@@ -64,20 +65,25 @@ class MainActivity : AppCompatActivity() {
                 FirebaseAuth.getInstance().signInWithEmailAndPassword(
                     emailEditText.text.toString(),
                     passwordEditText.text.toString()
-                ).addOnCompleteListener {
-                    if (it.isSuccessful) {
+                ).addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
                         val idUsuarioAuth = FirebaseAuth.getInstance().uid
 
                         // Obtener el personaje de la base de datos usando el ID de autenticación
-                        val personaje = idUsuarioAuth?.let { it1 -> db.obtenerPersonaje(it1) }
-                        val intent = Intent(this, PersonajeCreado::class.java)
+                        val dbHelper = DatabaseHelper(this)
+                        val personaje = dbHelper.obtenerPersonaje(idUsuarioAuth.toString())
 
-
-                        intent.putExtra("modoRegistro", true) // O false dependiendo del caso
-                        startActivity(intent)
-
-                        intent.putExtra("personaje", personaje)
-                        startActivity(intent)
+                        // Verificar si el personaje es null antes de intentar acceder a sus propiedades
+                        if (personaje != null) {
+                            val intent = Intent(this, PersonajeCreado::class.java)
+                            intent.putExtra("modoRegistro", false) // El usuario ya está registrado
+                            intent.putExtra("personaje", personaje)
+                            startActivity(intent)
+                        } else {
+                            // Mostrar mensaje o realizar alguna acción en caso de que el personaje no se encuentre en la base de datos
+                            Toast.makeText(this,"Personaje no encontrado en la base de datos.",
+                                Toast.LENGTH_SHORT).show()
+                        }
                     } else {
                         showAlert()
                     }

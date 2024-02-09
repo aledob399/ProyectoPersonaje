@@ -600,3 +600,228 @@ class Articulo(private var tipoArticulo: TipoArticulo, private var nombre: Nombr
         return "[Tipo Artículo:$tipoArticulo, Nombre:$nombre, Peso:$peso]"
     }
 }
+/***********************************************************************************************************************
+ *  CLASE: Mascota
+ *  CONSTRUCTOR:
+ *      nombre      - > Nombre de tu mascota (String)
+ *      tipo        - >(Enum{Fuego,Agua,Planta,Luz,Oscuridad})
+ *
+ *  METODOS
+ *      getPesoMochila()        - > Devuelve el peso máximo como Int
+ *      addArticulo()           - > Añade un artículo (clase Articulo) a la mochila, comprobando que el peso del
+ *                                  artículo sumado al peso total del resto de artículos de la Mochila no supere el
+ *                                  límite (pesoMochila)
+ *      getContenido()          - > Devuelve el ArrayList de artículos que contiene la mochila
+ *      findObjeto(nombre)      - > Devuelve la posición del artículo que cuyo nombre (Articulo.Nombre) pasamos como
+ *                                  entrada o -1 si no lo encuentra
+ *
+ **********************************************************************************************************************/
+class Mascota(private var nombre:String,private var atributo:tipoMascota) {
+    enum class tipoMascota { FUEGO,AGUA,PLANTA,LUZ,OSCURIDAD }
+    private var salud: Int = 0
+    private var ataque: Int = 0
+    private var experiencia: Int
+    private var nivel: Int
+    private var potencial: Int
+    private var defensa: Int = 0
+
+    init {
+        calcularSalud()
+        calcularAtaque()
+        calcularDefensa()
+        experiencia = 0
+        nivel = 1
+        potencial = (1..20).random()
+    }
+    fun subirNivel() {
+        if (nivel < 10) { // Limitar el nivel a 10
+            nivel++
+            calcularSalud() // Calcular el nuevo valor de salud al subir de nivel
+            calcularAtaque() // Calcular el nuevo valor de ataque al subir de nivel
+            calcularDefensa()
+        }
+    }
+    private fun calcularSalud() {
+        salud = when (nivel) {
+            1 -> 100
+            2 -> 200
+            3 -> 300
+            4 -> 450
+            5 -> 600
+            6 -> 800
+            7 -> 1000
+            8 -> 1250
+            9 -> 1500
+            10 -> 2000
+            else -> 100 // Valor por defecto si el nivel está fuera del rango especificado
+        }
+        salud *= potencial
+    }
+
+    private fun calcularAtaque() {
+        ataque = when (nivel) {
+            1 -> 10
+            2 -> 20
+            3 -> 25
+            4 -> 30
+            5 -> 40
+            6 -> 100
+            7 -> 200
+            8 -> 350
+            9 -> 400
+            10 -> 450
+            else -> 10 // Valor por defecto si el nivel está fuera del rango especificado
+        }
+        ataque*= potencial
+    }
+    private fun calcularDefensa() {
+        defensa = when (nivel) {
+            1 -> 4
+            2 -> 9
+            3 -> 14
+            4 -> 19
+            5 -> 49
+            6 -> 59
+            7 -> 119
+            8 -> 199
+            9 -> 349
+            10 -> 399
+            else -> 4 // Valor por defecto si el nivel está fuera del rango especificado
+        }
+        defensa*= potencial
+    }
+}
+class Mazmorra(
+    private var nombre: String,
+    private var dificultad: Int,
+    condicion: TipoCondicion
+) {
+    enum class TipoCondicion { MENOSVIDA, MENOSATAQUE }
+    enum class TipoMaldicion { VIDA, ATAQUE, DEFENSA, MASCOTA }
+    enum class TipoBendicion { VIDA, ATAQUE, DEFENSA, ATAQUEDOBLE }
+
+    private var bendiciones: ArrayList<TipoBendicion> = ArrayList()
+    private var maldiciones: ArrayList<TipoMaldicion> = ArrayList()
+    private var enemigos: ArrayList<enemigo> = ArrayList()
+
+    // Métodos para agregar maldiciones y bendiciones
+    fun agregarMaldicion(maldicion: TipoMaldicion) {
+        maldiciones.add(maldicion)
+    }
+
+    fun agregarBendicion(bendicion: TipoBendicion) {
+        bendiciones.add(bendicion)
+    }
+
+
+    fun obtenerMaldiciones(): ArrayList<TipoMaldicion> {
+        return maldiciones
+    }
+
+    fun obtenerBendiciones(): ArrayList<TipoBendicion> {
+        return bendiciones
+    }
+}
+
+class enemigo(private var nivel: Int,) {
+    private var salud: Int = 0
+    private var ataque: Int = 0
+    private var defensa: Int = 0
+    private var potencial: Int= 0
+
+
+    init {
+        calcularSalud()
+        calcularAtaque()
+        calcularDefensa()
+        nivel = this.nivel
+        potencial = (1..10).random()
+
+
+    }
+    private fun calcularSalud() {
+        salud = when (nivel) {
+            1 -> 10
+            2 -> 20
+            3 -> 30
+            4 -> 45
+            5 -> 60
+            6 -> 80
+            7 -> 100
+            8 -> 125
+            9 -> 150
+            10 -> 200
+            else -> 10 // Valor por defecto si el nivel está fuera del rango especificado
+        }
+        salud *= potencial
+    }
+
+    private fun calcularAtaque() {
+        ataque = when (nivel) {
+            1 -> 1
+            2 -> 2
+            3 -> 2
+            4 -> 3
+            5 -> 4
+            6 -> 10
+            7 -> 20
+            8 -> 35
+            9 -> 40
+            10 -> 450
+            else -> 10 // Valor por defecto si el nivel está fuera del rango especificado
+        }
+        ataque*= potencial
+    }
+    private fun calcularDefensa() {
+        defensa = when (nivel) {
+            1 -> 4
+            2 -> 9
+            3 -> 14
+            4 -> 19
+            5 -> 49
+            6 -> 59
+            7 -> 119
+            8 -> 199
+            9 -> 349
+            10 -> 399
+            else -> 4 // Valor por defecto si el nivel está fuera del rango especificado
+        }
+        defensa*= potencial
+    }
+    // Getters
+    fun getNivel(): Int {
+        return nivel
+    }
+
+    fun getSalud(): Int {
+        return salud
+    }
+
+    fun getAtaque(): Int {
+        return ataque
+    }
+
+    fun getDefensa(): Int {
+        return defensa
+    }
+
+    fun getPotencial(): Int {
+        return potencial
+    }
+
+    // Setters
+    fun setNivel(nuevoNivel: Int) {
+        nivel = nuevoNivel
+        calcularSalud()
+        calcularAtaque()
+        calcularDefensa()
+    }
+
+    fun setPotencial(nuevoPotencial: Int) {
+        potencial = nuevoPotencial
+        calcularSalud()
+        calcularAtaque()
+        calcularDefensa()
+    }
+}
+

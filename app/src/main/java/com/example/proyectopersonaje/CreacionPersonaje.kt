@@ -144,7 +144,7 @@ class CreacionPersonaje : AppCompatActivity() {
 
 
             intent.putExtra("personaje", p)
-
+            intent.putExtra("modoRegistro", true)
             val imagen = imagenes["$razaFinal-$claseFinal-$estadoVitalFinal"] ?: R.drawable.malditobrujoanciano
             intent.putExtra("img",imagen)
 

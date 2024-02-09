@@ -37,7 +37,8 @@ android {
 }
 
 dependencies {
-    implementation ("com.google.code.gson:gson:2.8.8")
+    implementation("com.google.code.gson:gson:2.8.8")
+
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("com.google.firebase:firebase-firestore-ktx")

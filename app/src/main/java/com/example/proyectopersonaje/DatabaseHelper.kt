@@ -86,25 +86,9 @@ class DatabaseHelper(context: Context) :
             val clase = cursor.getString(cursor.getColumnIndex(COLUMN_CLASE))
             val estadoVital = cursor.getString(cursor.getColumnIndex(COLUMN_ESTADOVITAL))
 
-            val razaFinal: Personaje.Raza = when (raza) {
-                "Elfo" -> Personaje.Raza.Elfo
-                "Enano" -> Personaje.Raza.Enano
-                "Humano" -> Personaje.Raza.Humano
-                "Maldito" -> Personaje.Raza.Maldito
-                else -> Personaje.Raza.Maldito
-            }
-            val estadoVitalFinal: Personaje.EstadoVital = when (estadoVital) {
-                "Adulto" -> Personaje.EstadoVital.Adulto
-                "Joven" -> Personaje.EstadoVital.Joven
-                "Anciano" -> Personaje.EstadoVital.Anciano
-                else -> Personaje.EstadoVital.Adulto
-            }
-            val claseFinal: Personaje.Clase = when (clase) {
-                "Brujo" -> Personaje.Clase.Brujo
-                "Guerrero" -> Personaje.Clase.Guerrero
-                "Mago" -> Personaje.Clase.Mago
-                else -> Personaje.Clase.Mago
-            }
+            val razaFinal: Personaje.Raza = obtenerRazaEnum(raza)
+            val estadoVitalFinal: Personaje.EstadoVital = obtenerEstadoVitalEnum(estadoVital)
+            val claseFinal: Personaje.Clase = obtenerClaseEnum(clase)
 
             personaje = Personaje(nombre, razaFinal, claseFinal, estadoVitalFinal)
         }
@@ -113,10 +97,39 @@ class DatabaseHelper(context: Context) :
         return personaje
     }
 
+    // Métodos auxiliares para convertir String a Enum
+    private fun obtenerRazaEnum(raza: String): Personaje.Raza {
+        return when (raza) {
+            "Elfo" -> Personaje.Raza.Elfo
+            "Enano" -> Personaje.Raza.Enano
+            "Humano" -> Personaje.Raza.Humano
+            "Maldito" -> Personaje.Raza.Maldito
+            else -> Personaje.Raza.Maldito
+        }
+    }
+
+    private fun obtenerEstadoVitalEnum(estadoVital: String): Personaje.EstadoVital {
+        return when (estadoVital) {
+            "Adulto" -> Personaje.EstadoVital.Adulto
+            "Joven" -> Personaje.EstadoVital.Joven
+            "Anciano" -> Personaje.EstadoVital.Anciano
+            else -> Personaje.EstadoVital.Adulto
+        }
+    }
+
+    private fun obtenerClaseEnum(clase: String): Personaje.Clase {
+        return when (clase) {
+            "Brujo" -> Personaje.Clase.Brujo
+            "Guerrero" -> Personaje.Clase.Guerrero
+            "Mago" -> Personaje.Clase.Mago
+            else -> Personaje.Clase.Mago
+        }
+    }
+
     fun insertarPersonaje(personaje: Personaje) {
         val db = writableDatabase
         val values = ContentValues().apply {
-            put(COLUMN_ID_USUARIO_AUTH, FirebaseAuth.getInstance().uid)
+            put(COLUMN_ID_USUARIO_AUTH, FirebaseAuth.getInstance().uid.toString())
             put(COLUMN_NOMBRE, personaje.getNombre())
             put(COLUMN_RAZA, personaje.getRaza().name)
             put(COLUMN_CLASE, personaje.getClase().name)
