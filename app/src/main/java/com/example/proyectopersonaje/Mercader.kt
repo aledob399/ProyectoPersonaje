@@ -33,7 +33,7 @@ class Mercader : AppCompatActivity() {
         var posicionObjeto = 0
         var posiciondb=0
         val objetoPersonaje = findViewById<ImageView>(R.id.objetoPersonaje)
-        val dbHelper = Objeto.DatabaseHelper(this)
+        val dbHelper = Objeto.DatabaseHelperMercader(this)
         val objeto1 =
             Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.DAGA, 2, 34, R.drawable.objeto,1)
         val objeto2 =

@@ -20,7 +20,7 @@ class Objeto : AppCompatActivity() {
         val btnRecoger = findViewById<Button>(R.id.recoger)
         val btnContinuar = findViewById<Button>(R.id.continuar)
         val personaje=intent.getParcelableExtra<Personaje>("personaje")
-        val dbHelper = DatabaseHelper(this)
+        val dbHelper = DatabaseHelperMercader(this)
         val objeto1=Articulo(Articulo.TipoArticulo.ARMA,Articulo.Nombre.DAGA,2,34,R.drawable.objeto,1)
         val objeto2=Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,3,24,R.drawable.objetodos,1)
         val objeto3=Articulo(Articulo.TipoArticulo.PROTECCION,Articulo.Nombre.ARMADURA,2,34,R.drawable.objetotres,1)
@@ -67,7 +67,7 @@ class Objeto : AppCompatActivity() {
         }
     }
 
-    class DatabaseHelper(context: Context) :
+    class DatabaseHelperMercader(context: Context) :
         SQLiteOpenHelper(context, DATABASE, null, DATABASE_VERSION) {
         companion object {
             private const val DATABASE_VERSION = 1
