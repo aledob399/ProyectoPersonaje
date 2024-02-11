@@ -401,7 +401,7 @@ class Personaje(
     }
 
     override fun toString(): String {
-        return "Personaje: Nombre: $nombre, Nivel: $nivel, Salud: $salud, Ataque: $ataque, Defensa: $defensa, Suerte: $suerte, Raza: $raza, Clase: $clase, Estado Vital: $estadoVital Mochila: $mochila"
+        return "Personaje: Nombre: $nombre, Nivel: $nivel, Salud: $salud, Ataque: $ataque, Defensa: $defensa, Suerte: $suerte, Raza: $raza, Clase: $clase, Estado Vital: $estadoVital Mochila: ${mochila.toString()}"
     }
 
     constructor(parcel: Parcel) : this(
@@ -551,6 +551,7 @@ class Mochila(private var pesoMochila: Int){
 
 class Articulo(private var tipoArticulo: TipoArticulo, private var nombre: Nombre, private var peso: Int,private var precio:Int,private var url:Int,private var unidades:Int) {
 
+
     enum class TipoArticulo { ARMA, OBJETO, PROTECCION,ORO }
     enum class Nombre { BASTON, ESPADA, DAGA, MARTILLO, GARRAS, POCION, IRA, ESCUDO, ARMADURA ,MONEDA}
 
@@ -616,31 +617,48 @@ class Articulo(private var tipoArticulo: TipoArticulo, private var nombre: Nombr
  *                                  entrada o -1 si no lo encuentra
  *
  **********************************************************************************************************************/
-class Mascota(private var nombre:String,private var atributo:tipoMascota) {
-    enum class tipoMascota { FUEGO,AGUA,PLANTA,LUZ,OSCURIDAD }
+
+
+class Mascota(
+    private var nombre:String?,
+    private var atributo: tipoMascota
+) : Parcelable {
+    enum class tipoMascota { FUEGO, AGUA, PLANTA, LUZ, OSCURIDAD }
+
     private var salud: Int = 0
     private var ataque: Int = 0
-    private var experiencia: Int
-    private var nivel: Int
-    private var potencial: Int
+    private var experiencia: Int = 0
+    private var nivel: Int = 1
+    private var potencial: Int = (1..20).random()
     private var defensa: Int = 0
+
+    constructor(parcel: Parcel) : this(
+        parcel.readString(),
+        tipoMascota.valueOf(parcel.readString() ?: "FUEGO")
+    ) {
+        salud = parcel.readInt()
+        ataque = parcel.readInt()
+        experiencia = parcel.readInt()
+        nivel = parcel.readInt()
+        potencial = parcel.readInt()
+        defensa = parcel.readInt()
+    }
 
     init {
         calcularSalud()
         calcularAtaque()
         calcularDefensa()
-        experiencia = 0
-        nivel = 1
-        potencial = (1..20).random()
     }
+
     fun subirNivel() {
-        if (nivel < 10) { // Limitar el nivel a 10
+        if (nivel < 10) {
             nivel++
-            calcularSalud() // Calcular el nuevo valor de salud al subir de nivel
-            calcularAtaque() // Calcular el nuevo valor de ataque al subir de nivel
+            calcularSalud()
+            calcularAtaque()
             calcularDefensa()
         }
     }
+
     private fun calcularSalud() {
         salud = when (nivel) {
             1 -> 100
@@ -653,7 +671,7 @@ class Mascota(private var nombre:String,private var atributo:tipoMascota) {
             8 -> 1250
             9 -> 1500
             10 -> 2000
-            else -> 100 // Valor por defecto si el nivel está fuera del rango especificado
+            else -> 100
         }
         salud *= potencial
     }
@@ -670,10 +688,11 @@ class Mascota(private var nombre:String,private var atributo:tipoMascota) {
             8 -> 350
             9 -> 400
             10 -> 450
-            else -> 10 // Valor por defecto si el nivel está fuera del rango especificado
+            else -> 10
         }
-        ataque*= potencial
+        ataque *= potencial
     }
+
     private fun calcularDefensa() {
         defensa = when (nivel) {
             1 -> 4
@@ -686,15 +705,91 @@ class Mascota(private var nombre:String,private var atributo:tipoMascota) {
             8 -> 199
             9 -> 349
             10 -> 399
-            else -> 4 // Valor por defecto si el nivel está fuera del rango especificado
+            else -> 4
         }
-        defensa*= potencial
+        defensa *= potencial
+    }
+
+    // Getters para las propiedades privadas
+    fun getNombre(): String? {
+        return nombre
+    }
+
+    fun getAtributo(): tipoMascota {
+        return atributo
+    }
+
+    fun getSalud(): Int {
+        return salud
+    }
+
+    fun getAtaque(): Int {
+        return ataque
+    }
+
+    fun getExperiencia(): Int {
+        return experiencia
+    }
+
+    fun getNivel(): Int {
+        return nivel
+    }
+
+    fun getPotencial(): Int {
+        return potencial
+    }
+
+    fun getDefensa(): Int {
+        return defensa
+    }
+
+    fun setNivel(newNivel: Int) {
+        nivel = newNivel
+        calcularSalud() // Recalcular la salud cuando se cambia el nivel
+        calcularAtaque() // Recalcular el ataque cuando se cambia el nivel
+        calcularDefensa() // Recalcular la defensa cuando se cambia el nivel
+    }
+
+    fun setPotencial(newPotencial: Int) {
+        potencial = newPotencial
+        calcularSalud() // Recalcular la salud cuando se cambia el potencial
+        calcularAtaque() // Recalcular el ataque cuando se cambia el potencial
+        calcularDefensa() // Recalcular la defensa cuando se cambia el potencial
+    }
+
+    fun setExperiencia(newExperiencia: Int) {
+        experiencia = newExperiencia
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(nombre)
+        parcel.writeString(atributo.name)
+        parcel.writeInt(salud)
+        parcel.writeInt(ataque)
+        parcel.writeInt(experiencia)
+        parcel.writeInt(nivel)
+        parcel.writeInt(potencial)
+        parcel.writeInt(defensa)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Mascota> {
+        override fun createFromParcel(parcel: Parcel): Mascota {
+            return Mascota(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Mascota?> {
+            return arrayOfNulls(size)
+        }
     }
 }
+
 class Mazmorra(
-    private var nombre: String,
     private var dificultad: Int,
-    condicion: TipoCondicion
+    private var condicion: TipoCondicion
 ) {
     enum class TipoCondicion { MENOSVIDA, MENOSATAQUE }
     enum class TipoMaldicion { VIDA, ATAQUE, DEFENSA, MASCOTA }
@@ -703,7 +798,11 @@ class Mazmorra(
     private var bendiciones: ArrayList<TipoBendicion> = ArrayList()
     private var maldiciones: ArrayList<TipoMaldicion> = ArrayList()
     private var enemigos: ArrayList<enemigo> = ArrayList()
-
+    init{
+        repeat((1..3).random()*dificultad){
+            enemigos.add(enemigo((1..10).random()))
+        }
+    }
     // Métodos para agregar maldiciones y bendiciones
     fun agregarMaldicion(maldicion: TipoMaldicion) {
         maldiciones.add(maldicion)
@@ -713,6 +812,18 @@ class Mazmorra(
         bendiciones.add(bendicion)
     }
 
+    // Getters
+
+    fun getDificultad(): Int {
+        return dificultad
+    }
+    fun getCondicion(): TipoCondicion {
+        return condicion
+    }
+
+    fun getEnemigos(): ArrayList<enemigo> {
+        return enemigos
+    }
 
     fun obtenerMaldiciones(): ArrayList<TipoMaldicion> {
         return maldiciones
@@ -722,6 +833,7 @@ class Mazmorra(
         return bendiciones
     }
 }
+
 
 class enemigo(private var nivel: Int,) {
     private var salud: Int = 0

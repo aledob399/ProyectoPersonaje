@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -21,6 +20,7 @@ class Mercader : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mercader)
         val personaje = intent.getParcelableExtra<Personaje>("personaje")
+        val mascotas = intent.getParcelableArrayListExtra<Mascota>("mascotas")
         val btnComerciar = findViewById<Button>(R.id.comerciar)
         val btnContinuar = findViewById<Button>(R.id.continuar)
         val btnComprar = findViewById<Button>(R.id.comprar)
@@ -137,6 +137,7 @@ class Mercader : AppCompatActivity() {
         btnContinuar.setOnClickListener {
             val intent = Intent(this, Aventura::class.java)
             intent.putExtra("personaje", personaje)
+            intent.putParcelableArrayListExtra("mascotas", mascotas)
             startActivity(intent)
         }
         btnComprar.setOnClickListener {

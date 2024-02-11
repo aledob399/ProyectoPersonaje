@@ -13,6 +13,7 @@ class PersonajeCreado : AppCompatActivity() {
 
     private lateinit var dbHelper: DatabaseHelper
     private var personaje: Personaje? = null
+    private var mascotas: ArrayList<Mascota>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,8 +28,11 @@ class PersonajeCreado : AppCompatActivity() {
         val modoRegistro = intent.getBooleanExtra("modoRegistro", false)
         if (modoRegistro) {
             personaje = guardarPersonajeEnBaseDeDatos(intent.getParcelableExtra("personaje"))
+
+
         } else {
             personaje = cargarPersonajeDesdeBaseDeDatos(intent.getParcelableExtra("personaje"))
+            mascotas= cargarMascotasDesdeBaseDeDatos()
         }
 
 
@@ -41,9 +45,14 @@ class PersonajeCreado : AppCompatActivity() {
         var img: ImageView = findViewById(R.id.img)
 
         // Guardar el personaje en la base de datos si es nuevo o si se reanuda la actividad
+        if(mascotas==null){
+            datos.text =personaje.toString()
+        }else{
+            datos.text =personaje.toString()+mascotas.toString()
+        }
 
 
-        datos.text =personaje.toString()
+
 
         val idImagen = intent.getIntExtra("img", 0)
         img.setImageResource(idImagen)
@@ -57,6 +66,8 @@ class PersonajeCreado : AppCompatActivity() {
         btnEmpezar.setOnClickListener {
             val intent = Intent(this, Aventura::class.java)
             intent.putExtra("personaje", personaje)
+            intent.putParcelableArrayListExtra("mascotas", mascotas)
+
             startActivity(intent)
         }
     }
@@ -89,6 +100,18 @@ class PersonajeCreado : AppCompatActivity() {
             null
         }
     }
+    private fun guardarMascotasEnBaseDeDatos(mascotas: ArrayList<Mascota>) {
+        dbHelper.insertarMascotas(mascotas)
+        Toast.makeText(this, "Mascotas guardadas correctamente", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun cargarMascotasDesdeBaseDeDatos(): ArrayList<Mascota> {
+        var mascotas = ArrayList<Mascota>()
+
+         mascotas=dbHelper.obtenerMascotas()
+        return mascotas
+    }
+
 
 
 }

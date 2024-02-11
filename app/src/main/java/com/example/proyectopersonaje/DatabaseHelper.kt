@@ -6,6 +6,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.widget.Toast
+
 import com.google.firebase.auth.FirebaseAuth
 
 
@@ -33,6 +34,32 @@ class DatabaseHelper(context: Context) :
         private const val COLUMN_ARTICULO_URL = "url"
         private const val COLUMN_ARTICULO_PRECIO = "precio"
         private const val COLUMN_ARTICULO_UNIDADES = "unidades"
+        private const val TABLE_MASCOTAS = "mascotas"
+        private const val COLUMN_ID_MASCOTA = "id_mascota"
+        private const val COLUMN_NOMBRE_MASCOTA = "nombre_mascota"
+        private const val COLUMN_ATRIBUTO_MASCOTA = "atributo_mascota"
+        private const val COLUMN_SALUD_MASCOTA = "salud_mascota"
+        private const val COLUMN_ATAQUE_MASCOTA = "ataque_mascota"
+        private const val COLUMN_EXPERIENCIA_MASCOTA = "experiencia_mascota"
+        private const val COLUMN_NIVEL_MASCOTA = "nivel_mascota"
+        private const val COLUMN_POTENCIAL_MASCOTA = "potencial_mascota"
+        private const val COLUMN_DEFENSA_MASCOTA = "defensa_mascota"
+        private const val COLUMN_ID_PERSONAJE_MASCOTA = "id_personaje_mascota"
+
+        private const val CREATE_TABLE_MASCOTAS =
+            "CREATE TABLE $TABLE_MASCOTAS (" +
+                    "$COLUMN_ID_MASCOTA INTEGER PRIMARY KEY," +
+                    "$COLUMN_ID_PERSONAJE_MASCOTA INTEGER," +
+                    "$COLUMN_NOMBRE_MASCOTA TEXT," +
+                    "$COLUMN_ATRIBUTO_MASCOTA TEXT," +
+                    "$COLUMN_SALUD_MASCOTA INTEGER," +
+                    "$COLUMN_ATAQUE_MASCOTA INTEGER," +
+                    "$COLUMN_EXPERIENCIA_MASCOTA INTEGER," +
+                    "$COLUMN_NIVEL_MASCOTA INTEGER," +
+                    "$COLUMN_POTENCIAL_MASCOTA INTEGER," +
+                    "$COLUMN_DEFENSA_MASCOTA INTEGER," +
+                    "FOREIGN KEY($COLUMN_ID_PERSONAJE_MASCOTA) REFERENCES $TABLE_PERSONAJE($COLUMN_ID))"
+
 
         private const val CREATE_TABLE_PERSONAJE =
             "CREATE TABLE $TABLE_PERSONAJE (" +
@@ -68,14 +95,72 @@ class DatabaseHelper(context: Context) :
         db.execSQL(CREATE_TABLE_PERSONAJE)
         db.execSQL(CREATE_TABLE_MOCHILA)
         db.execSQL(CREATE_TABLE_ARTICULOS)
+        db.execSQL(CREATE_TABLE_MASCOTAS)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS $TABLE_PERSONAJE")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_MOCHILA")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_ARTICULOS")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_MASCOTAS")
         onCreate(db)
     }
+    fun insertarMascotas(mascotas: ArrayList<Mascota>) {
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
+            // Eliminar todas las mascotas existentes
+            db.delete(TABLE_MASCOTAS, null, null)
+
+            // Insertar las nuevas mascotas
+            for (mascota in mascotas) {
+                val values = ContentValues().apply {
+                    put(COLUMN_ID_PERSONAJE_MASCOTA, 1)
+                    put(COLUMN_NOMBRE_MASCOTA, mascota.getNombre())
+                    put(COLUMN_ATRIBUTO_MASCOTA, mascota.getAtributo().name)
+                    put(COLUMN_SALUD_MASCOTA, mascota.getSalud())
+                    put(COLUMN_ATAQUE_MASCOTA, mascota.getAtaque())
+                    put(COLUMN_EXPERIENCIA_MASCOTA, mascota.getExperiencia())
+                    put(COLUMN_NIVEL_MASCOTA, mascota.getNivel())
+                    put(COLUMN_POTENCIAL_MASCOTA, mascota.getPotencial())
+                    put(COLUMN_DEFENSA_MASCOTA, mascota.getDefensa())
+                }
+                db.insert(TABLE_MASCOTAS, null, values)
+            }
+            db.setTransactionSuccessful()
+        } finally {
+            db.endTransaction()
+            db.close()
+        }
+    }
+
+
+    fun obtenerMascotas(): ArrayList<Mascota> {
+        val mascotas = ArrayList<Mascota>()
+        val db = readableDatabase
+        val query = "SELECT * FROM $TABLE_MASCOTAS WHERE $COLUMN_ID_PERSONAJE_MASCOTA = ? AND $COLUMN_ID_USUARIO_AUTH= ?"
+        val cursor = db.rawQuery(query, arrayOf("1",FirebaseAuth.getInstance().uid)) // Cambia "1" por el valor correcto del ID del personaje
+        cursor.use { cursor ->
+            while (cursor.moveToNext()) {
+                val nombre = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NOMBRE_MASCOTA))
+                val atributoString = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ATRIBUTO_MASCOTA))
+                val atributo = Mascota.tipoMascota.valueOf(atributoString)
+                val salud = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SALUD_MASCOTA))
+                val ataque = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ATAQUE_MASCOTA))
+                val experiencia = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_EXPERIENCIA_MASCOTA))
+                val nivel = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_NIVEL_MASCOTA))
+                val potencial = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_POTENCIAL_MASCOTA))
+                val defensa = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_DEFENSA_MASCOTA))
+                val mascota=Mascota(nombre, atributo)
+                mascota.setNivel(nivel)
+                mascota.setPotencial(potencial)
+                mascota.setExperiencia(experiencia)
+                mascotas.add(mascota)
+            }
+        }
+        return mascotas
+    }
+
 
     @SuppressLint("Range")
     fun obtenerPersonaje(idUsuarioAuth: String): Personaje? {
@@ -97,17 +182,28 @@ class DatabaseHelper(context: Context) :
             val claseFinal: Personaje.Clase = obtenerClaseEnum(clase)
 
             personaje = Personaje(nombre, razaFinal, claseFinal, estadoVitalFinal)
-            personaje.getMochila().setContenido(cargarMochila(db, cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_ID))))
+            /*
+            if(cargarMochila(1)==null){
+
+
+            }else {
+                cargarMochila(1)?.let { personaje.getMochila().setContenido(it) }
+            }
+
+             */
+
         }
 
         cursor.close()
         return personaje
     }
-    fun cargarMochila(db: SQLiteDatabase, idPersonaje: Long): ArrayList<Articulo> {
-        val mochila = Mochila(10)
+    fun cargarMochila(idPersonaje: Long): ArrayList<Articulo>? {
+        val db = this.readableDatabase
+        val mochila = ArrayList<Articulo>()
 
         val query = """
-        SELECT $COLUMN_ARTICULO_NOMBRE, $COLUMN_ARTICULO_TIPO, $COLUMN_ARTICULO_PESO, $COLUMN_ARTICULO_UNIDADES,$COLUMN_ARTICULO_PRECIO,$COLUMN_ARTICULO_URL
+        SELECT $COLUMN_ARTICULO_NOMBRE, $COLUMN_ARTICULO_TIPO, $COLUMN_ARTICULO_PESO,
+        $COLUMN_ARTICULO_UNIDADES, $COLUMN_ARTICULO_PRECIO, $COLUMN_ARTICULO_URL
         FROM $TABLE_MOCHILA 
         INNER JOIN $TABLE_ARTICULOS ON $TABLE_MOCHILA.$COLUMN_ID_ARTICULO = $TABLE_ARTICULOS.$COLUMN_ID 
         WHERE $COLUMN_ID_PERSONAJE = ?
@@ -115,21 +211,35 @@ class DatabaseHelper(context: Context) :
         val selectionArgs = arrayOf(idPersonaje.toString())
 
         db.rawQuery(query, selectionArgs).use { cursor ->
-            while (cursor.moveToNext()) {
-                val nombreArticulo = Articulo.Nombre.valueOf(cursor.getString(cursor.getColumnIndexOrThrow(
-                    COLUMN_ARTICULO_NOMBRE)))
-                val tipoArticulo = Articulo.TipoArticulo.valueOf(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ARTICULO_TIPO)))
-                val peso = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ARTICULO_PESO))
-                val unidades=cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ARTICULO_UNIDADES))
-                val url=cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ARTICULO_URL))
-                val precio=cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ARTICULO_PRECIO))
-                val articulo = Articulo( tipoArticulo,nombreArticulo,peso,precio,url,unidades)
-                mochila.addArticulo(articulo)
+            if (cursor.moveToFirst()) {
+                do {
+                    val nombreArticulo = obtenerNombreArticuloEnum(
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ARTICULO_NOMBRE))
+                    )
+                    val tipoArticulo = obtenerTipoArticuloEnum(
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ARTICULO_TIPO))
+                    )
+                    val peso = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ARTICULO_PESO))
+                    val unidades =
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ARTICULO_UNIDADES))
+                    val precio = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ARTICULO_PRECIO))
+                    val url = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ARTICULO_URL))
+
+                    val articulo =
+                        Articulo(tipoArticulo, nombreArticulo, peso, precio, url, unidades)
+                    mochila.add(articulo)
+                } while (cursor.moveToNext())
             }
         }
 
-        return mochila.getContenido()
+        if (mochila.isEmpty()) {
+            return Mochila(10).getContenido()
+        } else {
+            return Mochila(10).getContenido()
+        }
     }
+
+
 
     // Métodos auxiliares para convertir String a Enum
     private fun obtenerRazaEnum(raza: String): Personaje.Raza {
@@ -139,6 +249,30 @@ class DatabaseHelper(context: Context) :
             "Humano" -> Personaje.Raza.Humano
             "Maldito" -> Personaje.Raza.Maldito
             else -> Personaje.Raza.Maldito
+        }
+    }
+    private fun obtenerNombreArticuloEnum(nombre: String): Articulo.Nombre{
+        return when (nombre) {
+            "ARMADURA" -> Articulo.Nombre.ARMADURA
+            "BASTON" -> Articulo.Nombre.BASTON
+            "DAGA" -> Articulo.Nombre.DAGA
+            "ESCUDO" -> Articulo.Nombre.ESCUDO
+            "ESPADA" -> Articulo.Nombre.ESPADA
+            "GARRAS" -> Articulo.Nombre.GARRAS
+            "IRA" -> Articulo.Nombre.IRA
+            "MARTILLO" -> Articulo.Nombre.MARTILLO
+            "MONEDA" -> Articulo.Nombre.MONEDA
+            "POCION" -> Articulo.Nombre.POCION
+            else -> Articulo.Nombre.BASTON
+        }
+    }
+    private fun obtenerTipoArticuloEnum(tipo: String): Articulo.TipoArticulo{
+        return when (tipo) {
+            "ARMA" -> Articulo.TipoArticulo.ARMA
+            "OBJETO" -> Articulo.TipoArticulo.OBJETO
+            "ORO" -> Articulo.TipoArticulo.ORO
+            "PROTECCION" -> Articulo.TipoArticulo.PROTECCION
+            else ->  Articulo.TipoArticulo.PROTECCION
         }
     }
 
@@ -162,11 +296,18 @@ class DatabaseHelper(context: Context) :
 
     fun insertarPersonaje(personaje: Personaje) {
         val db = writableDatabase
-        var articulos=personaje.getMochila().getContenido()
+        val idUsuarioAuth = FirebaseAuth.getInstance().uid.toString()
+        val articulos = personaje.getMochila().getContenido()
+
+        // Begin transaction
         db.beginTransaction()
         try {
+            // Delete the character with ID 1
+            db.delete(TABLE_PERSONAJE, "$COLUMN_ID = ?", arrayOf("1"))
+
+            // Insert the new character
             val valuesPersonaje = ContentValues().apply {
-                put(COLUMN_ID_USUARIO_AUTH, FirebaseAuth.getInstance().uid.toString())
+                put(COLUMN_ID_USUARIO_AUTH, idUsuarioAuth)
                 put(COLUMN_NOMBRE, personaje.getNombre())
                 put(COLUMN_RAZA, personaje.getRaza().name)
                 put(COLUMN_CLASE, personaje.getClase().name)
@@ -174,6 +315,7 @@ class DatabaseHelper(context: Context) :
             }
             val idPersonaje = db.insert(TABLE_PERSONAJE, null, valuesPersonaje)
 
+            // Insert articles into the mochila
             for (articulo in articulos) {
                 val valuesArticulo = ContentValues().apply {
                     put(COLUMN_ARTICULO_NOMBRE, articulo.getNombre().name)
@@ -188,15 +330,46 @@ class DatabaseHelper(context: Context) :
                 }
                 db.insert(TABLE_MOCHILA, null, valuesMochila)
             }
+            // Transaction successful
             db.setTransactionSuccessful()
         } finally {
+            // End transaction
             db.endTransaction()
         }
+        // Close the database connection
         db.close()
+
     }
+
 
     fun actualizarPersonaje(personaje: Personaje) {
         val db = writableDatabase
+
+        // Eliminar registros antiguos de la mochila
+        db.delete(TABLE_MOCHILA, "$COLUMN_ID_PERSONAJE = ?", arrayOf("1")) // Cambia "1" por el valor correcto del ID del personaje
+
+        // Insertar nuevos registros de la mochila actualizada
+        val mochila = personaje.getMochila().getContenido()
+        for (articulo in mochila) {
+            val valuesArticulo = ContentValues().apply {
+                put(COLUMN_ARTICULO_NOMBRE, articulo.getNombre().name)
+                put(COLUMN_ARTICULO_TIPO, articulo.getTipoArticulo().name)
+                put(COLUMN_ARTICULO_PESO, articulo.getPeso())
+                put(COLUMN_ARTICULO_URL, articulo.getUrl())
+                put(COLUMN_ARTICULO_UNIDADES, articulo.getUnidades())
+                put(COLUMN_ARTICULO_PRECIO, articulo.getPrecio())
+
+            }
+            val idArticulo = db.insert(TABLE_ARTICULOS, null, valuesArticulo)
+
+            val valuesMochila = ContentValues().apply {
+                put(COLUMN_ID_PERSONAJE, 1) // Cambia "1" por el valor correcto del ID del personaje
+                put(COLUMN_ID_ARTICULO, idArticulo)
+            }
+            db.insert(TABLE_MOCHILA, null, valuesMochila)
+        }
+
+        // Actualizar datos del personaje
         val values = ContentValues().apply {
             put(COLUMN_NOMBRE, personaje.getNombre())
             put(COLUMN_RAZA, personaje.getRaza().name)
@@ -204,8 +377,11 @@ class DatabaseHelper(context: Context) :
             put(COLUMN_ESTADOVITAL, personaje.getEstadoVital().name)
         }
         db.update(TABLE_PERSONAJE, values, "$COLUMN_ID_USUARIO_AUTH = ?", arrayOf(FirebaseAuth.getInstance().uid.toString()))
+
         db.close()
     }
+
+
     fun contienePersonaje(): Boolean {
         val db = readableDatabase
         val query = "SELECT COUNT(*) FROM $TABLE_PERSONAJE"

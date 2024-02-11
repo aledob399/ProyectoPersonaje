@@ -1,98 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:background="#FEFEFE"
     tools:context=".Aventura">
 
-    <TextView
-        android:id="@+id/encabezado"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="66dp"
-        android:background="@color/black"
-        android:gravity="center_vertical"
-        android:paddingStart="50px"
-        android:paddingLeft="50px"
-        android:text="ViajeAI"
-        android:textColor="@color/white"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/btn_open"
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/tres_puntos"
-        android:gravity="end"
-        app:backgroundTint="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/imageView2"
-        app:layout_constraintTop_toBottomOf="@+id/encabezado"
-        app:layout_constraintVertical_bias="1.0"
-        tools:layout_editor_absoluteX="354dp"
-        tools:ignore="MissingConstraints" />
+        <TextView
+            android:id="@+id/encabezado"
+            android:layout_width="match_parent"
+            android:layout_height="66dp"
+            android:background="@color/black"
+            android:gravity="center_vertical"
+            android:paddingStart="50px"
+            android:paddingLeft="50px"
+            android:text="ViajeAI"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:textStyle="bold" />
 
-    <ImageButton
-        android:id="@+id/btn"
-        style="@android:style/Widget.DeviceDefault.ImageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="180dp"
-        android:layout_marginTop="344dp"
-        android:layout_marginEnd="175dp"
-        android:layout_marginBottom="211dp"
-        android:background="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.45"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/uno" />
+        <Button
+            android:id="@+id/btn_open"
+            android:layout_width="50dp"
+            android:layout_marginLeft="350dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/tres_puntos"
+            android:gravity="end"
+            app:backgroundTint="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/imageView2"
+            app:layout_constraintTop_toBottomOf="@+id/encabezado"
+            app:layout_constraintVertical_bias="1.0" />
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="79dp"
-        android:layout_marginTop="81dp"
-        android:layout_marginEnd="57dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/campo" />
+        <ImageButton
+            android:id="@+id/btn"
+            style="@android:style/Widget.DeviceDefault.ImageButton"
+            android:layout_width="168dp"
+            android:layout_height="139dp"
+            android:layout_marginStart="180dp"
+            android:layout_marginTop="344dp"
+            android:layout_marginEnd="175dp"
+            android:layout_marginBottom="211dp"
+            android:background="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.45"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/uno" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="79dp"
+            android:layout_marginTop="81dp"
+            android:layout_marginEnd="57dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/campo" />
+
+    </FrameLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationview"
         android:layout_width="277dp"
-        android:layout_height="662dp"
+        android:layout_height="match_parent"
         android:layout_gravity="end"
         app:headerLayout="@layout/header_layout"
-        app:itemTextColor="@android:color/system_accent1_1000"
-        app:menu="@menu/options"
-        tools:layout_editor_absoluteX="366dp"
-        tools:layout_editor_absoluteY="66dp"
-        tools:targetApi="s">
+        app:itemTextColor="@color/black"
+        app:menu="@menu/options" />
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="101dp"
-            android:background="@android:color/system_accent1_1000"
-            android:gravity="center_horizontal"
-            android:paddingTop="30dp"
-            android:text="Menu"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="25dp" />
-
-    </com.google.android.material.navigation.NavigationView>
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.drawerlayout.widget.DrawerLayout>

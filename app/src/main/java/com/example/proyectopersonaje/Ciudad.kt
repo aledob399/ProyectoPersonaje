@@ -15,14 +15,17 @@ class Ciudad : AppCompatActivity() {
         val btnEntrar=findViewById<Button>(R.id.entrar)
         val btnContinuar=findViewById<Button>(R.id.continuar)
         val personaje=intent.getParcelableExtra<Personaje>("personaje")
+        val mascotas = intent.getParcelableArrayListExtra<Mascota>("mascotas")
         btnEntrar.setOnClickListener {
             val intent= Intent(this,Aventura::class.java)
             intent.putExtra("personaje",personaje)
+            intent.putParcelableArrayListExtra("mascotas", mascotas)
             startActivity(intent)
         }
         btnContinuar.setOnClickListener {
             val intent= Intent(this,Aventura::class.java)
             intent.putExtra("personaje",personaje)
+            intent.putParcelableArrayListExtra("mascotas", mascotas)
             startActivity(intent)
         }
 

@@ -20,6 +20,7 @@ class Objeto : AppCompatActivity() {
         val btnRecoger = findViewById<Button>(R.id.recoger)
         val btnContinuar = findViewById<Button>(R.id.continuar)
         val personaje=intent.getParcelableExtra<Personaje>("personaje")
+        val mascotas = intent.getParcelableArrayListExtra<Mascota>("mascotas")
         val dbHelper = DatabaseHelperMercader(this)
         val objeto1=Articulo(Articulo.TipoArticulo.ARMA,Articulo.Nombre.DAGA,2,34,R.drawable.objeto,1)
         val objeto2=Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,3,24,R.drawable.objetodos,1)
@@ -63,6 +64,7 @@ class Objeto : AppCompatActivity() {
         btnContinuar.setOnClickListener {
             val intent=Intent(this,Aventura::class.java)
             intent.putExtra("personaje",personaje)
+            intent.putParcelableArrayListExtra("mascotas", mascotas)
             startActivity(intent)
         }
     }
