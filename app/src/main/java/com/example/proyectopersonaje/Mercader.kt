@@ -154,7 +154,21 @@ class Mercader : AppCompatActivity() {
 
                 cambiarImagenYMostrarPrecio(articuloActual!!)
                 unidadestextView.text="Unidades: ${dbHelper.getArticulos()[numRand].getUnidades()}"
+                val btnGacha=findViewById<Button>(R.id.gacha)
+                val btnContrato=findViewById<Button>(R.id.Contrato)
+                btnGacha.setOnClickListener {
+                    val intent=Intent(this,Gacha::class.java)
+                    intent.putExtra("personaje", personaje)
+                    intent.putParcelableArrayListExtra("mascotas", mascotas)
+                    startActivity(intent)
 
+                }
+                btnContrato.setOnClickListener {
+                    val intent=Intent(this,Contrato::class.java)
+                    intent.putExtra("personaje", personaje)
+                    intent.putParcelableArrayListExtra("mascotas", mascotas)
+                    startActivity(intent)
+                }
                 Toast.makeText(this, "Objeto comprado correctamente", Toast.LENGTH_SHORT)
                     .show()
             } else {

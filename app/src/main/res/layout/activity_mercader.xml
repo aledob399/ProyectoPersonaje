@@ -61,26 +61,53 @@
         style="@style/Widget.Material3.ExtendedFloatingActionButton.Icon.Surface"
         android:layout_width="126dp"
         android:layout_height="60dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginTop="220dp"
         android:layout_marginEnd="59dp"
         android:layout_marginBottom="116dp"
         android:text="Continuar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/comerciar" />
+        app:layout_constraintTop_toBottomOf="@+id/mercader" />
 
     <Button
         android:id="@+id/comerciar"
         style="@style/Widget.Material3.ExtendedFloatingActionButton.Icon.Surface"
         android:layout_width="125dp"
         android:layout_height="62dp"
-        android:layout_marginStart="81dp"
-        android:layout_marginEnd="130dp"
+        android:layout_marginTop="218dp"
+        android:layout_marginEnd="52dp"
         android:layout_marginBottom="116dp"
         android:text="Comerciar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/continuar"
+        app:layout_constraintTop_toBottomOf="@+id/mercader"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/gacha"
+        style="@style/Widget.Material3.ExtendedFloatingActionButton.Icon.Surface"
+        android:layout_width="201dp"
+        android:layout_height="64dp"
+        android:layout_marginEnd="9dp"
+        android:layout_marginBottom="2dp"
+        android:text="Gacha"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/Contrato"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/Contrato"
+        style="@style/Widget.Material3.ExtendedFloatingActionButton.Icon.Surface"
+        android:layout_width="202dp"
+        android:layout_height="63dp"
+        android:layout_marginStart="9dp"
+        android:layout_marginBottom="1dp"
+        android:text="Contrato"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/gacha" />
 
     <ImageView
         android:id="@+id/mercader"
