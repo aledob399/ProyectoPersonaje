@@ -14,103 +14,76 @@ class PersonajeCreado : AppCompatActivity() {
     private lateinit var dbHelper: DatabaseHelper
     private var personaje: Personaje? = null
     private var mascotas: ArrayList<Mascota>? = null
+    private lateinit var firebaseAuth:FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_personaje_creado)
+            super.onCreate(savedInstanceState)
+            setContentView(R.layout.activity_personaje_creado)
 
-        dbHelper = DatabaseHelper(this)
+
+        val datos: TextView = findViewById(R.id.datos)
+        val img: ImageView = findViewById(R.id.img)
 
         val btnVolver = findViewById<Button>(R.id.btnVolver)
-        val btnEmpezar = findViewById<Button>(R.id.btnEmpezar)
+            val btnEmpezar = findViewById<Button>(R.id.btnEmpezar)
+            dbHelper = DatabaseHelper(this)
 
+            val modoRegistro = intent.getBooleanExtra("modoRegistro", false)
+            if (modoRegistro) {
+                personaje = intent.getParcelableExtra<Personaje>("personaje")
+                dbHelper.insertarPersonaje(personaje!!, FirebaseAuth.getInstance().currentUser!!.uid.toString())
+                Toast.makeText(this, "Personaje insertado exitosamente", Toast.LENGTH_SHORT).show()
+            } else {
+                val idUsuarioAuth = FirebaseAuth.getInstance().currentUser!!.uid.toString()
+                try {
+                    personaje = dbHelper.getPersonaje(idUsuarioAuth!!)
+                    if (personaje == null) {
+                        // Manejar el caso en el que no se encuentra ningún personaje en la base de datos
+                        // Puedes mostrar un Toast indicando que no se encontró ningún personaje
+                        Toast.makeText(this, "No se encontró ningún personaje asociado a este usuario", Toast.LENGTH_SHORT).show()
+                        // Puedes decidir qué hacer en este caso, por ejemplo, redirigir al usuario a la pantalla de creación de personajes
+                    } else {
+                        // El personaje se encontró en la base de datos, continúa con el flujo normal
+                    }
+                } catch (e: Exception) {
+                    // Manejar la excepción
+                    e.printStackTrace()
+                    Toast.makeText(this, "Error al obtener el personaje: ${e.message}", Toast.LENGTH_SHORT).show()
+                    datos.text =e.message
 
-        val modoRegistro = intent.getBooleanExtra("modoRegistro", false)
-        if (modoRegistro) {
-            personaje = guardarPersonajeEnBaseDeDatos(intent.getParcelableExtra("personaje"))
-
-
-        } else {
-            personaje = cargarPersonajeDesdeBaseDeDatos(intent.getParcelableExtra("personaje"))
-            mascotas= cargarMascotasDesdeBaseDeDatos()
-        }
-
-
-
-
-
-
-
-        var datos: TextView = findViewById(R.id.datos)
-        var img: ImageView = findViewById(R.id.img)
-
-        // Guardar el personaje en la base de datos si es nuevo o si se reanuda la actividad
-        if(mascotas==null){
-            datos.text =personaje.toString()
-        }else{
-            datos.text =personaje.toString()+mascotas.toString()
-        }
-
-
-
-
-        val idImagen = intent.getIntExtra("img", 0)
-        img.setImageResource(idImagen)
-
-        btnVolver.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-        }
-
-        btnEmpezar.setOnClickListener {
-            val intent = Intent(this, Aventura::class.java)
-            intent.putExtra("personaje", personaje)
-            intent.putParcelableArrayListExtra("mascotas", mascotas)
-
-            startActivity(intent)
-        }
-    }
-
-
-
-    private fun guardarPersonajeEnBaseDeDatos(personaje: Personaje?): Personaje? {
-        val idUsuarioAuth = FirebaseAuth.getInstance().uid
-        var personajeGuardado: Personaje? = null
-
-        if (personaje != null) {
-            dbHelper.insertarPersonaje(personaje)
-            Toast.makeText(this, "Personaje guardado correctamente", Toast.LENGTH_SHORT).show()
-            personajeGuardado = personaje
-        } else {
-            idUsuarioAuth?.let {
-                personajeGuardado = dbHelper.obtenerPersonaje(it)
+                }
             }
-        }
 
-        return personajeGuardado
+
+
+
+            // Mostrar los datos del personaje y las mascotas
+
+                /*buildString {
+                append(personaje.toString())
+                mascotas?.let { append(it) }
+            }
+
+
+                 */
+            val idImagen = intent.getIntExtra("img", 0)
+            img.setImageResource(idImagen)
+
+            btnVolver.setOnClickListener {
+                val intent = Intent(this, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+            }
+
+            btnEmpezar.setOnClickListener {
+                val intent = Intent(this, Aventura::class.java)
+                intent.putExtra("personaje", personaje)
+                intent.putParcelableArrayListExtra("mascotas", mascotas)
+
+                startActivity(intent)
+            }
     }
-    private fun cargarPersonajeDesdeBaseDeDatos(personaje: Personaje?): Personaje? {
-        val idUsuarioAuth = FirebaseAuth.getInstance().uid
 
-        return if (personaje != null) {
-
-            dbHelper.obtenerPersonaje(idUsuarioAuth!!)
-        } else {
-            null
-        }
-    }
-    private fun guardarMascotasEnBaseDeDatos(mascotas: ArrayList<Mascota>) {
-        dbHelper.insertarMascotas(mascotas)
-        Toast.makeText(this, "Mascotas guardadas correctamente", Toast.LENGTH_SHORT).show()
-    }
-
-    private fun cargarMascotasDesdeBaseDeDatos(): ArrayList<Mascota> {
-        var mascotas = ArrayList<Mascota>()
-
-         mascotas=dbHelper.obtenerMascotas()
-        return mascotas
-    }
 
 
 

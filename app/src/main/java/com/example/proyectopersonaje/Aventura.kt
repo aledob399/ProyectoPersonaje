@@ -30,7 +30,7 @@ class Aventura : AppCompatActivity() {
         setContentView(R.layout.activity_aventura)
         val btn=findViewById<ImageButton>(R.id.btn)
         val personaje=intent.getParcelableExtra<Personaje>("personaje")
-        val mascotas = intent.getParcelableArrayListExtra<Mascota>("mascotas")
+       // val mascotas = intent.getParcelableArrayListExtra<Mascota>("mascotas")
         val db=DatabaseHelper(this)
         drawerLayout = findViewById(R.id.drawer_layout)
         navigationView = findViewById(R.id.navigationview)
@@ -58,7 +58,7 @@ class Aventura : AppCompatActivity() {
                         drawerLayout.closeDrawer(GravityCompat.END)
                         // Llamada para actualizar el personaje
                         if (personaje != null) {
-                            guardarMascotasEnBaseDeDatos(mascotas!!)
+                          //  guardarMascotasEnBaseDeDatos(mascotas!!)
                             guardarPersonajeEnBaseDeDatos(personaje)
 
                             Toast.makeText(this, "Personaje actualizado con éxito", Toast.LENGTH_SHORT).show()
@@ -97,7 +97,7 @@ class Aventura : AppCompatActivity() {
                     btn.setImageResource(R.drawable.uno)
                     val intent = Intent(this,Objeto::class.java)
                     intent.putExtra("personaje",personaje)
-                    intent.putParcelableArrayListExtra("mascotas", mascotas)
+                   // intent.putParcelableArrayListExtra("mascotas", mascotas)
 
                     startActivity(intent)
                 }
@@ -106,7 +106,7 @@ class Aventura : AppCompatActivity() {
                     btn.setImageResource(R.drawable.dos)
                     val intent = Intent(this,Ciudad::class.java)
                     intent.putExtra("personaje",personaje)
-                    intent.putParcelableArrayListExtra("mascotas", mascotas)
+                   // intent.putParcelableArrayListExtra("mascotas", mascotas)
 
                     startActivity(intent)
                 }
@@ -115,7 +115,7 @@ class Aventura : AppCompatActivity() {
                     btn.setImageResource(R.drawable.tres)
                     val intent = Intent(this,Mazmorras::class.java)
                     intent.putExtra("personaje",personaje)
-                    intent.putParcelableArrayListExtra("mascotas", mascotas)
+                   // intent.putParcelableArrayListExtra("mascotas", mascotas)
 
                     startActivity(intent)
                 }
@@ -124,7 +124,7 @@ class Aventura : AppCompatActivity() {
                     btn.setImageResource(R.drawable.cuatro)
                     val intent = Intent(this,Mercader::class.java)
                     intent.putExtra("personaje",personaje)
-                    intent.putParcelableArrayListExtra("mascotas", mascotas)
+                   // intent.putParcelableArrayListExtra("mascotas", mascotas)
 
                     startActivity(intent)
                 }
@@ -133,7 +133,7 @@ class Aventura : AppCompatActivity() {
                     btn.setImageResource(R.drawable.cinco)
                     val intent = Intent(this,Mascotas::class.java)
                     intent.putExtra("personaje",personaje)
-                    intent.putParcelableArrayListExtra("mascotas", mascotas)
+                   // intent.putParcelableArrayListExtra("mascotas", mascotas)
 
                     startActivity(intent)
                 }
@@ -142,27 +142,26 @@ class Aventura : AppCompatActivity() {
                     btn.setImageResource(R.drawable.seis)
                     val intent = Intent(this,Objeto::class.java)
                     intent.putExtra("personaje",personaje)
-                    intent.putParcelableArrayListExtra("mascotas", mascotas)
+                   // intent.putParcelableArrayListExtra("mascotas", mascotas)
                     startActivity(intent)
                 }
             }
         }
     }
-    private fun guardarPersonajeEnBaseDeDatos(personaje: Personaje?): Personaje? {
+    private fun guardarPersonajeEnBaseDeDatos(personaje: Personaje?) {
         val idUsuarioAuth = FirebaseAuth.getInstance().uid
         var personajeGuardado: Personaje? = null
 
         if (personaje != null) {
-            dbHelper.insertarPersonaje(personaje)
+            dbHelper.insertarPersonaje(personaje, idUsuarioAuth!!)
             Toast.makeText(this, "Personaje guardado correctamente", Toast.LENGTH_SHORT).show()
             personajeGuardado = personaje
         } else {
-            idUsuarioAuth?.let {
-                personajeGuardado = dbHelper.obtenerPersonaje(it)
-            }
+            Toast.makeText(this, "Personaje guardado correctamente", Toast.LENGTH_SHORT).show()
         }
 
-        return personajeGuardado
+
+
     }
     private fun guardarMascotasEnBaseDeDatos(mascotas: ArrayList<Mascota>): ArrayList<Mascota>? {
         val idUsuarioAuth = FirebaseAuth.getInstance().uid

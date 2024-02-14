@@ -71,19 +71,19 @@ class MainActivity : AppCompatActivity() {
 
                         // Obtener el personaje de la base de datos usando el ID de autenticación
                         val dbHelper = DatabaseHelper(this)
-                        val personaje = dbHelper.obtenerPersonaje(idUsuarioAuth.toString())
+
 
                         // Verificar si el personaje es null antes de intentar acceder a sus propiedades
-                        if (personaje != null) {
+
+
+
                             val intent = Intent(this, PersonajeCreado::class.java)
                             intent.putExtra("modoRegistro", false) // El usuario ya está registrado
-                            intent.putExtra("personaje", personaje)
+
                             startActivity(intent)
-                        } else {
-                            // Mostrar mensaje o realizar alguna acción en caso de que el personaje no se encuentre en la base de datos
-                            Toast.makeText(this,"Personaje no encontrado en la base de datos.",
-                                Toast.LENGTH_SHORT).show()
-                        }
+
+
+
                     } else {
                         showAlert()
                     }

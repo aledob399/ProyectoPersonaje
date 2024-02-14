@@ -84,6 +84,9 @@ class Personaje(
     fun getNivel(): Int {
         return nivel
     }
+    fun setNivel(nuevoNivel: Int) {
+        nivel = nuevoNivel
+    }
     fun subirNivel() {
         if (nivel < 10) { // Limitar el nivel a 10
             nivel++
