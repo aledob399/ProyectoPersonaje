@@ -23,25 +23,28 @@ class Aventura : AppCompatActivity() {
     private lateinit var navigationView: NavigationView
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var openDrawer: Button
-    private lateinit var dbHelper: DatabaseHelper
+    private lateinit var dbHelper: Database
     @SuppressLint("ResourceType", "WrongViewCast", "MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_aventura)
         val btn=findViewById<ImageButton>(R.id.btn)
         val personaje=intent.getParcelableExtra<Personaje>("personaje")
-       // val mascotas = intent.getParcelableArrayListExtra<Mascota>("mascotas")
-        val db=DatabaseHelper(this)
+        var mascotas = ArrayList<Mascota>()
+        if(intent.getParcelableArrayListExtra<Mascota>("mascotas")!=null){
+            mascotas = intent.getParcelableArrayListExtra<Mascota>("mascotas")!!
+        }
+
+        val db=Database(this)
         val idUsuarioAuth = FirebaseAuth.getInstance().currentUser!!.uid.toString()
         drawerLayout = findViewById(R.id.drawer_layout)
         navigationView = findViewById(R.id.navigationview)
         openDrawer = findViewById(R.id.btn_open)
         val objeto1 =
-            Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.DAGA, 2, 34, R.drawable.objeto,1)
-        if (personaje != null) {
-            personaje.getMochila().addArticulo(objeto1)
-        }
-        dbHelper = DatabaseHelper(this)
+            Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.MARTILLO, 2, 34, R.drawable.objeto,1)
+        val mascota=Mascota("Marco" , Mascota.tipoMascota.AGUA)
+        mascotas!!.add(mascota)
+        dbHelper = Database(this)
         val dado=Dado()
         var num2=0
         var num1=0
@@ -65,11 +68,15 @@ class Aventura : AppCompatActivity() {
                         // Llamada para actualizar el personaje
                         if (personaje != null) {
                           //  guardarMascotasEnBaseDeDatos(mascotas!!)
-                            personaje.setNivel(2)
+                            personaje.setNivel(3)
                             dbHelper.insertarPersonaje(personaje,idUsuarioAuth)
                             dbHelper.insertarArticulos(personaje.getMochila().getContenido(),idUsuarioAuth)
 
                             Toast.makeText(this, "Personaje actualizado con éxito", Toast.LENGTH_SHORT).show()
+                        }
+                        if (mascotas != null) {
+                            dbHelper.insertarMascotas(mascotas,idUsuarioAuth)
+                            Toast.makeText(this, "Mascotas actualizadas con éxito", Toast.LENGTH_SHORT).show()
                         }
                         return@setNavigationItemSelectedListener true
                     }
@@ -156,39 +163,8 @@ class Aventura : AppCompatActivity() {
             }
         }
     }
-    private fun guardarPersonajeEnBaseDeDatos(personaje: Personaje?) {
-        val idUsuarioAuth = FirebaseAuth.getInstance().uid
-        var personajeGuardado: Personaje? = null
-
-        if (personaje != null) {
-            dbHelper.insertarPersonaje(personaje, idUsuarioAuth!!)
-            Toast.makeText(this, "Personaje guardado correctamente", Toast.LENGTH_SHORT).show()
-            personajeGuardado = personaje
-        } else {
-            Toast.makeText(this, "Personaje guardado correctamente", Toast.LENGTH_SHORT).show()
-        }
 
 
-
-    }
-    private fun guardarMascotasEnBaseDeDatos(mascotas: ArrayList<Mascota>): ArrayList<Mascota>? {
-        val idUsuarioAuth = FirebaseAuth.getInstance().uid
-
-        if (mascotas.isNotEmpty()) {
-            dbHelper.insertarMascotas(mascotas)
-            Toast.makeText(this, "Mascotas guardadas correctamente", Toast.LENGTH_SHORT).show()
-        } else {
-            idUsuarioAuth?.let {
-                val mascotasGuardadas = dbHelper.obtenerMascotas()
-                // Asignar las mascotas de la base de datos a la lista de mascotas
-                mascotas.clear()
-                mascotas.addAll(mascotasGuardadas)
-                return mascotas
-            }
-        }
-
-        return mascotas
-    }
 
 
 

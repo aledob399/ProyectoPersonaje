@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         val signUpButton = findViewById<Button>(R.id.acceder)
         val analytics: FirebaseAnalytics = FirebaseAnalytics.getInstance(this)
         val bundle = Bundle()
+        dbHelper = DatabaseHelper(this)
         bundle.putString("mensaje", "Integracion de firebase completa")
         analytics.logEvent("InitScreep", bundle)
 
@@ -37,7 +38,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setup() {
-        var db = DatabaseHelper(this)
+        var db = Database(this)
         val signUpButton = findViewById<Button>(R.id.registrarse)
         val logInButton = findViewById<Button>(R.id.acceder)
         val emailEditText = findViewById<EditText>(R.id.email)
@@ -70,17 +71,19 @@ class MainActivity : AppCompatActivity() {
                         val idUsuarioAuth = FirebaseAuth.getInstance().uid
 
                         // Obtener el personaje de la base de datos usando el ID de autenticación
-                        val dbHelper = DatabaseHelper(this)
+                        val dbHelper = Database(this)
 
 
                         // Verificar si el personaje es null antes de intentar acceder a sus propiedades
+                        val personaje=dbHelper.obtenerPersonaje(FirebaseAuth.getInstance().currentUser!!.uid)
 
 
+                        val intent = Intent(this, PersonajeCreado::class.java)
 
-                            val intent = Intent(this, PersonajeCreado::class.java)
-                            intent.putExtra("modoRegistro", false) // El usuario ya está registrado
+                        intent.putExtra("modoRegistro", false)
+                        intent.putExtra("personaje",personaje)// El usuario ya está registrado
 
-                            startActivity(intent)
+                        startActivity(intent)
 
 
 

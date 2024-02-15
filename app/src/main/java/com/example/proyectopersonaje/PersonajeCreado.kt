@@ -12,7 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 
 class PersonajeCreado : AppCompatActivity() {
 
-    private lateinit var dbHelper: DatabaseHelper
+    private lateinit var dbHelper: Database
     private var personaje: Personaje? = null
     private var mascotas: ArrayList<Mascota>? = null
     private lateinit var firebaseAuth:FirebaseAuth
@@ -27,22 +27,26 @@ class PersonajeCreado : AppCompatActivity() {
         val img: ImageView = findViewById(R.id.img)
         val idUsuarioAuth = FirebaseAuth.getInstance().currentUser!!.uid.toString()
         val btnVolver = findViewById<Button>(R.id.btnVolver)
+        val objeto1 =
+            Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.DAGA, 2, 34, R.drawable.objeto,1)
             val btnEmpezar = findViewById<Button>(R.id.btnEmpezar)
-            dbHelper = DatabaseHelper(this)
-
+            dbHelper = Database(this)
+        personaje = intent.getParcelableExtra<Personaje>("personaje")
             val modoRegistro = intent.getBooleanExtra("modoRegistro", false)
             if (modoRegistro) {
 
-                personaje = intent.getParcelableExtra<Personaje>("personaje")
+
+               // personaje?.getMochila()?.addArticulo(objeto1)
                 dbHelper.insertarPersonaje(personaje!!, FirebaseAuth.getInstance().currentUser!!.uid.toString())
 
                 Toast.makeText(this, "Personaje insertado exitosamente", Toast.LENGTH_SHORT).show()
-                dbHelper.insertarArticulos(personaje!!.getMochila().getContenido(), idUsuarioAuth)
+                //dbHelper.insertarArticulos(personaje!!.getMochila().getContenido(), idUsuarioAuth)
             } else {
                 val idUsuarioAuth = FirebaseAuth.getInstance().currentUser!!.uid.toString()
                 try {
                     personaje = dbHelper.obtenerPersonaje(idUsuarioAuth!!)
                    personaje?.getMochila()?.setContenido(dbHelper.obtenerArticulos(idUsuarioAuth).getContenido())
+                    mascotas=dbHelper.obtenerMascotas(idUsuarioAuth!!)
                     if (personaje == null) {
 
                         Toast.makeText(this, "No se encontró ningún personaje asociado a este usuario", Toast.LENGTH_SHORT).show()
@@ -73,7 +77,7 @@ class PersonajeCreado : AppCompatActivity() {
 
                  */
             val personajeTxt=personaje.toString()
-            datos.text=(datos.text.toString()+ personajeTxt)
+            datos.text=(mascotas.toString()+datos.text.toString()+ personajeTxt)
             val idImagen = intent.getIntExtra("img", 0)
             img.setImageResource(idImagen)
 
@@ -86,7 +90,12 @@ class PersonajeCreado : AppCompatActivity() {
             btnEmpezar.setOnClickListener {
                 val intent = Intent(this, Aventura::class.java)
                 intent.putExtra("personaje", personaje)
-                intent.putParcelableArrayListExtra("mascotas", mascotas)
+                if(mascotas!=null){
+                    intent.putParcelableArrayListExtra("mascotas", mascotas)
+                }else{
+                    intent.putParcelableArrayListExtra("mascotas", null)
+                }
+
 
                 startActivity(intent)
             }

@@ -681,6 +681,9 @@ class Mascota(
         }
         salud *= potencial
     }
+    override fun toString(): String {
+        return "Mascota(nombre=$nombre, atributo=$atributo, salud=$salud, ataque=$ataque, experiencia=$experiencia, nivel=$nivel, potencial=$potencial, defensa=$defensa)"
+    }
 
     private fun calcularAtaque() {
         ataque = when (nivel) {
