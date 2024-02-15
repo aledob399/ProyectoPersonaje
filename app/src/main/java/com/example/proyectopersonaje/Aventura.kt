@@ -43,6 +43,7 @@ class Aventura : AppCompatActivity() {
         val objeto1 =
             Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.MARTILLO, 2, 34, R.drawable.objeto,1)
         val mascota=Mascota("Marco" , Mascota.tipoMascota.AGUA)
+        personaje!!.getMochila().addArticulo(objeto1)
         mascotas!!.add(mascota)
         dbHelper = Database(this)
         val dado=Dado()

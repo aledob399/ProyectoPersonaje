@@ -62,7 +62,7 @@ class PersonajeCreado : AppCompatActivity() {
 
                 }
             }
-            personaje!!.getMochila().addArticulo(Articulo(Articulo.TipoArticulo.ARMA,Articulo.Nombre.DAGA,2,3,R.drawable.moneda,1))
+
             var mochila=Mochila(100)
            // mochila.setContenido(dbHelper.obtenerArticulos(idUsuarioAuth))
 
@@ -77,7 +77,11 @@ class PersonajeCreado : AppCompatActivity() {
 
                  */
             val personajeTxt=personaje.toString()
-            datos.text=(mascotas.toString()+datos.text.toString()+ personajeTxt)
+            var txtMascota=""
+            repeat(mascotas!!.size){
+                txtMascota += mascotas!!.get(it)?.toString()
+            }
+            datos.text=(txtMascota +datos.text.toString()+ personajeTxt)
             val idImagen = intent.getIntExtra("img", 0)
             img.setImageResource(idImagen)
 
