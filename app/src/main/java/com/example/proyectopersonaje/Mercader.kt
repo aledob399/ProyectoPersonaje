@@ -264,11 +264,7 @@ class Mercader : AppCompatActivity() {
             private const val COLUMN_URL = "url"
             private const val COLUMN_PRECIO = "precio"
             private const val COLUMN_SALUD = "salud"
-            private const val COLUMN_ATAQUE = "ataque"
-            private const val COLUMN_EXPERIENCIA = "experiencia"
-            private const val COLUMN_NIVEL = "nivel"
-            private const val COLUMN_SUERTE = "suerte"
-            private const val COLUMN_DEFENSA = "defensa"
+
         }
 
         override fun onCreate(db: SQLiteDatabase) {
@@ -277,10 +273,7 @@ class Mercader : AppCompatActivity() {
                     "$COLUMN_PESO INTEGER,$COLUMN_URL INTEGER,$COLUMN_PRECIO INTEGER)"
             db.execSQL(createTableArticulos)
 
-            val createTablePersonaje = "CREATE TABLE $TABLA_PERSONAJE ($KEY_ID INTEGER PRIMARY KEY," +
-                    "$COLUMN_NOMBRE TEXT, $COLUMN_SALUD INTEGER, $COLUMN_ATAQUE INTEGER," +
-                    "$COLUMN_EXPERIENCIA INTEGER,$COLUMN_NIVEL INTEGER,$COLUMN_SUERTE INTEGER,$COLUMN_DEFENSA INTEGER)"
-            db.execSQL(createTablePersonaje)
+
 
             val createTableMochila = "CREATE TABLE $TABLA_MOCHILA ($KEY_ID INTEGER PRIMARY KEY," +
                     "$COLUMN_NOMBRE TEXT, $COLUMN_PESO INTEGER, $COLUMN_UNIDADES INTEGER)"

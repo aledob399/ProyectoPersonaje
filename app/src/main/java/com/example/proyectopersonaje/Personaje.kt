@@ -519,7 +519,10 @@ class Mochila(private var pesoMochila: Int){
         }
     }
     fun getContenido(): ArrayList<Articulo> {
-        return contenido
+        if(contenido.isEmpty()){
+            return ArrayList<Articulo>()
+        }else return contenido
+
     }
     fun findObjeto(nombre: Articulo.Nombre): Int {
         return contenido.indexOfFirst { it.getNombre() == nombre }

@@ -36,7 +36,7 @@ class PersonajeCreado : AppCompatActivity() {
             } else {
                 val idUsuarioAuth = FirebaseAuth.getInstance().currentUser!!.uid.toString()
                 try {
-                    personaje = dbHelper.getPersonaje(idUsuarioAuth!!)
+                    personaje = dbHelper.obtenerPersonaje(idUsuarioAuth!!)
                     if (personaje == null) {
                         // Manejar el caso en el que no se encuentra ningún personaje en la base de datos
                         // Puedes mostrar un Toast indicando que no se encontró ningún personaje
@@ -63,14 +63,15 @@ class PersonajeCreado : AppCompatActivity() {
                 append(personaje.toString())
                 mascotas?.let { append(it) }
             }
-
+            datos.text
 
                  */
+            datos.text=personaje.toString()
             val idImagen = intent.getIntExtra("img", 0)
             img.setImageResource(idImagen)
 
             btnVolver.setOnClickListener {
-                val intent = Intent(this, MainActivity::class.java)
+                val intent = Intent(this, CreacionPersonaje::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
             }
