@@ -76,6 +76,7 @@ class Aventura : AppCompatActivity() {
                             Toast.makeText(this, "Personaje actualizado con éxito", Toast.LENGTH_SHORT).show()
                         }
                         if (mascotas != null) {
+                            dbHelper.borrarMascotas(idUsuarioAuth)
                             dbHelper.insertarMascotas(mascotas,idUsuarioAuth)
                             Toast.makeText(this, "Mascotas actualizadas con éxito", Toast.LENGTH_SHORT).show()
                         }
@@ -113,7 +114,7 @@ class Aventura : AppCompatActivity() {
                     btn.setImageResource(R.drawable.uno)
                     val intent = Intent(this,Objeto::class.java)
                     intent.putExtra("personaje",personaje)
-                   // intent.putParcelableArrayListExtra("mascotas", mascotas)
+                    intent.putParcelableArrayListExtra("mascotas", mascotas)
 
                     startActivity(intent)
                 }
@@ -122,7 +123,7 @@ class Aventura : AppCompatActivity() {
                     btn.setImageResource(R.drawable.dos)
                     val intent = Intent(this,Ciudad::class.java)
                     intent.putExtra("personaje",personaje)
-                   // intent.putParcelableArrayListExtra("mascotas", mascotas)
+                    intent.putParcelableArrayListExtra("mascotas", mascotas)
 
                     startActivity(intent)
                 }
@@ -131,7 +132,7 @@ class Aventura : AppCompatActivity() {
                     btn.setImageResource(R.drawable.tres)
                     val intent = Intent(this,Mazmorras::class.java)
                     intent.putExtra("personaje",personaje)
-                   // intent.putParcelableArrayListExtra("mascotas", mascotas)
+                    intent.putParcelableArrayListExtra("mascotas", mascotas)
 
                     startActivity(intent)
                 }
@@ -140,7 +141,7 @@ class Aventura : AppCompatActivity() {
                     btn.setImageResource(R.drawable.cuatro)
                     val intent = Intent(this,Mercader::class.java)
                     intent.putExtra("personaje",personaje)
-                   // intent.putParcelableArrayListExtra("mascotas", mascotas)
+                    intent.putParcelableArrayListExtra("mascotas", mascotas)
 
                     startActivity(intent)
                 }
@@ -149,7 +150,7 @@ class Aventura : AppCompatActivity() {
                     btn.setImageResource(R.drawable.cinco)
                     val intent = Intent(this,Mascotas::class.java)
                     intent.putExtra("personaje",personaje)
-                   // intent.putParcelableArrayListExtra("mascotas", mascotas)
+                    intent.putParcelableArrayListExtra("mascotas", mascotas)
 
                     startActivity(intent)
                 }
@@ -158,7 +159,7 @@ class Aventura : AppCompatActivity() {
                     btn.setImageResource(R.drawable.seis)
                     val intent = Intent(this,Objeto::class.java)
                     intent.putExtra("personaje",personaje)
-                   // intent.putParcelableArrayListExtra("mascotas", mascotas)
+                    intent.putParcelableArrayListExtra("mascotas", mascotas)
                     startActivity(intent)
                 }
             }

@@ -25,6 +25,7 @@ class PersonajeCreado : AppCompatActivity() {
 
         val datos: TextView = findViewById(R.id.datos)
         val img: ImageView = findViewById(R.id.img)
+        var mascotas=intent.getParcelableArrayListExtra<Mascota>("mascotas")
         val idUsuarioAuth = FirebaseAuth.getInstance().currentUser!!.uid.toString()
         val btnVolver = findViewById<Button>(R.id.btnVolver)
         val objeto1 =
@@ -37,8 +38,9 @@ class PersonajeCreado : AppCompatActivity() {
 
 
                // personaje?.getMochila()?.addArticulo(objeto1)
+                mascotas!!.add(Mascota("Inicial",Mascota.tipoMascota.entries[(0..3).random()]))
                 dbHelper.insertarPersonaje(personaje!!, FirebaseAuth.getInstance().currentUser!!.uid.toString())
-
+                dbHelper.insertarMascotas(mascotas,idUsuarioAuth)
                 Toast.makeText(this, "Personaje insertado exitosamente", Toast.LENGTH_SHORT).show()
                 //dbHelper.insertarArticulos(personaje!!.getMochila().getContenido(), idUsuarioAuth)
             } else {
@@ -86,6 +88,7 @@ class PersonajeCreado : AppCompatActivity() {
             img.setImageResource(idImagen)
 
             btnVolver.setOnClickListener {
+                dbHelper.borrarMascotas(idUsuarioAuth)
                 val intent = Intent(this, CreacionPersonaje::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
