@@ -3,12 +3,14 @@ package com.example.proyectopersonaje
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import java.util.Locale
 
 class PersonajeCreado : AppCompatActivity() {
 
@@ -16,6 +18,7 @@ class PersonajeCreado : AppCompatActivity() {
     private var personaje: Personaje? = null
     private var mascotas: ArrayList<Mascota>? = null
     private lateinit var firebaseAuth:FirebaseAuth
+    private lateinit var textToSpeech:TextToSpeech
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,8 +34,17 @@ class PersonajeCreado : AppCompatActivity() {
         val objeto1 =
             Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.DAGA, 2, 34, R.drawable.objeto,1)
             val btnEmpezar = findViewById<Button>(R.id.btnEmpezar)
+        textToSpeech = TextToSpeech(this){status->
+            if (status == TextToSpeech.SUCCESS){
+                val result = textToSpeech.setLanguage(Locale.getDefault())
+                if (result == TextToSpeech.LANG_MISSING_DATA||result == TextToSpeech.LANG_NOT_SUPPORTED){
+                    Toast.makeText(this,"lenguaje no soportado",Toast.LENGTH_LONG).show()
+                }
+            }
+        }
             dbHelper = Database(this)
         personaje = intent.getParcelableExtra<Personaje>("personaje")
+
             val modoRegistro = intent.getBooleanExtra("modoRegistro", false)
             if (modoRegistro) {
 
@@ -84,9 +96,15 @@ class PersonajeCreado : AppCompatActivity() {
                 txtMascota += mascotas!!.get(it)?.toString()
             }
             datos.text=(txtMascota +datos.text.toString()+ personajeTxt)
+
             val idImagen = intent.getIntExtra("img", 0)
             img.setImageResource(idImagen)
-
+            textToSpeech.speak(
+            datos.text,
+            TextToSpeech.QUEUE_FLUSH,
+            null,
+            null
+        )
             btnVolver.setOnClickListener {
                 dbHelper.borrarMascotas(idUsuarioAuth)
                 val intent = Intent(this, CreacionPersonaje::class.java)

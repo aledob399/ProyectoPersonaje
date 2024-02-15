@@ -4,8 +4,10 @@ package com.example.proyectopersonaje
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Looper
+import android.speech.tts.TextToSpeech
 
 import android.util.Log
 import android.widget.Button
@@ -16,6 +18,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import java.util.Locale
 import java.util.logging.Handler
 
 
@@ -24,11 +27,14 @@ class Aventura : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var openDrawer: Button
     private lateinit var dbHelper: Database
+    private lateinit var textToSpeech:TextToSpeech
     @SuppressLint("ResourceType", "WrongViewCast", "MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_aventura)
         val btn=findViewById<ImageButton>(R.id.btn)
+        val musica: MediaPlayer = MediaPlayer.create(this, R.raw.musica)
+        val btnMusica: ImageButton = findViewById(R.id.btnMusica)
         val personaje=intent.getParcelableExtra<Personaje>("personaje")
         var mascotas = ArrayList<Mascota>()
         if(intent.getParcelableArrayListExtra<Mascota>("mascotas")!=null){
@@ -56,6 +62,30 @@ class Aventura : AppCompatActivity() {
         strings.add("R.drawable.cuatro")
         strings.add("R.drawable.cinco")
         strings.add("R.drawable.seis")
+        var pos=0
+        musica.isLooping = true
+        musica.start()
+        btnMusica.setOnClickListener {
+            if(musica.isPlaying){
+                pos = musica.currentPosition
+                musica.pause()
+                musica.isLooping = false
+                btnMusica.setImageResource(android.R.drawable.ic_media_pause)
+            }else{
+                btnMusica.setImageResource(android.R.drawable.ic_media_previous)
+                musica.seekTo(pos)
+                musica.start()
+                musica.isLooping = true
+            }
+        }
+        textToSpeech = TextToSpeech(this){status->
+            if (status == TextToSpeech.SUCCESS){
+                val result = textToSpeech.setLanguage(Locale.getDefault())
+                if (result == TextToSpeech.LANG_MISSING_DATA||result == TextToSpeech.LANG_NOT_SUPPORTED){
+                    Toast.makeText(this,"lenguaje no soportado",Toast.LENGTH_LONG).show()
+                }
+            }
+        }
         openDrawer.setOnClickListener {
             if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
                 drawerLayout.closeDrawer(GravityCompat.END)
