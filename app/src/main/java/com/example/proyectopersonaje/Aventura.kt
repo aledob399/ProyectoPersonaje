@@ -32,9 +32,15 @@ class Aventura : AppCompatActivity() {
         val personaje=intent.getParcelableExtra<Personaje>("personaje")
        // val mascotas = intent.getParcelableArrayListExtra<Mascota>("mascotas")
         val db=DatabaseHelper(this)
+        val idUsuarioAuth = FirebaseAuth.getInstance().currentUser!!.uid.toString()
         drawerLayout = findViewById(R.id.drawer_layout)
         navigationView = findViewById(R.id.navigationview)
         openDrawer = findViewById(R.id.btn_open)
+        val objeto1 =
+            Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.DAGA, 2, 34, R.drawable.objeto,1)
+        if (personaje != null) {
+            personaje.getMochila().addArticulo(objeto1)
+        }
         dbHelper = DatabaseHelper(this)
         val dado=Dado()
         var num2=0
@@ -59,7 +65,9 @@ class Aventura : AppCompatActivity() {
                         // Llamada para actualizar el personaje
                         if (personaje != null) {
                           //  guardarMascotasEnBaseDeDatos(mascotas!!)
-                            guardarPersonajeEnBaseDeDatos(personaje)
+                            personaje.setNivel(2)
+                            dbHelper.insertarPersonaje(personaje,idUsuarioAuth)
+                            dbHelper.insertarArticulos(personaje.getMochila().getContenido(),idUsuarioAuth)
 
                             Toast.makeText(this, "Personaje actualizado con éxito", Toast.LENGTH_SHORT).show()
                         }

@@ -1,5 +1,6 @@
 package com.example.proyectopersonaje
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -16,6 +17,7 @@ class PersonajeCreado : AppCompatActivity() {
     private var mascotas: ArrayList<Mascota>? = null
     private lateinit var firebaseAuth:FirebaseAuth
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_personaje_creado)
@@ -23,27 +25,30 @@ class PersonajeCreado : AppCompatActivity() {
 
         val datos: TextView = findViewById(R.id.datos)
         val img: ImageView = findViewById(R.id.img)
-
+        val idUsuarioAuth = FirebaseAuth.getInstance().currentUser!!.uid.toString()
         val btnVolver = findViewById<Button>(R.id.btnVolver)
             val btnEmpezar = findViewById<Button>(R.id.btnEmpezar)
             dbHelper = DatabaseHelper(this)
 
             val modoRegistro = intent.getBooleanExtra("modoRegistro", false)
             if (modoRegistro) {
+
                 personaje = intent.getParcelableExtra<Personaje>("personaje")
                 dbHelper.insertarPersonaje(personaje!!, FirebaseAuth.getInstance().currentUser!!.uid.toString())
+
                 Toast.makeText(this, "Personaje insertado exitosamente", Toast.LENGTH_SHORT).show()
+                dbHelper.insertarArticulos(personaje!!.getMochila().getContenido(), idUsuarioAuth)
             } else {
                 val idUsuarioAuth = FirebaseAuth.getInstance().currentUser!!.uid.toString()
                 try {
                     personaje = dbHelper.obtenerPersonaje(idUsuarioAuth!!)
+                   personaje?.getMochila()?.setContenido(dbHelper.obtenerArticulos(idUsuarioAuth).getContenido())
                     if (personaje == null) {
-                        // Manejar el caso en el que no se encuentra ningún personaje en la base de datos
-                        // Puedes mostrar un Toast indicando que no se encontró ningún personaje
+
                         Toast.makeText(this, "No se encontró ningún personaje asociado a este usuario", Toast.LENGTH_SHORT).show()
-                        // Puedes decidir qué hacer en este caso, por ejemplo, redirigir al usuario a la pantalla de creación de personajes
+
                     } else {
-                        // El personaje se encontró en la base de datos, continúa con el flujo normal
+
                     }
                 } catch (e: Exception) {
                     // Manejar la excepción
@@ -53,8 +58,9 @@ class PersonajeCreado : AppCompatActivity() {
 
                 }
             }
-
-
+            personaje!!.getMochila().addArticulo(Articulo(Articulo.TipoArticulo.ARMA,Articulo.Nombre.DAGA,2,3,R.drawable.moneda,1))
+            var mochila=Mochila(100)
+           // mochila.setContenido(dbHelper.obtenerArticulos(idUsuarioAuth))
 
 
             // Mostrar los datos del personaje y las mascotas
@@ -66,7 +72,8 @@ class PersonajeCreado : AppCompatActivity() {
             datos.text
 
                  */
-            datos.text=personaje.toString()
+            val personajeTxt=personaje.toString()
+            datos.text=(datos.text.toString()+ personajeTxt)
             val idImagen = intent.getIntExtra("img", 0)
             img.setImageResource(idImagen)
 

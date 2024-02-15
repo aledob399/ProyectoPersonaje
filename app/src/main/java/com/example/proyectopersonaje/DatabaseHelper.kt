@@ -5,6 +5,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import android.widget.Toast
 
 import com.google.firebase.auth.FirebaseAuth
@@ -36,7 +37,7 @@ class DatabaseHelper(context: Context) :
         private const val COLUMN_ID_PERSONAJE = "id_personaje"
         private const val COLUMN_ID_ARTICULO = "id_articulo"
         private const val COLUMN_ID_USUARIO_AUTH = "idUsuarioAuth"
-
+        private const val COLUMN_ID_USUARIO_AUTH_ARTICULOS = "idUsuarioAuthArticulos"
         private const val TABLE_MASCOTAS = "mascotas"
         private const val COLUMN_ID_MASCOTA = "id_mascota"
         private const val COLUMN_NOMBRE_MASCOTA = "nombre_mascota"
@@ -177,7 +178,7 @@ class DatabaseHelper(context: Context) :
         db.beginTransaction()
         try {
             // Delete the character with ID 1
-            db.delete(TABLE_PERSONAJE, "$COLUMN_ID = ?", arrayOf("1"))
+           // db.delete(TABLE_PERSONAJE, "$COLUMN_ID_USUARIO_AUTH = ?  ", arrayOf("$idUsuarioAuth"))
 
             // Insert the new character
             val valuesPersonaje = ContentValues().apply {
@@ -194,7 +195,7 @@ class DatabaseHelper(context: Context) :
 
             }
             val idPersonaje = db.insert(TABLE_PERSONAJE, null, valuesPersonaje)
-            insertarArticulos(personaje.getMochila().getContenido(),idUsuarioAuth)
+            //insertarArticulos(personaje.getMochila().getContenido(),idUsuarioAuth)
             /*
             // Insert articles into the mochila
             for (articulo in articulos) {
@@ -250,7 +251,7 @@ class DatabaseHelper(context: Context) :
             val claseFinal: Personaje.Clase = obtenerClaseEnum(clase)
 
             personaje = Personaje(nombre, razaFinal, claseFinal, estadoVitalFinal)
-            personaje.getMochila().setContenido(obtenerArticulos(idUsuarioAuth))
+          //  personaje.getMochila().setContenido(obtenerArticulos(idUsuarioAuth).getContenido())
 /*
             personaje.setExperiencia(experiencia)
             personaje.setSalud(salud)
@@ -274,21 +275,22 @@ class DatabaseHelper(context: Context) :
     }
     fun insertarArticulos(articulos: ArrayList<Articulo>, idUsuarioAuth: String) {
         val db = this.writableDatabase
+        articulos.add(Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.ESPADA, 2, 2, R.drawable.moneda, 1))
         db.beginTransaction()
-        if(articulos.isEmpty()){
-
-        }else{
+        if (articulos.isEmpty()) {
+            Log.d("DatabaseHelper", "No hay articulos para insertar")
+        } else {
             try {
                 for (articulo in articulos) {
                     val values = ContentValues().apply {
-                        put(COLUMN_ID_USUARIO_AUTH, idUsuarioAuth)
                         put(COLUMN_NOMBRE_ARTICULO, articulo.getNombre().name)
                         put(COLUMN_TIPO_ARTICULO, articulo.getTipoArticulo().name)
                         put(COLUMN_PESO, articulo.getPeso())
                         put(COLUMN_PRECIO, articulo.getPrecio())
                         put(COLUMN_URL, articulo.getUrl())
                     }
-                    db.insert(TABLE_ARTICULOS, null, values)
+                    val rowId = db.insert(TABLE_ARTICULOS, null, values)
+                    Log.d("DatabaseHelper", "Artículo insertado con ID: $rowId")
                 }
                 db.setTransactionSuccessful()
             } finally {
@@ -298,27 +300,40 @@ class DatabaseHelper(context: Context) :
         }
     }
 
-    fun obtenerArticulos(idUsuario: String): ArrayList<Articulo> {
+
+    fun obtenerArticulos(idUsuario: String): Mochila {
+        val mochila=Mochila(100)
         val articulos = ArrayList<Articulo>()
         val db = readableDatabase
-        val query = "SELECT * FROM $TABLE_ARTICULOS WHERE $COLUMN_ID_USUARIO_AUTH = ?"
-        val cursor = db.rawQuery(query, arrayOf(idUsuario))
 
-        cursor.use { cursor ->
-            while (cursor.moveToNext()) {
-                val nombreArticuloString = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NOMBRE_ARTICULO))
-                val tipoArticuloString = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TIPO_ARTICULO))
-                val nombreArticulo = obtenerNombreArticuloEnum(nombreArticuloString)
-                val tipoArticulo = obtenerTipoArticuloEnum(tipoArticuloString)
-                val peso = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PESO))
-                val precio = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PRECIO))
-                val unidades = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_UNIDADES))
-                val url = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_URL))
-                val articulo = Articulo( tipoArticulo,nombreArticulo, peso, precio, unidades, url)
-                articulos.add(articulo)
+        val query = "SELECT * FROM $TABLE_ARTICULOS  ORDER BY $COLUMN_ID"
+
+
+        val cursor = db.rawQuery(query, null)
+
+
+        if(cursor.moveToNext()){
+            cursor.use { cursor ->
+                while (cursor.moveToNext()) {
+                    val nombreArticuloString = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NOMBRE_ARTICULO))
+                    val tipoArticuloString = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TIPO_ARTICULO))
+                    val nombreArticulo = obtenerNombreArticuloEnum(nombreArticuloString)
+                    val tipoArticulo = obtenerTipoArticuloEnum(tipoArticuloString)
+                    val peso = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PESO))
+                    val precio = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PRECIO))
+                    val unidades = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_UNIDADES))
+                    val url = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_URL))
+                    val articulo = Articulo( tipoArticulo,nombreArticulo, peso, precio, unidades, url)
+                    mochila.addArticulo(articulo)
+
+                }
             }
+
         }
-        return articulos
+        if(mochila.getContenido().isEmpty()){
+            return Mochila(100)
+        }else return mochila
+
     }
 
 
