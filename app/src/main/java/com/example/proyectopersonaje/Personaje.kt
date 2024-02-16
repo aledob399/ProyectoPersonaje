@@ -960,7 +960,7 @@ class Mazmorra(
 
     private var bendiciones: ArrayList<TipoBendicion> = ArrayList()
     private var maldiciones: ArrayList<TipoMaldicion> = ArrayList()
-    private var enemigos: ArrayList<enemigo> = ArrayList()
+    private var enemigos: ArrayList<Enemigo> = ArrayList()
 
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
@@ -968,12 +968,12 @@ class Mazmorra(
     ) {
         parcel.readList(bendiciones, TipoBendicion::class.java.classLoader)
         parcel.readList(maldiciones, TipoMaldicion::class.java.classLoader)
-        parcel.readList(enemigos, enemigo::class.java.classLoader)
+        parcel.readList(enemigos, Enemigo::class.java.classLoader)
     }
 
     init{
         repeat((1..3).random()*dificultad){
-            enemigos.add(enemigo((1..10).random()))
+            enemigos.add(Enemigo((1..10).random()))
         }
     }
 
@@ -993,7 +993,7 @@ class Mazmorra(
         return condicion
     }
 
-    fun getEnemigos(): ArrayList<enemigo> {
+    fun getEnemigos(): ArrayList<Enemigo> {
         return enemigos
     }
 
@@ -1031,7 +1031,7 @@ class Mazmorra(
 
 
 
-class enemigo(private var nivel: Int) : Parcelable {
+class Enemigo(private var nivel: Int) : Parcelable {
     private var salud: Int = 0
     private var ataque: Int = 0
     private var defensa: Int = 0
@@ -1149,12 +1149,12 @@ class enemigo(private var nivel: Int) : Parcelable {
         return 0
     }
 
-    companion object CREATOR : Parcelable.Creator<enemigo> {
-        override fun createFromParcel(parcel: Parcel): enemigo {
-            return enemigo(parcel)
+    companion object CREATOR : Parcelable.Creator<Enemigo> {
+        override fun createFromParcel(parcel: Parcel): Enemigo {
+            return Enemigo(parcel)
         }
 
-        override fun newArray(size: Int): Array<enemigo?> {
+        override fun newArray(size: Int): Array<Enemigo?> {
             return arrayOfNulls(size)
         }
     }
