@@ -32,7 +32,7 @@ class PersonajeCreado : AppCompatActivity() {
         val idUsuarioAuth = FirebaseAuth.getInstance().currentUser!!.uid.toString()
         val btnVolver = findViewById<Button>(R.id.btnVolver)
         val objeto1 =
-            Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.DAGA, 2, 34, R.drawable.objeto,1,30,Articulo.Rareza.COMUN)
+            Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.DAGA, 2, 34, R.drawable.objeto,1,Articulo.Rareza.COMUN)
             val btnEmpezar = findViewById<Button>(R.id.btnEmpezar)
         textToSpeech = TextToSpeech(this){status->
             if (status == TextToSpeech.SUCCESS){
@@ -48,19 +48,25 @@ class PersonajeCreado : AppCompatActivity() {
             val modoRegistro = intent.getBooleanExtra("modoRegistro", false)
             if (modoRegistro) {
 
-
+                dbHelper.borrarArticulos(idUsuarioAuth)
+                dbHelper.borrarArticulos(idUsuarioAuth)
+                dbHelper.borrarMascotas(idUsuarioAuth)
                // personaje?.getMochila()?.addArticulo(objeto1)
                 mascotas!!.add(Mascota("Inicial",Mascota.tipoMascota.entries[(0..3).random()]))
                 do{
-                    val magia=Magia(Magia.TipoMagia.entries[(0..3).random()],Magia.Nombre.entries[(0..12).random()],20)
+                    val magia=Magia(Magia.TipoMagia.entries[(0..3).random()],Magia.Nombre.entries[(0..11).random()],20)
                     personaje!!.getLibro().aprenderMagia(magia)
                 }while (personaje!!.getLibro().getContenido().isEmpty())
-
+                Toast.makeText(this, personaje!!.getLibro().getContenido().toString(), Toast.LENGTH_SHORT).show()
                 dbHelper.insertarPersonaje(personaje!!, FirebaseAuth.getInstance().currentUser!!.uid.toString())
                 dbHelper.insertarMascotas(mascotas,idUsuarioAuth)
                 dbHelper.insertarMagias(personaje!!.getLibro().getContenido(),idUsuarioAuth)
+                val objeto1 =
+                    Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.MARTILLO, 2, 34, R.drawable.objeto,1,Articulo.Rareza.COMUN)
+
+                personaje!!.getMochila().addArticulo(objeto1)
                 Toast.makeText(this, "Personaje insertado exitosamente", Toast.LENGTH_SHORT).show()
-                //dbHelper.insertarArticulos(personaje!!.getMochila().getContenido(), idUsuarioAuth)
+                dbHelper.insertarArticulos(personaje!!.getMochila().getContenido(), idUsuarioAuth)
             } else {
                 val idUsuarioAuth = FirebaseAuth.getInstance().currentUser!!.uid.toString()
                 try {

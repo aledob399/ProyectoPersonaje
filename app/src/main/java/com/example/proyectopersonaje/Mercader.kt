@@ -36,59 +36,59 @@ class Mercader : AppCompatActivity() {
         val dbHelper = Objeto.DatabaseHelperMercader(this)
         
         val objeto1 =
-            Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.DAGA, 2, 34, R.drawable.objeto,1)
+            Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.DAGA, 2, 34, R.drawable.objeto,1,Articulo.Rareza.COMUN)
         val objeto2 =
-            Articulo(Articulo.TipoArticulo.ORO, Articulo.Nombre.MONEDA, 3, 15, R.drawable.moneda,1)
+            Articulo(Articulo.TipoArticulo.ORO, Articulo.Nombre.MONEDA, 3, 15, R.drawable.moneda,1,Articulo.Rareza.COMUN)
         val objeto3 = Articulo(
             Articulo.TipoArticulo.PROTECCION,
             Articulo.Nombre.ARMADURA,
             2,
             34,
-            R.drawable.objetotres,6
+            R.drawable.objetotres,6,Articulo.Rareza.COMUN
         )
         val objeto4 = Articulo(
             Articulo.TipoArticulo.ARMA,
             Articulo.Nombre.BASTON,
             5,
             42,
-            R.drawable.objetocinco,5
+            R.drawable.objetocinco,5,Articulo.Rareza.COMUN
         )
         val objeto5 = Articulo(
             Articulo.TipoArticulo.ARMA,
             Articulo.Nombre.GARRAS,
             7,
             74,
-            R.drawable.objetocuatro,3
+            R.drawable.objetocuatro,3,Articulo.Rareza.COMUN
         )
         val objeto6 =
-            Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.DAGA, 9, 94, R.drawable.objetoseis,1)
+            Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.DAGA, 9, 94, R.drawable.objetoseis,1,Articulo.Rareza.COMUN)
         val objeto7 = Articulo(
             Articulo.TipoArticulo.OBJETO,
             Articulo.Nombre.IRA,
             1,
             32,
-            R.drawable.objetosiete,3
+            R.drawable.objetosiete,3,Articulo.Rareza.COMUN
         )
         val objeto8 = Articulo(
             Articulo.TipoArticulo.PROTECCION,
             Articulo.Nombre.ESCUDO,
             3,
             36,
-            R.drawable.objetoocho,4
+            R.drawable.objetoocho,4,Articulo.Rareza.COMUN
         )
         val objeto9 = Articulo(
             Articulo.TipoArticulo.ARMA,
             Articulo.Nombre.MARTILLO,
             2,
             83,
-            R.drawable.objetodos,1
+            R.drawable.objetodos,1,Articulo.Rareza.COMUN
         )
         val objeto10 = Articulo(
             Articulo.TipoArticulo.ARMA,
             Articulo.Nombre.GARRAS,
             4,
             34,
-            R.drawable.objetotres,10
+            R.drawable.objetotres,10,Articulo.Rareza.COMUN
         )
 
         personaje?.getMochila()?.addArticulo(objeto1)
@@ -114,7 +114,7 @@ class Mercader : AppCompatActivity() {
         var numRand = (1..max).random()
 
         mochilaDb.setContenido(dbHelper.getArticulos())
-        var moneda=Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,0,15,R.drawable.moneda,1)
+        var moneda=Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,0,15,R.drawable.moneda,1,Articulo.Rareza.COMUN)
         personaje!!.getMochila().addArticulo(moneda)
         personaje!!.getMochila().addArticulo(moneda)
         personaje!!.getMochila().addArticulo(moneda)
@@ -379,7 +379,7 @@ class Mercader : AppCompatActivity() {
                     val url = cursor.getInt(cursor.getColumnIndex(COLUMN_URL))
                     val unidades = cursor.getInt(cursor.getColumnIndex(COLUMN_UNIDADES))
 
-                    articulos.add(Articulo(tipoArticulo, nom, peso, precio, url, unidades))
+                    articulos.add(Articulo(tipoArticulo, nom, peso, precio, url, unidades,Articulo.Rareza.COMUN))
 
                 } while (cursor.moveToNext())
             }

@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EnemigosMazmorra">
+
+    <TextView
+        android:id="@+id/encabezado"
+        android:layout_width="match_parent"
+        android:layout_height="66dp"
+        android:background="@color/black"
+        android:gravity="center_vertical"
+        android:paddingStart="50px"
+        android:paddingLeft="50px"
+        android:text="Aventura"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/ataqueArma"
+        android:layout_width="106dp"
+        android:layout_height="58dp"
+        android:layout_marginStart="154dp"
+        android:layout_marginTop="592dp"
+        android:layout_marginEnd="152dp"
+        android:text="Ataque"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/huir"
+        android:layout_width="106dp"
+        android:layout_height="58dp"
+        android:layout_marginTop="664dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="9dp"
+        android:text="Huir"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/ataqueLibro"
+        android:layout_width="106dp"
+        android:layout_height="58dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="12dp"
+        android:text="Magia"
+        app:layout_constraintBottom_toTopOf="@+id/huir"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ataqueArma" />
+
+    <Button
+        android:id="@+id/ataqueMascota"
+        android:layout_width="106dp"
+        android:layout_height="58dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="8dp"
+        android:text="Mascota"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/huir"
+        app:layout_constraintTop_toBottomOf="@+id/ataqueArma" />
+
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="166dp"
+        android:layout_height="161dp"
+        android:layout_marginStart="89dp"
+        android:layout_marginTop="84dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.593"
+        app:layout_constraintStart_toEndOf="@+id/versus"
+        app:layout_constraintTop_toBottomOf="@+id/encabezado"
+        app:srcCompat="@drawable/campo" />
+
+    <ImageView
+        android:id="@+id/imageView8"
+        android:layout_width="166dp"
+        android:layout_height="161dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="240dp"
+        android:layout_marginEnd="225dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/versus"
+        app:srcCompat="@drawable/campo" />
+
+    <ProgressBar
+        android:id="@+id/barraVidaEnemigo"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="196dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="188dp"
+        android:max="100"
+        android:progress="100"
+        android:progressTint="#15E82A"
+        app:layout_constraintBottom_toTopOf="@+id/imageView8"
+        app:layout_constraintEnd_toStartOf="@+id/imageView7"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/versus"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ProgressBar
+        android:id="@+id/barraVidaPersonaje"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="196dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="206dp"
+        android:layout_marginEnd="19dp"
+        android:max="100"
+        android:progress="100"
+        android:progressTint="#15E82A"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageView8"
+        app:layout_constraintTop_toBottomOf="@+id/imageView7" />
+
+    <ProgressBar
+        android:id="@+id/barraVidaMascota"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="114dp"
+        android:layout_height="16dp"
+        android:layout_marginTop="161dp"
+        android:layout_marginEnd="7dp"
+        android:layout_marginBottom="29dp"
+        android:max="100"
+        android:progress="100"
+        android:progressTint="#15E82A"
+        app:layout_constraintBottom_toTopOf="@+id/barraVidaPersonaje"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView7" />
+
+    <ImageView
+        android:id="@+id/versus"
+        android:layout_width="92dp"
+        android:layout_height="76dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="303dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/encabezado"
+        app:srcCompat="@drawable/cinco" />
+
+    <TextView
+        android:id="@+id/vidaEnemigo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="113dp"
+        android:layout_marginEnd="20dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/barraVidaEnemigo"
+        app:layout_constraintEnd_toStartOf="@+id/imageView7"
+        app:layout_constraintTop_toBottomOf="@+id/encabezado"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/vidaPersonaje"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="147dp"
+        android:layout_marginBottom="51dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/ataqueArma"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/imageView8" />
+
+    <TextView
+        android:id="@+id/vidaMascota"
+        android:layout_width="68dp"
+        android:layout_height="13dp"
+        android:layout_marginTop="161dp"
+        android:text="TextView"
+        android:textSize="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/barraVidaMascota"
+        app:layout_constraintStart_toEndOf="@+id/mascota"
+        app:layout_constraintTop_toBottomOf="@+id/imageView7"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/mascota"
+        android:layout_width="89dp"
+        android:layout_height="91dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="93dp"
+        android:layout_marginBottom="22dp"
+        app:layout_constraintBottom_toTopOf="@+id/barraVidaPersonaje"
+        app:layout_constraintStart_toEndOf="@+id/imageView8"
+        app:layout_constraintTop_toBottomOf="@+id/imageView7"
+        app:srcCompat="@drawable/mascota_fuego" />
+
+    <ImageView
+        android:id="@+id/ataqueAPersonaje"
+        android:layout_width="81dp"
+        android:layout_height="69dp"
+        android:layout_marginStart="43dp"
+        android:layout_marginTop="232dp"
+        android:layout_marginEnd="270dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/barraVidaEnemigo"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <ImageView
+        android:id="@+id/ataqueAEnemigo"
+        android:layout_width="81dp"
+        android:layout_height="69dp"
+        android:layout_marginStart="74dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="200dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/barraVidaMascota"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.825"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <ImageView
+        android:id="@+id/ataqueAMascota"
+        android:layout_width="69dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="32dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/barraVidaPersonaje"
+        app:layout_constraintEnd_toStartOf="@+id/vidaMascota"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/imageView8"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/dañoAEnemigo"
+        android:layout_width="89dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="264dp"
+        android:layout_marginTop="136dp"
+        android:layout_marginEnd="58dp"
+        android:text=" "
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/encabezado" />
+
+    <TextView
+        android:id="@+id/dañoAPersonaje"
+        android:layout_width="89dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="360dp"
+        android:layout_marginEnd="215dp"
+        android:text=" "
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/encabezado" />
+
+    <TextView
+        android:id="@+id/dañoAMascota"
+        android:layout_width="89dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="220dp"
+        android:layout_marginTop="356dp"
+        android:layout_marginEnd="32dp"
+        android:text=" "
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/encabezado" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,7 +15,7 @@ class Database(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
         companion object {
-            private const val DATABASE_VERSION = 6
+            private const val DATABASE_VERSION = 7
             private const val DATABASE_NAME = "personajes.db"
             private const val TABLE_PERSONAJE = "personaje"
             private const val TABLE_MOCHILA = "mochila"
@@ -385,7 +385,8 @@ class Database(context: Context) :
                        val precio = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PRECIO))
                        val unidades = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_UNIDADES))
                         val url = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_URL))
-                        val articulo = Articulo( tipoArticulo,nombreArticulo, peso, precio,url,unidades,durabilidad,rareza)
+                        val articulo = Articulo( tipoArticulo,nombreArticulo, peso, precio,url,unidades,rareza)
+                        articulo.setDurabilidad(durabilidad)
                         mochila.addArticulo(articulo)
 
                     }
@@ -397,6 +398,43 @@ class Database(context: Context) :
             }else return mochila
 
         }
+    fun borrarMagias(idUsuario: String) {
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
+            // Eliminar las magias asociadas al usuario
+            db.delete(TABLE_MAGIAS, "$COLUMN_ID_USUARIO_AUTH = ?", arrayOf(idUsuario))
+            // Marcar la transacción como exitosa
+            db.setTransactionSuccessful()
+            Log.d("DatabaseHelper", "Magias eliminadas para el usuario con ID: $idUsuario")
+        } catch (e: Exception) {
+            Log.e("DatabaseHelper", "Error al borrar magias del usuario con ID: $idUsuario", e)
+        } finally {
+            // Finalizar la transacción
+            db.endTransaction()
+            // Cerrar la conexión a la base de datos
+            db.close()
+        }
+    }
+    fun borrarArticulos(idUsuario: String) {
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
+            // Eliminar las magias asociadas al usuario
+            db.delete(TABLE_ARTICULOS, "$COLUMN_ID_USUARIO_AUTH = ?", arrayOf(idUsuario))
+            // Marcar la transacción como exitosa
+            db.setTransactionSuccessful()
+            Log.d("DatabaseHelper", "Articulos eliminados para el usuario con ID: $idUsuario")
+        } catch (e: Exception) {
+            Log.e("DatabaseHelper", "Error al borrar articulos del usuario con ID: $idUsuario", e)
+        } finally {
+            // Finalizar la transacción
+            db.endTransaction()
+            // Cerrar la conexión a la base de datos
+            db.close()
+        }
+    }
+
     fun insertarMagias(magias: ArrayList<Magia>, idUsuario: String) {
         val db = writableDatabase
         db.beginTransaction()
@@ -408,8 +446,8 @@ class Database(context: Context) :
                     put(COLUMN_MANA, magia.getMana())
                     put(COLUMN_ID_USUARIO_AUTH, idUsuario)
                 }
-                db.insert(TABLE_MAGIAS, null, values)
-                Log.e("DatabaseHelper", "MagiaInsertada")
+                val rowId=db.insert(TABLE_MAGIAS, null, values)
+                Log.d("DatabaseHelper", "Magia insertada insertado con ID: $rowId")
             }
             db.setTransactionSuccessful()
         } catch (e: Exception) {

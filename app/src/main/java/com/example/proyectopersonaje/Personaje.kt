@@ -479,7 +479,7 @@ class Personaje(
         return monedas
     }
     fun restarMonedas(articuloComprar:Articulo){
-        var moneda=Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,0,15,R.drawable.moneda,1,1,Articulo.Rareza.COMUN)
+        var moneda=Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,0,15,R.drawable.moneda,1,Articulo.Rareza.COMUN)
         var monedasGastar=articuloComprar.getPrecio()
         var monedas=misMonedas()
 
@@ -494,7 +494,7 @@ class Personaje(
             monedas -= 15
         }
         if(monedas>0){
-            getMochila().addArticulo(Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,0,monedas,R.drawable.moneda,1,1,Articulo.Rareza.COMUN))
+            getMochila().addArticulo(Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,0,monedas,R.drawable.moneda,1,Articulo.Rareza.COMUN))
         }
 
 
@@ -670,14 +670,23 @@ class Articulo(
     private var precio: Int,
     private var url: Int,
     private var unidades: Int,
-    private var durabilidad: Int,
+
     private var rareza: Rareza
 ) {
 
     enum class TipoArticulo { ARMA, OBJETO, PROTECCION, ORO }
     enum class Nombre { BASTON, ESPADA, DAGA, MARTILLO, GARRAS, POCION, IRA, ESCUDO, ARMADURA, MONEDA }
     enum class Rareza { COMUN, RARO, EPICO, LEGENDARIO }
-
+    private var durabilidad: Int = 0
+    init {
+        durabilidad=when(rareza){
+            Articulo.Rareza.COMUN->50
+            Articulo.Rareza.RARO->100
+            Articulo.Rareza.EPICO->150
+            Articulo.Rareza.LEGENDARIO->200
+            else -> 501
+        }
+    }
     fun getPeso(): Int {
         return peso
     }
@@ -939,10 +948,12 @@ class Mascota(
     }
 }
 
+
+
 class Mazmorra(
     private var dificultad: Int,
     private var condicion: TipoCondicion
-) {
+) : Parcelable {
     enum class TipoCondicion { MENOSVIDA, MENOSATAQUE }
     enum class TipoMaldicion { VIDA, ATAQUE, DEFENSA, MASCOTA }
     enum class TipoBendicion { VIDA, ATAQUE, DEFENSA, ATAQUEDOBLE }
@@ -950,12 +961,22 @@ class Mazmorra(
     private var bendiciones: ArrayList<TipoBendicion> = ArrayList()
     private var maldiciones: ArrayList<TipoMaldicion> = ArrayList()
     private var enemigos: ArrayList<enemigo> = ArrayList()
+
+    constructor(parcel: Parcel) : this(
+        parcel.readInt(),
+        parcel.readSerializable() as TipoCondicion
+    ) {
+        parcel.readList(bendiciones, TipoBendicion::class.java.classLoader)
+        parcel.readList(maldiciones, TipoMaldicion::class.java.classLoader)
+        parcel.readList(enemigos, enemigo::class.java.classLoader)
+    }
+
     init{
         repeat((1..3).random()*dificultad){
             enemigos.add(enemigo((1..10).random()))
         }
     }
-    // Métodos para agregar maldiciones y bendiciones
+
     fun agregarMaldicion(maldicion: TipoMaldicion) {
         maldiciones.add(maldicion)
     }
@@ -964,11 +985,10 @@ class Mazmorra(
         bendiciones.add(bendicion)
     }
 
-    // Getters
-
     fun getDificultad(): Int {
         return dificultad
     }
+
     fun getCondicion(): TipoCondicion {
         return condicion
     }
@@ -984,25 +1004,53 @@ class Mazmorra(
     fun obtenerBendiciones(): ArrayList<TipoBendicion> {
         return bendiciones
     }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(dificultad)
+        parcel.writeSerializable(condicion)
+        parcel.writeList(bendiciones)
+        parcel.writeList(maldiciones)
+        parcel.writeList(enemigos)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Mazmorra> {
+        override fun createFromParcel(parcel: Parcel): Mazmorra {
+            return Mazmorra(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Mazmorra?> {
+            return arrayOfNulls(size)
+        }
+    }
 }
 
 
-class enemigo(private var nivel: Int,) {
+
+
+class enemigo(private var nivel: Int) : Parcelable {
     private var salud: Int = 0
     private var ataque: Int = 0
     private var defensa: Int = 0
-    private var potencial: Int= 0
+    private var potencial: Int = 0
 
+    constructor(parcel: Parcel) : this(parcel.readInt()) {
+        salud = parcel.readInt()
+        ataque = parcel.readInt()
+        defensa = parcel.readInt()
+        potencial = parcel.readInt()
+    }
 
     init {
+        potencial = (1..10).random()
         calcularSalud()
         calcularAtaque()
         calcularDefensa()
-        nivel = this.nivel
-        potencial = (1..10).random()
-
-
     }
+
     private fun calcularSalud() {
         salud = when (nivel) {
             1 -> 10
@@ -1015,7 +1063,7 @@ class enemigo(private var nivel: Int,) {
             8 -> 125
             9 -> 150
             10 -> 200
-            else -> 10 // Valor por defecto si el nivel está fuera del rango especificado
+            else -> 10
         }
         salud *= potencial
     }
@@ -1032,10 +1080,11 @@ class enemigo(private var nivel: Int,) {
             8 -> 35
             9 -> 40
             10 -> 450
-            else -> 10 // Valor por defecto si el nivel está fuera del rango especificado
+            else -> 10
         }
-        ataque*= potencial
+        ataque *= potencial
     }
+
     private fun calcularDefensa() {
         defensa = when (nivel) {
             1 -> 4
@@ -1048,11 +1097,12 @@ class enemigo(private var nivel: Int,) {
             8 -> 199
             9 -> 349
             10 -> 399
-            else -> 4 // Valor por defecto si el nivel está fuera del rango especificado
+            else -> 4
         }
-        defensa*= potencial
+        defensa *= potencial
     }
-    // Getters
+
+    // Getters y Setters
     fun getNivel(): Int {
         return nivel
     }
@@ -1073,7 +1123,6 @@ class enemigo(private var nivel: Int,) {
         return potencial
     }
 
-    // Setters
     fun setNivel(nuevoNivel: Int) {
         nivel = nuevoNivel
         calcularSalud()
@@ -1087,7 +1136,30 @@ class enemigo(private var nivel: Int,) {
         calcularAtaque()
         calcularDefensa()
     }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(nivel)
+        parcel.writeInt(salud)
+        parcel.writeInt(ataque)
+        parcel.writeInt(defensa)
+        parcel.writeInt(potencial)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<enemigo> {
+        override fun createFromParcel(parcel: Parcel): enemigo {
+            return enemigo(parcel)
+        }
+
+        override fun newArray(size: Int): Array<enemigo?> {
+            return arrayOfNulls(size)
+        }
+    }
 }
+
 
 
 class Magia(private val tipoMagia: TipoMagia, private val nombre: Nombre, private val mana: Int) {
