@@ -32,12 +32,14 @@ class Database(context: Context) :
             private const val COLUMN_NOMBRE_ARTICULO = "nombre"
             private const val COLUMN_PESO = "peso"
             private const val COLUMN_UNIDADES = "unidades"
+            private const val COLUMN_DURABILIDAD = "durabilidad"
+            private const val COLUMN_RAREZA = "rareza"
             private const val COLUMN_URL = "url"
             private const val COLUMN_PRECIO = "precio"
             private const val COLUMN_ID_PERSONAJE = "id_personaje"
             private const val COLUMN_ID_ARTICULO = "id_articulo"
             private const val COLUMN_ID_USUARIO_AUTH = "idUsuarioAuth"
-            private const val COLUMN_ID_USUARIO_AUTH_ARTICULOS = "idUsuarioAuthArticulos"
+
             private const val TABLE_MASCOTAS = "mascotas"
             private const val COLUMN_ID_MASCOTA = "id_mascota"
             private const val COLUMN_NOMBRE_MASCOTA = "nombre_mascota"
@@ -48,7 +50,13 @@ class Database(context: Context) :
             private const val COLUMN_NIVEL_MASCOTA = "nivel_mascota"
             private const val COLUMN_POTENCIAL_MASCOTA = "potencial_mascota"
             private const val COLUMN_DEFENSA_MASCOTA = "defensa_mascota"
-            private const val COLUMN_ID_PERSONAJE_MASCOTA = "id_personaje_mascota"
+
+            private const val TABLE_MAGIAS = "magias"
+            private const val COLUMN_ID_MAGIA = "_id"
+            private const val COLUMN_NOMBRE_MAGIA = "nombre"
+            private const val COLUMN_TIPO_MAGIA = "tipo"
+            private const val COLUMN_MANA = "mana"
+
 
             private const val CREATE_TABLE_MASCOTAS =
                 "CREATE TABLE $TABLE_MASCOTAS (" +
@@ -75,7 +83,8 @@ class Database(context: Context) :
                         "$COLUMN_EXPERIENCIA INTEGER," +
                         "$COLUMN_RAZA TEXT," +
                         "$COLUMN_CLASE TEXT," +
-                        "$COLUMN_ESTADOVITAL TEXT)"
+                        "$COLUMN_ESTADOVITAL TEXT,"+
+                        "$COLUMN_MANA INTEGER)"
 
 
             private const val CREATE_TABLE_MOCHILA =
@@ -96,7 +105,17 @@ class Database(context: Context) :
                         "$COLUMN_PESO INTEGER,"+
                         "$COLUMN_PRECIO INTEGER,"+
                         "$COLUMN_UNIDADES INTEGER,"+
+                        "$COLUMN_DURABILIDAD INTEGER,"+
+                        "$COLUMN_RAREZA TEXT,"+
                         "$COLUMN_URL INT)"
+
+            private const val CREATE_TABLE_MAGIAS =
+                "CREATE TABLE $TABLE_MAGIAS (" +
+                        "$COLUMN_ID_MAGIA INTEGER PRIMARY KEY," +
+                        "$COLUMN_NOMBRE_MAGIA TEXT," +
+                        "$COLUMN_TIPO_MAGIA TEXT," +
+                        "$COLUMN_MANA INTEGER," +
+                        "$COLUMN_ID_USUARIO_AUTH TEXT)"
         }
 
         override fun onCreate(db: SQLiteDatabase) {
@@ -104,6 +123,7 @@ class Database(context: Context) :
             db.execSQL(CREATE_TABLE_MOCHILA)
             db.execSQL(CREATE_TABLE_ARTICULOS)
             db.execSQL(CREATE_TABLE_MASCOTAS)
+            db.execSQL(CREATE_TABLE_MAGIAS)
         }
 
         override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -111,6 +131,8 @@ class Database(context: Context) :
             db.execSQL("DROP TABLE IF EXISTS $TABLE_MOCHILA")
             db.execSQL("DROP TABLE IF EXISTS $TABLE_ARTICULOS")
             db.execSQL("DROP TABLE IF EXISTS $TABLE_MASCOTAS")
+            db.execSQL("DROP TABLE IF EXISTS $TABLE_MAGIAS")
+
             onCreate(db)
         }
         fun insertarMascotas(mascotas: ArrayList<Mascota>, idUsuarioAuth: String) {
@@ -222,6 +244,7 @@ class Database(context: Context) :
                     put(COLUMN_NIVEL,personaje.getNivel())
                     put(COLUMN_SALUD,personaje.getSalud())
                     put(COLUMN_EXPERIENCIA,personaje.getExperiencia())
+                    put(COLUMN_MANA,personaje.getMana())
 
                 }
                 val idPersonaje = db.insert(TABLE_PERSONAJE, null, valuesPersonaje)
@@ -274,6 +297,7 @@ class Database(context: Context) :
                 val nivel=cursor.getInt(cursor.getColumnIndex(COLUMN_NIVEL))
                 val salud=cursor.getInt(cursor.getColumnIndex(COLUMN_SALUD))
                 val experiencia=cursor.getInt(cursor.getColumnIndex(COLUMN_EXPERIENCIA))
+                val mana=cursor.getInt(cursor.getColumnIndex(COLUMN_MANA))
 
 
                 val razaFinal: Personaje.Raza = obtenerRazaEnum(raza)
@@ -282,9 +306,10 @@ class Database(context: Context) :
 
                 personaje = Personaje(nombre, razaFinal, claseFinal, estadoVitalFinal)
                 //  personaje.getMochila().setContenido(obtenerArticulos(idUsuarioAuth).getContenido())
-                            personaje.setExperiencia(experiencia)
-                            personaje.setSalud(salud)
-                            personaje.setNivel(nivel)
+                personaje.setExperiencia(experiencia)
+                personaje.setSalud(salud)
+                personaje.setNivel(nivel)
+                personaje.setMana(mana)
 
 
                 /*
@@ -314,6 +339,8 @@ class Database(context: Context) :
                         val values = ContentValues().apply {
                             put(COLUMN_NOMBRE_ARTICULO, articulo.getNombre().name)
                             put(COLUMN_TIPO_ARTICULO, articulo.getTipoArticulo().name)
+                            put(COLUMN_RAREZA, articulo.getRareza().name)
+                            put(COLUMN_DURABILIDAD, articulo.getDurabilidad())
                             put(COLUMN_ID_USUARIO_AUTH, idUsuarioAuth)
                             put(COLUMN_PESO, articulo.getPeso())
                             put(COLUMN_PRECIO, articulo.getPrecio())
@@ -347,14 +374,18 @@ class Database(context: Context) :
                 cursor.use { cursor ->
                     while (cursor.moveToNext()) {
                         val nombreArticuloString = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NOMBRE_ARTICULO))
+                        val rarezaString = cursor.getString(cursor.getColumnIndexOrThrow(
+                            COLUMN_RAREZA))
                         val tipoArticuloString = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TIPO_ARTICULO))
                         val nombreArticulo = obtenerNombreArticuloEnum(nombreArticuloString)
                         val tipoArticulo = obtenerTipoArticuloEnum(tipoArticuloString)
+                        val rareza = obtenerRareza(rarezaString)
+                        val durabilidad = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_DURABILIDAD))
                         val peso = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PESO))
                        val precio = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PRECIO))
                        val unidades = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_UNIDADES))
                         val url = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_URL))
-                        val articulo = Articulo( tipoArticulo,nombreArticulo, peso, 2/*precio*/, 1/*unidades*/, url)
+                        val articulo = Articulo( tipoArticulo,nombreArticulo, peso, precio,url,unidades,durabilidad,rareza)
                         mochila.addArticulo(articulo)
 
                     }
@@ -366,12 +397,86 @@ class Database(context: Context) :
             }else return mochila
 
         }
+    fun insertarMagias(magias: ArrayList<Magia>, idUsuario: String) {
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
+            for (magia in magias) {
+                val values = ContentValues().apply {
+                    put(COLUMN_NOMBRE_MAGIA, magia.getNombre().name)
+                    put(COLUMN_TIPO_MAGIA, magia.getTipoMagia().name)
+                    put(COLUMN_MANA, magia.getMana())
+                    put(COLUMN_ID_USUARIO_AUTH, idUsuario)
+                }
+                db.insert(TABLE_MAGIAS, null, values)
+                Log.e("DatabaseHelper", "MagiaInsertada")
+            }
+            db.setTransactionSuccessful()
+        } catch (e: Exception) {
+            Log.e("DatabaseHelper", "Error al insertar magias", e)
+        } finally {
+            db.endTransaction()
+            db.close()
+        }
+    }
+
+    fun obtenerMagias(idUsuario: String): ArrayList<Magia> {
+        val magias = ArrayList<Magia>()
+        val db = readableDatabase
+        val query = "SELECT * FROM $TABLE_MAGIAS WHERE $COLUMN_ID_USUARIO_AUTH = ?"
+        val cursor = db.rawQuery(query, arrayOf(idUsuario))
+
+        cursor.use { cursor ->
+            while (cursor.moveToNext()) {
+                val nombre = obtenerNombreMagiaEnum( cursor.getString(cursor.getColumnIndexOrThrow(
+                    COLUMN_NOMBRE_MAGIA)))
+                val tipo = obtenerTipoMagiaEnum(cursor.getString(cursor.getColumnIndexOrThrow(
+                    COLUMN_TIPO_MAGIA)))
+                val mana = cursor.getInt(cursor.getColumnIndexOrThrow(
+                    COLUMN_MANA))
+
+                magias.add(Magia( tipo,nombre,mana))
+            }
+        }
+
+        db.close()
+        return magias
+    }
 
 
 
 
-        // Métodos auxiliares para convertir String a Enum
-        private fun obtenerRazaEnum(raza: String): Personaje.Raza {
+
+
+    private fun obtenerTipoMagiaEnum(tipo: String): Magia.TipoMagia {
+        return when (tipo) {
+            "AIRE" -> Magia.TipoMagia.AIRE
+            "FUEGO" -> Magia.TipoMagia.FUEGO
+            "TIERRA" -> Magia.TipoMagia.TIERRA
+            "BLANCA" -> Magia.TipoMagia.BLANCA
+            else -> Magia.TipoMagia.AIRE // Valor por defecto, puedes cambiarlo según tu lógica
+        }
+    }
+
+    private fun obtenerNombreMagiaEnum(nombre: String): Magia.Nombre {
+        return when (nombre) {
+            "TORNADO" -> Magia.Nombre.TORNADO
+            "VENDAVAL" -> Magia.Nombre.VENDAVAL
+            "HURACAN" -> Magia.Nombre.HURACAN
+            "ALIENTO" -> Magia.Nombre.ALIENTO
+            "DESCARGA" -> Magia.Nombre.DESCARGA
+            "PROPULSION" -> Magia.Nombre.PROPULSION
+            "FATUO" -> Magia.Nombre.FATUO
+            "MURO" -> Magia.Nombre.MURO
+            "TEMBLOR" -> Magia.Nombre.TEMBLOR
+            "TERREMOTO" -> Magia.Nombre.TERREMOTO
+            "SANAR" -> Magia.Nombre.SANAR
+            "CURAR" -> Magia.Nombre.CURAR
+            else -> Magia.Nombre.TORNADO // Valor por defecto, puedes cambiarlo según tu lógica
+        }
+    }
+
+    private fun obtenerRazaEnum(raza: String): Personaje.Raza {
             return when (raza) {
                 "Elfo" -> Personaje.Raza.Elfo
                 "Enano" -> Personaje.Raza.Enano
@@ -404,6 +509,15 @@ class Database(context: Context) :
                 else ->  Articulo.TipoArticulo.PROTECCION
             }
         }
+    private fun obtenerRareza(rareza: String): Articulo.Rareza{
+        return when (rareza) {
+            "COMUN" -> Articulo.Rareza.COMUN
+            "RARO" -> Articulo.Rareza.RARO
+            "EPICO" -> Articulo.Rareza.EPICO
+            "LEGENDARIO" -> Articulo.Rareza.LEGENDARIO
+            else ->  Articulo.Rareza.COMUN
+        }
+    }
 
         private fun obtenerEstadoVitalEnum(estadoVital: String): Personaje.EstadoVital {
             return when (estadoVital) {
@@ -428,15 +542,7 @@ class Database(context: Context) :
 
 
 
-        fun contienePersonaje(): Boolean {
-            val db = readableDatabase
-            val query = "SELECT COUNT(*) FROM $TABLE_PERSONAJE"
-            val cursor = db.rawQuery(query, null)
-            cursor.moveToFirst()
-            val count = cursor.getInt(0)
-            cursor.close()
-            return count > 0
-        }
+
 
 
 

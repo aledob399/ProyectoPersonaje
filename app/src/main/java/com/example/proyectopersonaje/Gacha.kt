@@ -30,7 +30,7 @@ class Gacha : AppCompatActivity() {
             nombres.add("Julian")
             nombres.add("Fran")
             nombres.add("Eisier")
-
+/*
             when(num){
                 1->{
                     var recompensa: Mascota? =null
@@ -57,13 +57,13 @@ class Gacha : AppCompatActivity() {
                     recompensa =  Mascota(nombres[(0..4).random()], Mascota.tipoMascota.entries[(0..4).random()])
                 }
 
-
+*/
 
             }
 
         }
 
 
-    }
+
 
 }

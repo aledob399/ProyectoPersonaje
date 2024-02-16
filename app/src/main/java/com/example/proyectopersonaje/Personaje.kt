@@ -15,6 +15,8 @@ class Personaje(
     private var nivel: Int
     private var suerte: Int
     private var defensa: Int = 0
+    private val libro: Libro = Libro(4, 4, 4, 4) // 4 páginas de cada tipo de magia
+    private var mana: Int = 0
 
     // Enumeración para el tipo de raza y clase
     enum class Raza { Humano, Elfo, Enano, Maldito }
@@ -32,6 +34,7 @@ class Personaje(
         calcularSalud()
         calcularAtaque()
         calcularDefensa()
+        calcularMana()
         experiencia = 0
         nivel = 1
         suerte = (0..10).random() // Asigna un valor de suerte aleatorio entre 0 y 10
@@ -87,12 +90,23 @@ class Personaje(
     fun setNivel(nuevoNivel: Int) {
         nivel = nuevoNivel
     }
+    fun getMana(): Int {
+        return mana
+    }
+
+    fun setMana(nuevoMana: Int) {
+        mana = nuevoMana
+    }
+    fun setM(nuevoMana: Int) {
+        mana = nuevoMana
+    }
     fun subirNivel() {
         if (nivel < 10) { // Limitar el nivel a 10
             nivel++
             calcularSalud() // Calcular el nuevo valor de salud al subir de nivel
             calcularAtaque() // Calcular el nuevo valor de ataque al subir de nivel
             calcularDefensa()
+            calcularMana()
         }
     }
     private fun calcularSalud() {
@@ -141,6 +155,99 @@ class Personaje(
             else -> 4 // Valor por defecto si el nivel está fuera del rango especificado
         }
     }
+    private fun calcularMana() {
+        mana = when (nivel) {
+            1 -> 50
+            2 -> 100
+            3 -> 130
+            4 -> 150
+            5 -> 180
+            6 -> 200
+            7 -> 220
+            8 -> 250
+            9 -> 280
+            10 -> 300
+            else -> 50 // Valor por defecto si el nivel está fuera del rango especificado
+        }
+    }
+    private fun calcularSaludMaxima(): Int {
+        return when (nivel) {
+            1 -> 100
+            2 -> 200
+            3 -> 300
+            4 -> 450
+            5 -> 600
+            6 -> 800
+            7 -> 1000
+            8 -> 1250
+            9 -> 1500
+            10 -> 2000
+            else -> 100 // Valor por defecto si el nivel está fuera del rango especificado
+        }
+    }
+    fun getLibro(): Libro {
+        return libro
+    }
+
+    fun usarMagia(nombre: Magia.Nombre): Int {
+        val magiaEncontrada = libro.buscarMagia(nombre)
+        if (magiaEncontrada != -1) {
+            val magia = libro.getContenido()[magiaEncontrada]
+            val tipoMagia = magia.getTipoMagia()
+            val manaNecesario = magia.getMana()
+
+            if (mana >= manaNecesario) {
+                mana -= manaNecesario
+                libro.getContenido().removeAt(magiaEncontrada)
+
+                val resultado: Int = when (tipoMagia) {
+                    Magia.TipoMagia.AIRE, Magia.TipoMagia.FUEGO, Magia.TipoMagia.TIERRA -> magia.getMagiaNegra()
+                    Magia.TipoMagia.BLANCA -> {
+                        salud += magia.getMagiaBlanca()
+                        // Asegurar que la salud no supere el máximo según el nivel
+                        if (salud > calcularSaludMaxima()) {
+                            salud = calcularSaludMaxima()
+                        }
+                        0 // Devolver 0 porque no es un ataque
+                    }
+                    else -> -1 // Valor por defecto si no se puede usar la magia
+                }
+
+                if (resultado != -1) {
+                    return resultado
+                }
+            } else {
+                println("No tienes suficiente maná para utilizar esta magia.")
+            }
+        } else {
+            println("No se encontró la magia en el grimorio.")
+        }
+        return 0 // Devolver 0 si no se pudo usar la magia
+    }
+
+    /*
+        fun pelear(): Int {
+            println("Turno del Personaje:")
+            val nombreMagia = pedirNombreMagia()
+            val incremento = usarMagia(nombreMagia)
+
+            // Realizar ataque normal o incrementar la vida según el resultado de usarMagia
+            if (incremento == 0) {
+                // Ataque normal
+                println("Atacando al Monstruo...")
+                return ataque
+            } else {
+                // Incremento de vida
+                println("Incrementando vida...")
+                return incremento
+            }
+        }
+
+     */
+
+
+
+
 
 
 
@@ -372,7 +479,7 @@ class Personaje(
         return monedas
     }
     fun restarMonedas(articuloComprar:Articulo){
-        var moneda=Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,0,15,R.drawable.moneda,1)
+        var moneda=Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,0,15,R.drawable.moneda,1,1,Articulo.Rareza.COMUN)
         var monedasGastar=articuloComprar.getPrecio()
         var monedas=misMonedas()
 
@@ -387,7 +494,7 @@ class Personaje(
             monedas -= 15
         }
         if(monedas>0){
-            getMochila().addArticulo(Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,0,monedas,R.drawable.moneda,1))
+            getMochila().addArticulo(Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,0,monedas,R.drawable.moneda,1,1,Articulo.Rareza.COMUN))
         }
 
 
@@ -404,7 +511,8 @@ class Personaje(
     }
 
     override fun toString(): String {
-        return "Personaje: Nombre: $nombre, Nivel: $nivel, Salud: $salud, Ataque: $ataque, Defensa: $defensa, Suerte: $suerte, Raza: $raza, Clase: $clase, Estado Vital: $estadoVital Mochila: ${mochila.toString()}"
+
+        return "Personaje: Nombre: $nombre, Nivel: $nivel, Salud: $salud, Ataque: $ataque, Defensa: $defensa, Suerte: $suerte, Raza: $raza, Clase: $clase, Estado Vital: $estadoVital, Mana: $mana, Mochila: ${mochila.toString()}  Grimorio: $libro.toString()"
     }
 
     constructor(parcel: Parcel) : this(
@@ -555,30 +663,61 @@ class Mochila(private var pesoMochila: Int){
  *
  **********************************************************************************************************************/
 
-class Articulo(private var tipoArticulo: TipoArticulo, private var nombre: Nombre, private var peso: Int,private var precio:Int,private var url:Int,private var unidades:Int) {
+class Articulo(
+    private var tipoArticulo: TipoArticulo,
+    private var nombre: Nombre,
+    private var peso: Int,
+    private var precio: Int,
+    private var url: Int,
+    private var unidades: Int,
+    private var durabilidad: Int,
+    private var rareza: Rareza
+) {
 
-
-    enum class TipoArticulo { ARMA, OBJETO, PROTECCION,ORO }
-    enum class Nombre { BASTON, ESPADA, DAGA, MARTILLO, GARRAS, POCION, IRA, ESCUDO, ARMADURA ,MONEDA}
+    enum class TipoArticulo { ARMA, OBJETO, PROTECCION, ORO }
+    enum class Nombre { BASTON, ESPADA, DAGA, MARTILLO, GARRAS, POCION, IRA, ESCUDO, ARMADURA, MONEDA }
+    enum class Rareza { COMUN, RARO, EPICO, LEGENDARIO }
 
     fun getPeso(): Int {
         return peso
     }
+
     fun getPrecio(): Int {
         return precio
     }
+
     fun getNombre(): Nombre {
         return nombre
     }
+
     fun getUrl(): Int {
         return url
     }
+
     fun getTipoArticulo(): TipoArticulo {
         return tipoArticulo
     }
-    fun getUnidades():Int{
+
+    fun getUnidades(): Int {
         return unidades
     }
+
+    fun getDurabilidad(): Int {
+        return durabilidad
+    }
+
+    fun setDurabilidad(durabilidad: Int) {
+        this.durabilidad = durabilidad
+    }
+
+    fun getRareza(): Rareza {
+        return rareza
+    }
+
+    fun setRareza(rareza: Rareza) {
+        this.rareza = rareza
+    }
+
     fun getAumentoAtaque(): Int {
         return when (nombre) {
             Nombre.BASTON -> 10
@@ -590,6 +729,7 @@ class Articulo(private var tipoArticulo: TipoArticulo, private var nombre: Nombr
             else -> 0 // Para otros tipos de armas no especificados
         }
     }
+
     fun getAumentoDefensa(): Int {
         return when (nombre) {
             Nombre.ESCUDO -> 10
@@ -597,16 +737,19 @@ class Articulo(private var tipoArticulo: TipoArticulo, private var nombre: Nombr
             else -> 0 // Para otros tipos de protecciones no especificados
         }
     }
+
     fun getAumentoVida(): Int {
         return when (nombre) {
             Nombre.POCION -> 100
             else -> 0 // Para otros tipos de objetos no especificados
         }
     }
+
     override fun toString(): String {
-        return "[Tipo Artículo:$tipoArticulo, Nombre:$nombre, Peso:$peso]"
+        return "[Tipo Artículo:$tipoArticulo, Nombre:$nombre, Peso:$peso, Rareza:$rareza]"
     }
 }
+
 /***********************************************************************************************************************
  *  CLASE: Mascota
  *  CONSTRUCTOR:
@@ -945,4 +1088,140 @@ class enemigo(private var nivel: Int,) {
         calcularDefensa()
     }
 }
+
+
+class Magia(private val tipoMagia: TipoMagia, private val nombre: Nombre, private val mana: Int) {
+    enum class TipoMagia {
+        AIRE,
+        FUEGO,
+        TIERRA,
+        BLANCA
+    }
+
+    enum class Nombre {
+        TORNADO,
+        VENDAVAL,
+        HURACAN,
+        ALIENTO,
+        DESCARGA,
+        PROPULSION,
+        FATUO,
+        MURO,
+        TEMBLOR,
+        TERREMOTO,
+        SANAR,
+        CURAR
+    }
+    fun getMana(): Int {
+        return mana
+    }
+
+    fun getNombre(): Nombre {
+        return nombre
+    }
+
+    fun getTipoMagia(): TipoMagia {
+        return tipoMagia
+    }
+
+    fun getMagiaNegra(): Int {
+        var valorAtaque = 0
+        when (nombre) {
+            Nombre.TORNADO -> if (tipoMagia == TipoMagia.AIRE) valorAtaque = 100
+            Nombre.VENDAVAL -> if (tipoMagia == TipoMagia.AIRE) valorAtaque = 70
+            Nombre.HURACAN -> if (tipoMagia == TipoMagia.AIRE) valorAtaque = 150
+            Nombre.ALIENTO -> if (tipoMagia == TipoMagia.FUEGO) valorAtaque = 50
+            Nombre.DESCARGA -> if (tipoMagia == TipoMagia.FUEGO) valorAtaque = 70
+            Nombre.PROPULSION -> if (tipoMagia == TipoMagia.FUEGO) valorAtaque = 100
+            Nombre.FATUO -> if (tipoMagia == TipoMagia.FUEGO) valorAtaque = 200
+            Nombre.MURO -> if (tipoMagia == TipoMagia.TIERRA) valorAtaque = 20
+            Nombre.TEMBLOR -> if (tipoMagia == TipoMagia.TIERRA) valorAtaque = 80
+            Nombre.TERREMOTO -> if (tipoMagia == TipoMagia.TIERRA) valorAtaque = 300
+            else -> {valorAtaque = 300}
+        }
+        return valorAtaque
+    }
+
+    fun getMagiaBlanca(): Int {
+        var aumentoVida = 0
+        when (nombre) {
+            Nombre.SANAR -> if (tipoMagia == TipoMagia.BLANCA) aumentoVida = 100
+            Nombre.CURAR -> if (tipoMagia == TipoMagia.BLANCA) aumentoVida = 200
+            else -> {aumentoVida = 200}
+        }
+        return aumentoVida
+    }
+
+    override fun toString(): String {
+        return "Magia: ${nombre.name} - Tipo: ${tipoMagia.name} - Mana: $mana"
+    }
+}
+
+class Libro(
+    private val paginasLibroVerde: Int,
+    private val paginasLibroRojo: Int,
+    private val paginasLibroMarron: Int,
+    private val paginasLibroBlanco: Int
+) {
+    private var contenido: ArrayList<Magia> = ArrayList()
+
+    fun getPaginasGrimorioVerde(): Double {
+        return (paginasLibroVerde * 2 - contenido.count { it.getTipoMagia() == Magia.TipoMagia.AIRE }).toDouble()
+    }
+
+    fun getPaginasGrimorioRojo(): Double {
+        return (paginasLibroRojo * 2 - contenido.count { it.getTipoMagia() == Magia.TipoMagia.FUEGO }).toDouble()
+    }
+
+    fun getPaginasGrimorioMarron(): Double {
+        return (paginasLibroMarron * 2 - contenido.count { it.getTipoMagia() == Magia.TipoMagia.TIERRA }).toDouble()
+    }
+
+    fun getPaginasGrimorioBlanco(): Double {
+        return (paginasLibroBlanco * 2 - contenido.count { it.getTipoMagia() == Magia.TipoMagia.BLANCA }).toDouble()
+    }
+
+    fun aprenderMagia(nuevaMagia: Magia) {
+        val tipoMagia = nuevaMagia.getTipoMagia()
+        val nombreMagia = nuevaMagia.getNombre()
+
+        val paginasDisponibles = when (tipoMagia) {
+            Magia.TipoMagia.AIRE -> getPaginasGrimorioVerde()
+            Magia.TipoMagia.FUEGO -> getPaginasGrimorioRojo()
+            Magia.TipoMagia.TIERRA -> getPaginasGrimorioMarron()
+            Magia.TipoMagia.BLANCA -> getPaginasGrimorioBlanco()
+        }
+
+        if (paginasDisponibles >= 1 && tipoMagia == Magia.TipoMagia.BLANCA &&
+            (nombreMagia == Magia.Nombre.SANAR || nombreMagia == Magia.Nombre.CURAR)) {
+            contenido.add(nuevaMagia)
+            println("¡Magia aprendida y añadida al grimorio!")
+        } else {
+            println("No se puede aprender la magia o no hay suficientes páginas disponibles en el grimorio.")
+        }
+    }
+
+    fun getContenido(): ArrayList<Magia> {
+        return contenido
+    }
+    fun setContenido(nuevoContenido:ArrayList<Magia>) {
+        contenido=nuevoContenido
+    }
+
+
+    fun buscarMagia(nombre: Magia.Nombre): Int {
+        return contenido.indexOfFirst { it.getNombre() == nombre }
+    }
+
+    override fun toString(): String {
+        val contenidoString = StringBuilder()
+        contenidoString.append("Contenido del Grimorio:\n")
+        contenido.forEachIndexed { index, magia ->
+            contenidoString.append("${index + 1}. ${magia.getNombre()} - Tipo: ${magia.getTipoMagia()} - Mana: ${magia.getMana()}\n")
+        }
+        return contenidoString.toString()
+    }
+}
+
+
 

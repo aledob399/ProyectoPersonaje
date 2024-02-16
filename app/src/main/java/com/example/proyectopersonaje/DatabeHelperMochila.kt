@@ -60,8 +60,8 @@ class DatabaseHelperMochila(context: Context) : SQLiteOpenHelper(context, DATABA
                 val peso = cursor.getInt(cursor.getColumnIndex(COLUMN_ARTICULO_PESO))
                 val precio = cursor.getInt(cursor.getColumnIndex(COLUMN_ARTICULO_PRECIO))
                 val url = cursor.getInt(cursor.getColumnIndex(COLUMN_ARTICULO_URL))
-                val arti = Articulo(tipo,nombre,peso,precio,url,unidades)
-                contenido.add(arti)
+               // val arti = Articulo(tipo,nombre,peso,precio,url,unidades)
+              //  contenido.add(arti)
 
             } while (cursor.moveToNext())
         }

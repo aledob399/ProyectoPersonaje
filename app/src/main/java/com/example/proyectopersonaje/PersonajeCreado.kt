@@ -32,7 +32,7 @@ class PersonajeCreado : AppCompatActivity() {
         val idUsuarioAuth = FirebaseAuth.getInstance().currentUser!!.uid.toString()
         val btnVolver = findViewById<Button>(R.id.btnVolver)
         val objeto1 =
-            Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.DAGA, 2, 34, R.drawable.objeto,1)
+            Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.DAGA, 2, 34, R.drawable.objeto,1,30,Articulo.Rareza.COMUN)
             val btnEmpezar = findViewById<Button>(R.id.btnEmpezar)
         textToSpeech = TextToSpeech(this){status->
             if (status == TextToSpeech.SUCCESS){
@@ -51,16 +51,23 @@ class PersonajeCreado : AppCompatActivity() {
 
                // personaje?.getMochila()?.addArticulo(objeto1)
                 mascotas!!.add(Mascota("Inicial",Mascota.tipoMascota.entries[(0..3).random()]))
+                do{
+                    val magia=Magia(Magia.TipoMagia.entries[(0..3).random()],Magia.Nombre.entries[(0..12).random()],20)
+                    personaje!!.getLibro().aprenderMagia(magia)
+                }while (personaje!!.getLibro().getContenido().isEmpty())
+
                 dbHelper.insertarPersonaje(personaje!!, FirebaseAuth.getInstance().currentUser!!.uid.toString())
                 dbHelper.insertarMascotas(mascotas,idUsuarioAuth)
+                dbHelper.insertarMagias(personaje!!.getLibro().getContenido(),idUsuarioAuth)
                 Toast.makeText(this, "Personaje insertado exitosamente", Toast.LENGTH_SHORT).show()
                 //dbHelper.insertarArticulos(personaje!!.getMochila().getContenido(), idUsuarioAuth)
             } else {
                 val idUsuarioAuth = FirebaseAuth.getInstance().currentUser!!.uid.toString()
                 try {
                     personaje = dbHelper.obtenerPersonaje(idUsuarioAuth!!)
-                   personaje?.getMochila()?.setContenido(dbHelper.obtenerArticulos(idUsuarioAuth).getContenido())
+                     personaje?.getMochila()?.setContenido(dbHelper.obtenerArticulos(idUsuarioAuth).getContenido())
                     mascotas=dbHelper.obtenerMascotas(idUsuarioAuth!!)
+                    personaje!!.getLibro().setContenido(dbHelper.obtenerMagias(idUsuarioAuth))
                     if (personaje == null) {
 
                         Toast.makeText(this, "No se encontró ningún personaje asociado a este usuario", Toast.LENGTH_SHORT).show()

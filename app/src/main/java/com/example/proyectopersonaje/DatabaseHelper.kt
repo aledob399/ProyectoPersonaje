@@ -275,7 +275,7 @@ class DatabaseHelper(context: Context) :
     }
     fun insertarArticulos(articulos: ArrayList<Articulo>, idUsuarioAuth: String) {
         val db = this.writableDatabase
-        articulos.add(Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.ESPADA, 2, 2, R.drawable.moneda, 1))
+       // articulos.add(Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.ESPADA, 2, 2, R.drawable.moneda, 1))
         db.beginTransaction()
         if (articulos.isEmpty()) {
             Log.d("DatabaseHelper", "No hay articulos para insertar")
@@ -324,8 +324,8 @@ class DatabaseHelper(context: Context) :
                     val precio = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PRECIO))
                     val unidades = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_UNIDADES))
                     val url = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_URL))
-                    val articulo = Articulo( tipoArticulo,nombreArticulo, peso, precio, unidades, url)
-                    mochila.addArticulo(articulo)
+                  //  val articulo = Articulo( tipoArticulo,nombreArticulo, peso, precio, unidades, url)
+                 //   mochila.addArticulo(articulo)
 
                 }
             }

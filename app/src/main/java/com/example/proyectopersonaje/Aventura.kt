@@ -47,7 +47,7 @@ class Aventura : AppCompatActivity() {
         navigationView = findViewById(R.id.navigationview)
         openDrawer = findViewById(R.id.btn_open)
         val objeto1 =
-            Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.MARTILLO, 2, 34, R.drawable.objeto,1)
+            Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.MARTILLO, 2, 34, R.drawable.objeto,1,30,Articulo.Rareza.COMUN)
         val mascota=Mascota("Marco" , Mascota.tipoMascota.AGUA)
         personaje!!.getMochila().addArticulo(objeto1)
         mascotas!!.add(mascota)
