@@ -188,6 +188,13 @@ class Personaje(
     fun getLibro(): Libro {
         return libro
     }
+    fun getArma(): Articulo? {
+        return arma
+    }
+    fun getProteccion(): Articulo? {
+        return proteccion
+    }
+
 
     fun usarMagia(nombre: Magia.Nombre): Int {
         val magiaEncontrada = libro.buscarMagia(nombre)

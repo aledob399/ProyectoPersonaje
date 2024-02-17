@@ -63,6 +63,8 @@ class PersonajeCreado : AppCompatActivity() {
                 dbHelper.insertarMagias(personaje!!.getLibro().getContenido(),idUsuarioAuth)
                 val objeto1 =
                     Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.MARTILLO, 2, 34, R.drawable.objeto,1,Articulo.Rareza.COMUN)
+                val objeto2 =
+                    Articulo(Articulo.TipoArticulo.PROTECCION, Articulo.Nombre.ESCUDO, 2, 34, R.drawable.objeto,1,Articulo.Rareza.RARO)
 
                 personaje!!.getMochila().addArticulo(objeto1)
                 Toast.makeText(this, "Personaje insertado exitosamente", Toast.LENGTH_SHORT).show()
