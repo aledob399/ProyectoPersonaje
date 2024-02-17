@@ -23,7 +23,7 @@ class Personaje(
     enum class Clase { Brujo, Mago, Guerrero }
     enum class EstadoVital{Anciano, Joven, Adulto}
 
-    private val mochila = Mochila(10) // Ejemplo de peso máximo de la mochila
+    private var mochila = Mochila(10) // Ejemplo de peso máximo de la mochila
     // Atributos para el equipo del personaje
     private var arma: Articulo? = null
     private var proteccion: Articulo? = null
@@ -553,6 +553,7 @@ class Personaje(
         mana = parcel.readInt()
         arma = parcel.readParcelable(Articulo::class.java.classLoader)
         proteccion = parcel.readParcelable(Articulo::class.java.classLoader)
+        mochila= parcel.readParcelable(Mochila::class.java.classLoader)!!
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -569,6 +570,7 @@ class Personaje(
         parcel.writeInt(mana)
         parcel.writeParcelable(arma, flags)
         parcel.writeParcelable(proteccion, flags)
+        parcel.writeParcelable(mochila, flags)
     }
 
     override fun describeContents(): Int {

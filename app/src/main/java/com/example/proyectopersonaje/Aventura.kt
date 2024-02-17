@@ -155,7 +155,9 @@ class Aventura : AppCompatActivity() {
 
                     btn.setImageResource(R.drawable.uno)
                     val intent = Intent(this,Contrato::class.java)
+
                     intent.putExtra("personaje",personaje)
+                    intent.putExtra("mochila",personaje!!.getMochila())
                     intent.putParcelableArrayListExtra("mascotas", mascotas)
 
                     startActivity(intent)
@@ -165,6 +167,7 @@ class Aventura : AppCompatActivity() {
                     btn.setImageResource(R.drawable.dos)
                     val intent = Intent(this,Contrato::class.java)
                     intent.putExtra("personaje",personaje)
+                    intent.putExtra("mochila",personaje!!.getMochila())
                     intent.putParcelableArrayListExtra("mascotas", mascotas)
 
                     startActivity(intent)
@@ -174,6 +177,7 @@ class Aventura : AppCompatActivity() {
                     btn.setImageResource(R.drawable.tres)
                     val intent = Intent(this,Contrato::class.java)
                     intent.putExtra("personaje",personaje)
+                    intent.putExtra("mochila",personaje!!.getMochila())
                     intent.putParcelableArrayListExtra("mascotas", mascotas)
 
                     startActivity(intent)
@@ -183,6 +187,7 @@ class Aventura : AppCompatActivity() {
                     btn.setImageResource(R.drawable.cuatro)
                     val intent = Intent(this,Contrato::class.java)
                     intent.putExtra("personaje",personaje)
+                    intent.putExtra("mochila",personaje!!.getMochila())
                     intent.putParcelableArrayListExtra("mascotas", mascotas)
 
                     startActivity(intent)
@@ -191,7 +196,7 @@ class Aventura : AppCompatActivity() {
 
                     btn.setImageResource(R.drawable.cinco)
                     val intent = Intent(this,Contrato::class.java)
-
+                    intent.putExtra("mochila",personaje!!.getMochila())
                     intent.putExtra("personaje",personaje)
                     intent.putParcelableArrayListExtra("mascotas", mascotas)
 
@@ -202,6 +207,7 @@ class Aventura : AppCompatActivity() {
                     btn.setImageResource(R.drawable.seis)
                     val intent = Intent(this,Contrato::class.java)
                     intent.putExtra("personaje",personaje)
+                    intent.putExtra("mochila",personaje!!.getMochila())
                     intent.putParcelableArrayListExtra("mascotas", mascotas)
                     startActivity(intent)
                 }
