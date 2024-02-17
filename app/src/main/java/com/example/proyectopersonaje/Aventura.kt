@@ -35,14 +35,22 @@ class Aventura : AppCompatActivity() {
         val btn=findViewById<ImageButton>(R.id.btn)
         val musica: MediaPlayer = MediaPlayer.create(this, R.raw.musica)
         val btnMusica: ImageButton = findViewById(R.id.btnMusica)
-        val personaje=intent.getParcelableExtra<Personaje>("personaje")
-        var mascotas = ArrayList<Mascota>()
-        if(intent.getParcelableArrayListExtra<Mascota>("mascotas")!=null){
-            mascotas = intent.getParcelableArrayListExtra<Mascota>("mascotas")!!
-        }
-
-        val db=Database(this)
+        val dbHelper=Database(this)
         val idUsuarioAuth = FirebaseAuth.getInstance().currentUser!!.uid.toString()
+        val personaje=intent.getParcelableExtra<Personaje>("personaje")
+        val creado=intent.getBooleanExtra("creado",false)
+
+        var mascotas = intent.getParcelableArrayListExtra<Mascota>("mascotas")!!
+        if(creado){
+            personaje!!.getMochila().setContenido(dbHelper.obtenerArticulos(idUsuarioAuth).getContenido())
+            personaje.getLibro().setContenido(dbHelper.obtenerMagias(idUsuarioAuth))
+            mascotas=dbHelper.obtenerMascotas(idUsuarioAuth)
+        }
+        Log.d("DatosPersonaje", "$personaje")
+        Log.d("DatosMascota 1", "${mascotas[0]}")
+        val db=Database(this)
+
+
         drawerLayout = findViewById(R.id.drawer_layout)
         navigationView = findViewById(R.id.navigationview)
         openDrawer = findViewById(R.id.btn_open)
@@ -51,7 +59,7 @@ class Aventura : AppCompatActivity() {
         val mascota=Mascota("Marco" , Mascota.tipoMascota.AGUA)
         //personaje!!.getMochila().addArticulo(objeto1)
 
-        dbHelper = Database(this)
+
         val dado=Dado()
         var num2=0
         var num1=0
@@ -108,11 +116,11 @@ class Aventura : AppCompatActivity() {
 
                             Toast.makeText(this, "Personaje actualizado con éxito", Toast.LENGTH_SHORT).show()
                         }
-                        if (mascotas != null) {
-                            dbHelper.borrarMascotas(idUsuarioAuth)
-                            dbHelper.insertarMascotas(mascotas,idUsuarioAuth)
-                            Toast.makeText(this, "Mascotas actualizadas con éxito", Toast.LENGTH_SHORT).show()
-                        }
+
+                        dbHelper.borrarMascotas(idUsuarioAuth)
+                        dbHelper.insertarMascotas(mascotas,idUsuarioAuth)
+                        Toast.makeText(this, "Mascotas actualizadas con éxito", Toast.LENGTH_SHORT).show()
+
 
                         return@setNavigationItemSelectedListener true
                     }
@@ -146,7 +154,7 @@ class Aventura : AppCompatActivity() {
                     }
 
                     btn.setImageResource(R.drawable.uno)
-                    val intent = Intent(this,Mazmorras::class.java)
+                    val intent = Intent(this,Contrato::class.java)
                     intent.putExtra("personaje",personaje)
                     intent.putParcelableArrayListExtra("mascotas", mascotas)
 
@@ -155,7 +163,7 @@ class Aventura : AppCompatActivity() {
                 2 -> {
 
                     btn.setImageResource(R.drawable.dos)
-                    val intent = Intent(this,Mazmorras::class.java)
+                    val intent = Intent(this,Contrato::class.java)
                     intent.putExtra("personaje",personaje)
                     intent.putParcelableArrayListExtra("mascotas", mascotas)
 
@@ -164,7 +172,7 @@ class Aventura : AppCompatActivity() {
                 3 -> {
 
                     btn.setImageResource(R.drawable.tres)
-                    val intent = Intent(this,Mazmorras::class.java)
+                    val intent = Intent(this,Contrato::class.java)
                     intent.putExtra("personaje",personaje)
                     intent.putParcelableArrayListExtra("mascotas", mascotas)
 
@@ -173,7 +181,7 @@ class Aventura : AppCompatActivity() {
                 4 -> {
 
                     btn.setImageResource(R.drawable.cuatro)
-                    val intent = Intent(this,Mazmorras::class.java)
+                    val intent = Intent(this,Contrato::class.java)
                     intent.putExtra("personaje",personaje)
                     intent.putParcelableArrayListExtra("mascotas", mascotas)
 
@@ -182,7 +190,8 @@ class Aventura : AppCompatActivity() {
                 5 -> {
 
                     btn.setImageResource(R.drawable.cinco)
-                    val intent = Intent(this,Mascotas::class.java)
+                    val intent = Intent(this,Contrato::class.java)
+
                     intent.putExtra("personaje",personaje)
                     intent.putParcelableArrayListExtra("mascotas", mascotas)
 
@@ -191,7 +200,7 @@ class Aventura : AppCompatActivity() {
                 6 -> {
 
                     btn.setImageResource(R.drawable.seis)
-                    val intent = Intent(this,Mazmorras::class.java)
+                    val intent = Intent(this,Contrato::class.java)
                     intent.putExtra("personaje",personaje)
                     intent.putParcelableArrayListExtra("mascotas", mascotas)
                     startActivity(intent)

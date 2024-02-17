@@ -28,12 +28,12 @@
 
     <TextView
         android:id="@+id/datos"
-        android:layout_width="308dp"
-        android:layout_height="155dp"
+        android:layout_width="338dp"
+        android:layout_height="296dp"
         android:layout_gravity="center"
         android:layout_marginTop="70px"
-        android:textSize="16dp"
-        android:text="" />
+        android:text=""
+        android:textSize="16dp" />
 
     <Button
         android:id="@+id/btnVolver"

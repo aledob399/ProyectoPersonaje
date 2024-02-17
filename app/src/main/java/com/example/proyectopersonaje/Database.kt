@@ -15,7 +15,7 @@ class Database(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
         companion object {
-            private const val DATABASE_VERSION = 7
+            private const val DATABASE_VERSION = 8
             private const val DATABASE_NAME = "personajes.db"
             private const val TABLE_PERSONAJE = "personaje"
             private const val TABLE_MOCHILA = "mochila"
@@ -140,7 +140,7 @@ class Database(context: Context) :
             db.beginTransaction()
             try {
 
-               // db.delete(TABLE_MASCOTAS, "$COLUMN_ID_USUARIO_AUTH = ?", arrayOf(idUsuarioAuth))
+                db.delete(TABLE_MASCOTAS, "$COLUMN_ID_USUARIO_AUTH = ?", arrayOf(idUsuarioAuth))
 
 
                 for (mascota in mascotas) {
@@ -193,37 +193,42 @@ class Database(context: Context) :
     }
 
     fun obtenerMascotas(idUsuarioAuth: String): ArrayList<Mascota> {
-            val mascotas = ArrayList<Mascota>()
-            val db = readableDatabase
-            val query = "SELECT * FROM $TABLE_MASCOTAS WHERE $COLUMN_ID_USUARIO_AUTH = ?"
-            val cursor = db.rawQuery(query, arrayOf(idUsuarioAuth))
+        val mascotas = ArrayList<Mascota>()
+        val db = readableDatabase
+        val query = "SELECT * FROM $TABLE_MASCOTAS WHERE $COLUMN_ID_USUARIO_AUTH = ?"
+        val cursor = db.rawQuery(query, arrayOf(idUsuarioAuth))
 
-            if(cursor.moveToNext()){
-                cursor.use { cursor ->
-                    while (cursor.moveToNext()) {
-                        val nombre = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NOMBRE_MASCOTA))
-                        val atributoString = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ATRIBUTO_MASCOTA))
-                        val atributo = Mascota.tipoMascota.valueOf(atributoString)
-                        val salud = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SALUD_MASCOTA))
-                        val ataque = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ATAQUE_MASCOTA))
-                        val experiencia = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_EXPERIENCIA_MASCOTA))
-                        val nivel = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_NIVEL_MASCOTA))
-                        val potencial = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_POTENCIAL_MASCOTA))
-                        val defensa = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_DEFENSA_MASCOTA))
-                        val mascota = Mascota(nombre, atributo)
-                        mascota.setNivel(nivel)
-                        mascota.setPotencial(potencial)
-                        mascota.setExperiencia(experiencia)
-                        mascotas.add(mascota)
-                    }
-                }
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    val nombre = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NOMBRE_MASCOTA))
+                    val atributoString = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ATRIBUTO_MASCOTA))
+                    val atributo = Mascota.tipoMascota.valueOf(atributoString)
+                    val salud = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SALUD_MASCOTA))
+                    val ataque = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ATAQUE_MASCOTA))
+                    val experiencia = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_EXPERIENCIA_MASCOTA))
+                    val nivel = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_NIVEL_MASCOTA))
+                    val potencial = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_POTENCIAL_MASCOTA))
+                    val defensa = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_DEFENSA_MASCOTA))
+                    val mascota = Mascota(nombre, atributo)
+                    mascota.setNivel(nivel)
+                    mascota.setPotencial(potencial)
+                    mascota.setExperiencia(experiencia)
+                    mascotas.add(mascota)
+                } while (cursor.moveToNext())
             }
-
+        } catch (e: Exception) {
+            Log.e("DatabaseHelper", "Error al obtener mascotas", e)
+        } finally {
             cursor?.close()
-            return mascotas
+            db.close()
         }
 
-        fun insertarPersonaje(personaje: Personaje,idUsuarioAuth: String) {
+        return mascotas
+    }
+
+
+    fun insertarPersonaje(personaje: Personaje,idUsuarioAuth: String) {
             val db = writableDatabase
 
             val articulos = personaje.getMochila().getContenido()
@@ -248,6 +253,7 @@ class Database(context: Context) :
 
                 }
                 val idPersonaje = db.insert(TABLE_PERSONAJE, null, valuesPersonaje)
+                Log.d("DatabaseHelper", "Artículo insertado con ID: $idPersonaje")
                 //insertarArticulos(personaje.getMochila().getContenido(),idUsuarioAuth)
                 /*
                 // Insert articles into the mochila
@@ -327,77 +333,79 @@ class Database(context: Context) :
             cursor.close()
             return personaje
         }
-        fun insertarArticulos(articulos: ArrayList<Articulo>, idUsuarioAuth: String) {
-            val db = this.writableDatabase
-
+    fun insertarArticulos(articulos: ArrayList<Articulo>, idUsuarioAuth: String) {
+        val db = writableDatabase
+        try {
             db.beginTransaction()
             if (articulos.isEmpty()) {
-                Log.d("DatabaseHelper", "No hay articulos para insertar")
+                Log.d("DatabaseHelper", "No hay artículos para insertar")
             } else {
-                try {
-                    for (articulo in articulos) {
-                        val values = ContentValues().apply {
-                            put(COLUMN_NOMBRE_ARTICULO, articulo.getNombre().name)
-                            put(COLUMN_TIPO_ARTICULO, articulo.getTipoArticulo().name)
-                            put(COLUMN_RAREZA, articulo.getRareza().name)
-                            put(COLUMN_DURABILIDAD, articulo.getDurabilidad())
-                            put(COLUMN_ID_USUARIO_AUTH, idUsuarioAuth)
-                            put(COLUMN_PESO, articulo.getPeso())
-                            put(COLUMN_PRECIO, articulo.getPrecio())
-                            put(COLUMN_URL, articulo.getUrl())
-                            put(COLUMN_UNIDADES, articulo.getUnidades())
-                        }
-                        val rowId = db.insert(TABLE_ARTICULOS, null, values)
-                        Log.d("DatabaseHelper", "Artículo insertado con ID: $rowId")
+                for (articulo in articulos) {
+                    val values = ContentValues().apply {
+                        put(COLUMN_NOMBRE_ARTICULO, articulo.getNombre().name)
+                        put(COLUMN_TIPO_ARTICULO, articulo.getTipoArticulo().name)
+                        put(COLUMN_RAREZA, articulo.getRareza().name)
+                        put(COLUMN_DURABILIDAD, articulo.getDurabilidad())
+                        put(COLUMN_ID_USUARIO_AUTH, idUsuarioAuth)
+                        put(COLUMN_PESO, articulo.getPeso())
+                        put(COLUMN_PRECIO, articulo.getPrecio())
+                        put(COLUMN_URL, articulo.getUrl())
+                        put(COLUMN_UNIDADES, articulo.getUnidades())
                     }
-                    db.setTransactionSuccessful()
-                } finally {
-                    db.endTransaction()
-                    db.close()
+                    val rowId = db.insert(TABLE_ARTICULOS, null, values)
+                    Log.d("DatabaseHelper", "Artículo insertado con ID: $rowId")
                 }
+                db.setTransactionSuccessful()
             }
+        } catch (e: Exception) {
+            Log.e("DatabaseHelper", "Error al insertar artículos", e)
+        } finally {
+            db.endTransaction()
+            // Cerrar la conexión a la base de datos después de terminar todas las operaciones
+            db.close()
+        }
+    }
+
+
+
+    fun obtenerArticulos(idUsuario: String): Mochila {
+        val mochila = Mochila(100)
+        val articulos = ArrayList<Articulo>()
+        val db = readableDatabase
+
+        val query = "SELECT * FROM $TABLE_ARTICULOS  WHERE $COLUMN_ID_USUARIO_AUTH = ?  ORDER BY $COLUMN_ID"
+
+        val cursor = db.rawQuery(query, arrayOf(idUsuario))
+
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    val nombreArticuloString = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NOMBRE_ARTICULO))
+                    val rarezaString = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_RAREZA))
+                    val tipoArticuloString = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TIPO_ARTICULO))
+                    val nombreArticulo = obtenerNombreArticuloEnum(nombreArticuloString)
+                    val tipoArticulo = obtenerTipoArticuloEnum(tipoArticuloString)
+                    val rareza = obtenerRareza(rarezaString)
+                    val durabilidad = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_DURABILIDAD))
+                    val peso = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PESO))
+                    val precio = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PRECIO))
+                    val unidades = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_UNIDADES))
+                    val url = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_URL))
+                    val articulo = Articulo(tipoArticulo, nombreArticulo, peso, precio, url, unidades, rareza)
+                    articulo.setDurabilidad(durabilidad)
+                    mochila.addArticulo(articulo)
+                } while (cursor.moveToNext())
+            }
+        } catch (e: Exception) {
+            Log.e("DatabaseHelper", "Error al obtener artículos", e)
+        } finally {
+            cursor.close()
+            db.close()
         }
 
+        return if (mochila.getContenido().isEmpty()) Mochila(100) else mochila
+    }
 
-        fun obtenerArticulos(idUsuario: String): Mochila {
-            val mochila=Mochila(100)
-            val articulos = ArrayList<Articulo>()
-            val db = readableDatabase
-
-            val query = "SELECT * FROM $TABLE_ARTICULOS  WHERE $COLUMN_ID_USUARIO_AUTH = ?  ORDER BY $COLUMN_ID"
-
-
-            val cursor = db.rawQuery(query, arrayOf(idUsuario))
-
-
-            if(cursor.moveToNext()){
-                cursor.use { cursor ->
-                    while (cursor.moveToNext()) {
-                        val nombreArticuloString = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NOMBRE_ARTICULO))
-                        val rarezaString = cursor.getString(cursor.getColumnIndexOrThrow(
-                            COLUMN_RAREZA))
-                        val tipoArticuloString = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TIPO_ARTICULO))
-                        val nombreArticulo = obtenerNombreArticuloEnum(nombreArticuloString)
-                        val tipoArticulo = obtenerTipoArticuloEnum(tipoArticuloString)
-                        val rareza = obtenerRareza(rarezaString)
-                        val durabilidad = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_DURABILIDAD))
-                        val peso = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PESO))
-                       val precio = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PRECIO))
-                       val unidades = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_UNIDADES))
-                        val url = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_URL))
-                        val articulo = Articulo( tipoArticulo,nombreArticulo, peso, precio,url,unidades,rareza)
-                        articulo.setDurabilidad(durabilidad)
-                        mochila.addArticulo(articulo)
-
-                    }
-                }
-
-            }
-            if(mochila.getContenido().isEmpty()){
-                return Mochila(100)
-            }else return mochila
-
-        }
     fun borrarMagias(idUsuario: String) {
         val db = writableDatabase
         db.beginTransaction()
@@ -437,8 +445,8 @@ class Database(context: Context) :
 
     fun insertarMagias(magias: ArrayList<Magia>, idUsuario: String) {
         val db = writableDatabase
-        db.beginTransaction()
         try {
+            db.beginTransaction()
             for (magia in magias) {
                 val values = ContentValues().apply {
                     put(COLUMN_NOMBRE_MAGIA, magia.getNombre().name)
@@ -446,17 +454,19 @@ class Database(context: Context) :
                     put(COLUMN_MANA, magia.getMana())
                     put(COLUMN_ID_USUARIO_AUTH, idUsuario)
                 }
-                val rowId=db.insert(TABLE_MAGIAS, null, values)
-                Log.d("DatabaseHelper", "Magia insertada insertado con ID: $rowId")
+                val rowId = db.insert(TABLE_MAGIAS, null, values)
+                Log.d("DatabaseHelper", "Magia insertada con ID: $rowId")
             }
             db.setTransactionSuccessful()
         } catch (e: Exception) {
             Log.e("DatabaseHelper", "Error al insertar magias", e)
         } finally {
             db.endTransaction()
+            // Cerrar la conexión a la base de datos después de terminar todas las operaciones
             db.close()
         }
     }
+
 
     fun obtenerMagias(idUsuario: String): ArrayList<Magia> {
         val magias = ArrayList<Magia>()
@@ -464,22 +474,26 @@ class Database(context: Context) :
         val query = "SELECT * FROM $TABLE_MAGIAS WHERE $COLUMN_ID_USUARIO_AUTH = ?"
         val cursor = db.rawQuery(query, arrayOf(idUsuario))
 
-        cursor.use { cursor ->
-            while (cursor.moveToNext()) {
-                val nombre = obtenerNombreMagiaEnum( cursor.getString(cursor.getColumnIndexOrThrow(
-                    COLUMN_NOMBRE_MAGIA)))
-                val tipo = obtenerTipoMagiaEnum(cursor.getString(cursor.getColumnIndexOrThrow(
-                    COLUMN_TIPO_MAGIA)))
-                val mana = cursor.getInt(cursor.getColumnIndexOrThrow(
-                    COLUMN_MANA))
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    val nombre = obtenerNombreMagiaEnum(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NOMBRE_MAGIA)))
+                    val tipo = obtenerTipoMagiaEnum(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TIPO_MAGIA)))
+                    val mana = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_MANA))
 
-                magias.add(Magia( tipo,nombre,mana))
+                    magias.add(Magia(tipo, nombre, mana))
+                } while (cursor.moveToNext())
             }
+        } catch (e: Exception) {
+            Log.e("DatabaseHelper", "Error al obtener magias", e)
+        } finally {
+            cursor?.close()
+            db.close()
         }
 
-        db.close()
         return magias
     }
+
 
 
 

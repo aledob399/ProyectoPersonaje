@@ -144,7 +144,7 @@ class Mercader : AppCompatActivity() {
         btnComprar.setOnClickListener {
             if (personaje!!.misMonedas() < articuloActual.getPrecio()) {
 
-                personaje.restarMonedas(articuloActual)
+                personaje.restarMonedas(articuloActual.getPrecio())
                 dbHelper.eliminarUnidad(articuloActual)
                 val max = dbHelper.getArticulos().size
 

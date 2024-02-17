@@ -10,41 +10,36 @@
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="176dp"
-        tools:layout_editor_absoluteY="72dp" />
-
-    <ImageView
-        android:id="@+id/imageView19"
-        android:layout_width="320dp"
-        android:layout_height="285dp"
-        app:srcCompat="@drawable/objeto"
-        tools:layout_editor_absoluteX="45dp"
-        tools:layout_editor_absoluteY="144dp" />
+        android:layout_marginStart="167dp"
+        android:layout_marginTop="42dp"
+        android:layout_marginEnd="168dp"
+        android:text="Selecciona los articulos a intercambiar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btnContinuar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
-        tools:layout_editor_absoluteX="59dp"
-        tools:layout_editor_absoluteY="478dp" />
+        android:layout_marginStart="59dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="325dp"
+        android:text="Continuar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnQuitarTodo"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btnQuitarTodo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
-        tools:layout_editor_absoluteX="244dp"
-        tools:layout_editor_absoluteY="478dp" />
-
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        tools:layout_editor_absoluteX="158dp"
-        tools:layout_editor_absoluteY="601dp" />
+        android:layout_marginEnd="58dp"
+        android:layout_marginBottom="325dp"
+        android:text="Quitar objetos"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnContinuar" />
 
     <TextView
         android:id="@+id/textView6"
@@ -52,5 +47,24 @@
         android:layout_height="wrap_content"
         android:text="TextView"
         tools:layout_editor_absoluteX="167dp"
-        tools:layout_editor_absoluteY="437dp" />
+        tools:layout_editor_absoluteY="459dp" />
+
+    <HorizontalScrollView
+        android:layout_width="389dp"
+        android:layout_height="203dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="61dp"
+        android:layout_marginEnd="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5">
+
+        <LinearLayout
+            android:id="@+id/objetos"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" >
+
+        </LinearLayout>
+    </HorizontalScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

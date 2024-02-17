@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity() {
                 ).addOnCompleteListener {
                     if (it.isSuccessful) {
                         val intent = Intent(this, CreacionPersonaje::class.java)
+
                         startActivity(intent)
                     } else {
                         showAlert()
@@ -70,19 +71,24 @@ class MainActivity : AppCompatActivity() {
                     if (task.isSuccessful) {
                         val idUsuarioAuth = FirebaseAuth.getInstance().uid
 
-                        // Obtener el personaje de la base de datos usando el ID de autenticación
+
                         val dbHelper = Database(this)
 
 
-                        // Verificar si el personaje es null antes de intentar acceder a sus propiedades
-                        val personaje=dbHelper.obtenerPersonaje(FirebaseAuth.getInstance().currentUser!!.uid)
 
-
+                        val personaje=dbHelper.obtenerPersonaje(idUsuarioAuth.toString())
+                        val mascotas=dbHelper.obtenerMascotas(idUsuarioAuth.toString())
+                        val articulos=dbHelper.obtenerArticulos(idUsuarioAuth.toString())
+                        val magias=dbHelper.obtenerMagias(idUsuarioAuth.toString())
+                        if (personaje != null) {
+                            personaje.getLibro().setContenido(magias)
+                            personaje.getMochila().setContenido(articulos.getContenido())
+                        }
                         val intent = Intent(this, PersonajeCreado::class.java)
 
                         intent.putExtra("modoRegistro", false)
-                        intent.putExtra("personaje",personaje)// El usuario ya está registrado
-
+                        intent.putExtra("personaje",personaje)
+                        intent.putParcelableArrayListExtra("mascotas",mascotas)
                         startActivity(intent)
 
 

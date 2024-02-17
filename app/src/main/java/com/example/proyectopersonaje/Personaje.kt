@@ -89,6 +89,10 @@ class Personaje(
     }
     fun setNivel(nuevoNivel: Int) {
         nivel = nuevoNivel
+        calcularSalud()
+        calcularAtaque()
+        calcularDefensa()
+        calcularMana()
     }
     fun getMana(): Int {
         return mana
@@ -485,27 +489,39 @@ class Personaje(
         }
         return monedas
     }
-    fun restarMonedas(articuloComprar:Articulo){
+    fun restarMonedas(monedasGastar:Int){
         var moneda=Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,0,15,R.drawable.moneda,1,Articulo.Rareza.COMUN)
-        var monedasGastar=articuloComprar.getPrecio()
+
         var monedas=misMonedas()
 
         if(monedas>monedasGastar){
+
             monedas -= monedasGastar
-            removerArticuloNombre(Articulo.Nombre.MONEDA)
-        }
-        while(monedas>=15){
-            if(monedas>=15){
+            quitarMonedas()
+            while(monedas>=15){
                 getMochila().addArticulo(moneda)
+                monedas -= 15
             }
-            monedas -= 15
+            if(monedas>0){
+                getMochila().addArticulo(Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,0,monedas,R.drawable.moneda,1,Articulo.Rareza.COMUN))
+            }
+
         }
-        if(monedas>0){
-            getMochila().addArticulo(Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,0,monedas,R.drawable.moneda,1,Articulo.Rareza.COMUN))
-        }
+
+
 
 
     }
+    fun quitarMonedas() {
+        val monedas = getMochila().getContenido().filter { it.getNombre() == Articulo.Nombre.MONEDA }
+        for (moneda in monedas) {
+            removerArticulo(moneda)
+        }
+    }
+    fun removerArticulo(articulo: Articulo) {
+        mochila.getContenido().remove(articulo)
+    }
+
     fun removerArticuloNombre(nombre:Articulo.Nombre){
         repeat(getMochila().getContenido().size){
             if(getMochila().getContenido().get(it).getNombre()==nombre){
@@ -534,6 +550,9 @@ class Personaje(
         nivel = parcel.readInt()
         suerte = parcel.readInt()
         defensa = parcel.readInt()
+        mana = parcel.readInt()
+        arma = parcel.readParcelable(Articulo::class.java.classLoader)
+        proteccion = parcel.readParcelable(Articulo::class.java.classLoader)
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -547,6 +566,9 @@ class Personaje(
         parcel.writeInt(nivel)
         parcel.writeInt(suerte)
         parcel.writeInt(defensa)
+        parcel.writeInt(mana)
+        parcel.writeParcelable(arma, flags)
+        parcel.writeParcelable(proteccion, flags)
     }
 
     override fun describeContents(): Int {
@@ -579,8 +601,12 @@ class Personaje(
  *                                  entrada o -1 si no lo encuentra
  *
  **********************************************************************************************************************/
-class Mochila(private var pesoMochila: Int){
+class Mochila(private var pesoMochila: Int) : Parcelable {
     private var contenido=ArrayList<Articulo>()
+
+    constructor(parcel: Parcel) : this(parcel.readInt()) {
+
+    }
 
     fun getPesoMochila(): Int {
         var suma=0
@@ -626,6 +652,16 @@ class Mochila(private var pesoMochila: Int){
                         else -> println("Nombre del artículo no válido para el tipo PROTECCION.")
                     }
                 }
+                Articulo.TipoArticulo.ORO -> {
+                    when (articulo.getNombre()) {
+                        Articulo.Nombre.MONEDA -> {
+                            contenido.add(articulo)
+                            this.pesoMochila -= articulo.getPeso()
+                            println("${articulo.getNombre()} ha sido añadido a la mochila.")
+                        }
+                        else -> println("Nombre del artículo no válido para el tipo PROTECCION.")
+                    }
+                }
 
                 else -> {}
             }
@@ -647,6 +683,24 @@ class Mochila(private var pesoMochila: Int){
             "Mochila vacía"
         } else {
             "Artículos en la mochila: ${contenido.joinToString("\n")}"
+        }
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(pesoMochila)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Mochila> {
+        override fun createFromParcel(parcel: Parcel): Mochila {
+            return Mochila(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Mochila?> {
+            return arrayOfNulls(size)
         }
     }
 }
@@ -679,12 +733,25 @@ class Articulo(
     private var unidades: Int,
 
     private var rareza: Rareza
-) {
+) : Parcelable {
 
     enum class TipoArticulo { ARMA, OBJETO, PROTECCION, ORO }
     enum class Nombre { BASTON, ESPADA, DAGA, MARTILLO, GARRAS, POCION, IRA, ESCUDO, ARMADURA, MONEDA }
     enum class Rareza { COMUN, RARO, EPICO, LEGENDARIO }
     private var durabilidad: Int = 0
+
+    constructor(parcel: Parcel) : this(
+        TODO("tipoArticulo"),
+        TODO("nombre"),
+        parcel.readInt(),
+        parcel.readInt(),
+        parcel.readInt(),
+        parcel.readInt(),
+        TODO("rareza")
+    ) {
+        durabilidad = parcel.readInt()
+    }
+
     init {
         durabilidad=when(rareza){
             Articulo.Rareza.COMUN->50
@@ -762,7 +829,29 @@ class Articulo(
     }
 
     override fun toString(): String {
-        return "[Tipo Artículo:$tipoArticulo, Nombre:$nombre, Peso:$peso, Rareza:$rareza]"
+        return "[Tipo Artículo:$tipoArticulo, Nombre:$nombre, Peso:$peso, Rareza:$rareza, Precio:$precio]"
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(peso)
+        parcel.writeInt(precio)
+        parcel.writeInt(url)
+        parcel.writeInt(unidades)
+        parcel.writeInt(durabilidad)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Articulo> {
+        override fun createFromParcel(parcel: Parcel): Articulo {
+            return Articulo(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Articulo?> {
+            return arrayOfNulls(size)
+        }
     }
 }
 
@@ -995,6 +1084,13 @@ class Mazmorra(
     fun getDificultad(): Int {
         return dificultad
     }
+    fun borrarMaldiciones() {
+        maldiciones.clear()
+    }
+
+    fun borrarBendiciones() {
+        bendiciones.clear()
+    }
 
     fun getCondicion(): TipoCondicion {
         return condicion
@@ -1169,7 +1265,8 @@ class Enemigo(private var nivel: Int) : Parcelable {
 
 
 
-class Magia(private val tipoMagia: TipoMagia, private val nombre: Nombre, private val mana: Int) {
+class Magia(private val tipoMagia: TipoMagia, private val nombre: Nombre, private val mana: Int) :
+    Parcelable {
     enum class TipoMagia {
         AIRE,
         FUEGO,
@@ -1191,6 +1288,14 @@ class Magia(private val tipoMagia: TipoMagia, private val nombre: Nombre, privat
         SANAR,
         CURAR
     }
+
+    constructor(parcel: Parcel) : this(
+        TODO("tipoMagia"),
+        TODO("nombre"),
+        parcel.readInt()
+    ) {
+    }
+
     fun getMana(): Int {
         return mana
     }
@@ -1234,6 +1339,24 @@ class Magia(private val tipoMagia: TipoMagia, private val nombre: Nombre, privat
     override fun toString(): String {
         return "Magia: ${nombre.name} - Tipo: ${tipoMagia.name} - Mana: $mana"
     }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(mana)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Magia> {
+        override fun createFromParcel(parcel: Parcel): Magia {
+            return Magia(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Magia?> {
+            return arrayOfNulls(size)
+        }
+    }
 }
 
 class Libro(
@@ -1241,8 +1364,17 @@ class Libro(
     private val paginasLibroRojo: Int,
     private val paginasLibroMarron: Int,
     private val paginasLibroBlanco: Int
-) {
+) : Parcelable {
     private var contenido: ArrayList<Magia> = ArrayList()
+
+    constructor(parcel: Parcel) : this(
+        parcel.readInt(),
+        parcel.readInt(),
+        parcel.readInt(),
+        parcel.readInt()
+    ) {
+
+    }
 
     fun getPaginasGrimorioVerde(): Double {
         return (paginasLibroVerde * 2 - contenido.count { it.getTipoMagia() == Magia.TipoMagia.AIRE }).toDouble()
@@ -1274,9 +1406,30 @@ class Libro(
         if (paginasDisponibles >= 1 && tipoMagia == Magia.TipoMagia.BLANCA &&
             (nombreMagia == Magia.Nombre.SANAR || nombreMagia == Magia.Nombre.CURAR)) {
             contenido.add(nuevaMagia)
-            println("¡Magia aprendida y añadida al grimorio!")
+            println("¡Magia aprendida y añadida al libro!")
         } else {
-            println("No se puede aprender la magia o no hay suficientes páginas disponibles en el grimorio.")
+            println("No se puede aprender la magia o no hay suficientes páginas disponibles en el libro.")
+        }
+        if (paginasDisponibles >= 1 && tipoMagia == Magia.TipoMagia.AIRE &&
+            (nombreMagia == Magia.Nombre.HURACAN|| nombreMagia == Magia.Nombre.TORNADO || nombreMagia == Magia.Nombre.ALIENTO || nombreMagia == Magia.Nombre.VENDAVAL )) {
+            contenido.add(nuevaMagia)
+            println("¡Magia aprendida y añadida al libro!")
+        } else {
+            println("No se puede aprender la magia o no hay suficientes páginas disponibles en el libro.")
+        }
+        if (paginasDisponibles >= 1 && tipoMagia == Magia.TipoMagia.FUEGO &&
+            (nombreMagia == Magia.Nombre.FATUO|| nombreMagia == Magia.Nombre.DESCARGA || nombreMagia == Magia.Nombre.PROPULSION )) {
+            contenido.add(nuevaMagia)
+            println("¡Magia aprendida y añadida al libro!")
+        } else {
+            println("No se puede aprender la magia o no hay suficientes páginas disponibles en el libro.")
+        }
+        if (paginasDisponibles >= 1 && tipoMagia == Magia.TipoMagia.TIERRA &&
+            (nombreMagia == Magia.Nombre.MURO|| nombreMagia == Magia.Nombre.TEMBLOR || nombreMagia == Magia.Nombre.TERREMOTO )) {
+            contenido.add(nuevaMagia)
+            println("¡Magia aprendida y añadida al libro!")
+        } else {
+            println("No se puede aprender la magia o no hay suficientes páginas disponibles en el libro.")
         }
     }
 
@@ -1299,6 +1452,27 @@ class Libro(
             contenidoString.append("${index + 1}. ${magia.getNombre()} - Tipo: ${magia.getTipoMagia()} - Mana: ${magia.getMana()}\n")
         }
         return contenidoString.toString()
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(paginasLibroVerde)
+        parcel.writeInt(paginasLibroRojo)
+        parcel.writeInt(paginasLibroMarron)
+        parcel.writeInt(paginasLibroBlanco)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Libro> {
+        override fun createFromParcel(parcel: Parcel): Libro {
+            return Libro(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Libro?> {
+            return arrayOfNulls(size)
+        }
     }
 }
 

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -28,11 +29,12 @@ class PersonajeCreado : AppCompatActivity() {
 
         val datos: TextView = findViewById(R.id.datos)
         val img: ImageView = findViewById(R.id.img)
-        var mascotas=intent.getParcelableArrayListExtra<Mascota>("mascotas")
+
+       // var mascotas=intent.getParcelableArrayListExtra<Mascota>("mascotas")
         val idUsuarioAuth = FirebaseAuth.getInstance().currentUser!!.uid.toString()
         val btnVolver = findViewById<Button>(R.id.btnVolver)
-        val objeto1 =
-            Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.DAGA, 2, 34, R.drawable.objeto,1,Articulo.Rareza.COMUN)
+        //val objeto1 =
+          //  Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.DAGA, 2, 34, R.drawable.moneda,1,Articulo.Rareza.COMUN)
             val btnEmpezar = findViewById<Button>(R.id.btnEmpezar)
         textToSpeech = TextToSpeech(this){status->
             if (status == TextToSpeech.SUCCESS){
@@ -43,35 +45,40 @@ class PersonajeCreado : AppCompatActivity() {
             }
         }
             dbHelper = Database(this)
-        personaje = intent.getParcelableExtra<Personaje>("personaje")
+
 
             val modoRegistro = intent.getBooleanExtra("modoRegistro", false)
             if (modoRegistro) {
-
+                personaje = intent.getParcelableExtra<Personaje>("personaje")
                 dbHelper.borrarArticulos(idUsuarioAuth)
-                dbHelper.borrarArticulos(idUsuarioAuth)
+                dbHelper.borrarMagias(idUsuarioAuth)
                 dbHelper.borrarMascotas(idUsuarioAuth)
-               // personaje?.getMochila()?.addArticulo(objeto1)
+                //personaje?.getMochila()?.addArticulo(objeto1)
+                mascotas=intent.getParcelableArrayListExtra("mascotas")
                 mascotas!!.add(Mascota("Inicial",Mascota.tipoMascota.entries[(0..3).random()]))
                 do{
                     val magia=Magia(Magia.TipoMagia.entries[(0..3).random()],Magia.Nombre.entries[(0..11).random()],20)
                     personaje!!.getLibro().aprenderMagia(magia)
                 }while (personaje!!.getLibro().getContenido().isEmpty())
                 Toast.makeText(this, personaje!!.getLibro().getContenido().toString(), Toast.LENGTH_SHORT).show()
-                dbHelper.insertarPersonaje(personaje!!, FirebaseAuth.getInstance().currentUser!!.uid.toString())
-                dbHelper.insertarMascotas(mascotas,idUsuarioAuth)
-                dbHelper.insertarMagias(personaje!!.getLibro().getContenido(),idUsuarioAuth)
                 val objeto1 =
-                    Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.MARTILLO, 2, 34, R.drawable.objeto,1,Articulo.Rareza.COMUN)
+                    Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.ESPADA, 2, 34, R.drawable.objetodos,1,Articulo.Rareza.COMUN)
                 val objeto2 =
-                    Articulo(Articulo.TipoArticulo.PROTECCION, Articulo.Nombre.ESCUDO, 2, 34, R.drawable.objeto,1,Articulo.Rareza.RARO)
+                    Articulo(Articulo.TipoArticulo.PROTECCION, Articulo.Nombre.ESCUDO, 2, 34, R.drawable.objetocuatro,1,Articulo.Rareza.RARO)
 
                 personaje!!.getMochila().addArticulo(objeto1)
-                Toast.makeText(this, "Personaje insertado exitosamente", Toast.LENGTH_SHORT).show()
+                personaje!!.getMochila().addArticulo(objeto2)
+                dbHelper.insertarPersonaje(personaje!!, idUsuarioAuth)
+                dbHelper.insertarMascotas(mascotas!!,idUsuarioAuth)
+                dbHelper.insertarMagias(personaje!!.getLibro().getContenido(),idUsuarioAuth)
                 dbHelper.insertarArticulos(personaje!!.getMochila().getContenido(), idUsuarioAuth)
+
+                Toast.makeText(this, "Personaje insertado exitosamente", Toast.LENGTH_SHORT).show()
+
             } else {
                 val idUsuarioAuth = FirebaseAuth.getInstance().currentUser!!.uid.toString()
                 try {
+
                     personaje = dbHelper.obtenerPersonaje(idUsuarioAuth!!)
                      personaje?.getMochila()?.setContenido(dbHelper.obtenerArticulos(idUsuarioAuth).getContenido())
                     mascotas=dbHelper.obtenerMascotas(idUsuarioAuth!!)
@@ -106,6 +113,7 @@ class PersonajeCreado : AppCompatActivity() {
 
                  */
             val personajeTxt=personaje.toString()
+
             var txtMascota=""
             repeat(mascotas!!.size){
                 txtMascota += mascotas!!.get(it)?.toString()
@@ -114,12 +122,16 @@ class PersonajeCreado : AppCompatActivity() {
 
             val idImagen = intent.getIntExtra("img", 0)
             img.setImageResource(idImagen)
+
             textToSpeech.speak(
             datos.text,
             TextToSpeech.QUEUE_FLUSH,
             null,
             null
         )
+        Log.d("DatosPersonaje", "$personaje")
+        Log.d("DatosMascota 1", "${mascotas!![0]}")
+
             btnVolver.setOnClickListener {
                 dbHelper.borrarMascotas(idUsuarioAuth)
                 val intent = Intent(this, CreacionPersonaje::class.java)
@@ -130,12 +142,8 @@ class PersonajeCreado : AppCompatActivity() {
             btnEmpezar.setOnClickListener {
                 val intent = Intent(this, Aventura::class.java)
                 intent.putExtra("personaje", personaje)
-                if(mascotas!=null){
-                    intent.putParcelableArrayListExtra("mascotas", mascotas)
-                }else{
-                    intent.putParcelableArrayListExtra("mascotas", null)
-                }
-
+                intent.putParcelableArrayListExtra("mascotas", mascotas)
+                intent.putExtra("creado",true)
 
                 startActivity(intent)
             }

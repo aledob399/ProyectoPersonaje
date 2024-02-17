@@ -195,6 +195,7 @@ class DatabaseHelper(context: Context) :
 
             }
             val idPersonaje = db.insert(TABLE_PERSONAJE, null, valuesPersonaje)
+            Log.d("DatabaseHelper", "Personaje insertado con ID: $idPersonaje")
             //insertarArticulos(personaje.getMochila().getContenido(),idUsuarioAuth)
             /*
             // Insert articles into the mochila
@@ -307,10 +308,10 @@ class DatabaseHelper(context: Context) :
         val articulos = ArrayList<Articulo>()
         val db = readableDatabase
 
-        val query = "SELECT * FROM $TABLE_ARTICULOS  ORDER BY $COLUMN_ID"
+        val query = "SELECT * FROM $TABLE_ARTICULOS WHERE $COLUMN_ID_USUARIO_AUTH= ? ORDER BY $COLUMN_ID"
 
 
-        val cursor = db.rawQuery(query, null)
+        val cursor = db.rawQuery(query, arrayOf(idUsuario))
 
 
         if(cursor.moveToNext()){
