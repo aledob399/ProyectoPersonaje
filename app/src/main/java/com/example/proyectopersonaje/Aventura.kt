@@ -124,6 +124,18 @@ class Aventura : AppCompatActivity() {
 
                         return@setNavigationItemSelectedListener true
                     }
+                    R.id.two -> {
+                        drawerLayout.closeDrawer(GravityCompat.END)
+                        // Llamada para actualizar el personaje
+                        val intent=Intent(this,DialogFlow::class.java)
+                        intent.putExtra("personaje",personaje)
+                        intent.putExtra("mochila",personaje!!.getMochila())
+                        intent.putParcelableArrayListExtra("mascotas", mascotas)
+
+                        startActivity(intent)
+
+                        return@setNavigationItemSelectedListener true
+                    }
 
                     else -> {
                         return@setNavigationItemSelectedListener false

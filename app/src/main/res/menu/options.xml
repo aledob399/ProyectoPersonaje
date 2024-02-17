@@ -4,6 +4,8 @@
         <item android:id="@+id/one"
             android:icon="@drawable/icono_guardado"
             android:title="Guardar"></item>
-
+        <item android:id="@+id/two"
+            android:icon="@drawable/btn_enviar"
+            android:title="ChatBot"></item>
     </group>
 </menu>

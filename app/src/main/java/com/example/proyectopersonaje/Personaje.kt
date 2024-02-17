@@ -620,6 +620,15 @@ class Mochila(private var pesoMochila: Int) : Parcelable {
     fun setContenido(nuevaMochila:ArrayList<Articulo>) {
         contenido = nuevaMochila
     }
+    fun borrarArticulo(articulo: Articulo) {
+        if (contenido.contains(articulo)) {
+            contenido.remove(articulo)
+            pesoMochila += articulo.getPeso()
+            println("${articulo.getNombre()} ha sido eliminado de la mochila.")
+        } else {
+            println("El artículo no se encuentra en la mochila.")
+        }
+    }
     fun addArticulo(articulo: Articulo) {
         if (articulo.getPeso() <= pesoMochila) {
             when (articulo.getTipoArticulo()) {
@@ -831,7 +840,7 @@ class Articulo(
     }
 
     override fun toString(): String {
-        return "[Tipo Artículo:$tipoArticulo, Nombre:$nombre, Peso:$peso, Rareza:$rareza, Precio:$precio]"
+        return "[Tipo Artículo:$tipoArticulo, Nombre:$nombre, Peso:$peso, Rareza:${rareza.name}, Precio:$precio]"
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
