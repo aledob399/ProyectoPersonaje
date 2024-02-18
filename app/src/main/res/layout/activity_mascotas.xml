@@ -6,6 +6,34 @@
     android:layout_height="match_parent"
     tools:context=".Mascotas">
 
+    <ImageButton
+        android:id="@+id/btnMusica"
+        style="@android:style/Widget.DeviceDefault.ImageButton"
+        android:layout_width="120dp"
+        android:layout_height="111dp"
+
+        android:layout_marginStart="252dp"
+        android:layout_marginEnd="21dp"
+        android:layout_marginBottom="16dp"
+        android:background="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@android:drawable/ic_media_play" />
+
+    <ImageButton
+        android:id="@+id/btnLeerTexto"
+        android:layout_width="69dp"
+        android:layout_height="83dp"
+        android:layout_marginEnd="324dp"
+        android:layout_marginBottom="36dp"
+        android:backgroundTint="#FEFAFD"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@android:drawable/ic_btn_speak_now" />
+
     <TextView
         android:id="@+id/encabezado"
         android:layout_width="match_parent"
@@ -22,36 +50,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/huevos"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Mascota"
-        app:layout_constraintEnd_toStartOf="@+id/continuar"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/encabezado" />
-
+    <!-- Agregar un ScrollView para contener el LinearLayout de los CardViews -->
     <Button
         android:id="@+id/continuar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="108dp"
         android:text="Continuar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/huevos"
         app:layout_constraintTop_toBottomOf="@+id/encabezado" />
 
-    <!-- Agregar un ScrollView para contener el LinearLayout de los CardViews -->
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/huevos"
+        android:id="@+id/scrollView2"
+        android:layout_width="388dp"
+        android:layout_height="665dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <!-- Agregar un LinearLayout para contener los CardViews -->
         <LinearLayout

@@ -17,6 +17,14 @@
             android:layout_height="match_parent">
 
             <ImageButton
+                android:id="@+id/btnLeerTexto"
+                android:layout_width="69dp"
+                android:layout_height="83dp"
+                android:layout_marginTop="700dp"
+                android:backgroundTint="#FEFAFD"
+                app:srcCompat="@android:drawable/ic_btn_speak_now" />
+
+            <ImageButton
                 android:id="@+id/btnMusica"
                 style="@android:style/Widget.DeviceDefault.ImageButton"
                 android:layout_width="120dp"

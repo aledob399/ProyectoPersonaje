@@ -6,6 +6,32 @@
     android:layout_height="match_parent"
     tools:context=".Mazmorras">
 
+    <ImageButton
+        android:id="@+id/btnMusica"
+        style="@android:style/Widget.DeviceDefault.ImageButton"
+        android:layout_width="120dp"
+        android:layout_height="111dp"
+
+        android:layout_marginStart="252dp"
+        android:layout_marginEnd="21dp"
+        android:layout_marginBottom="16dp"
+        android:background="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@android:drawable/ic_media_play" />
+
+    <ImageButton
+        android:id="@+id/btnLeerTexto"
+        android:layout_width="69dp"
+        android:layout_height="83dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginBottom="2dp"
+        android:backgroundTint="#FEFAFD"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@android:drawable/ic_btn_speak_now" />
+
     <Button
         android:id="@+id/entrar"
         android:layout_width="wrap_content"

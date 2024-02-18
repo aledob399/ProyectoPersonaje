@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -15,16 +17,18 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import java.util.Locale
 
-class PersonajeCreado : AppCompatActivity() {
+class PersonajeCreado : AppCompatActivity() ,TextToSpeech.OnInitListener  {
 
     private lateinit var dbHelper: Database
     private var personaje: Personaje? = null
+    private lateinit var datos:TextView
     private var mascotas: ArrayList<Mascota>? = null
     private lateinit var firebaseAuth:FirebaseAuth
     private lateinit var textToSpeech:TextToSpeech
+    private var cadena: String? =null
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_personaje_creado)
@@ -32,21 +36,15 @@ class PersonajeCreado : AppCompatActivity() {
 
         val datos: TextView = findViewById(R.id.datos)
         val img: ImageView = findViewById(R.id.img)
-
+        textToSpeech = TextToSpeech(this, this)
        // var mascotas=intent.getParcelableArrayListExtra<Mascota>("mascotas")
         val idUsuarioAuth = FirebaseAuth.getInstance().currentUser!!.uid.toString()
         val btnVolver = findViewById<Button>(R.id.btnVolver)
         //val objeto1 =
           //  Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.DAGA, 2, 34, R.drawable.moneda,1,Articulo.Rareza.COMUN)
             val btnEmpezar = findViewById<Button>(R.id.btnEmpezar)
-        textToSpeech = TextToSpeech(this){status->
-            if (status == TextToSpeech.SUCCESS){
-                val result = textToSpeech.setLanguage(Locale.getDefault())
-                if (result == TextToSpeech.LANG_MISSING_DATA||result == TextToSpeech.LANG_NOT_SUPPORTED){
-                    Toast.makeText(this,"lenguaje no soportado",Toast.LENGTH_LONG).show()
-                }
-            }
-        }
+        val btnLeerTexto = findViewById<ImageButton>(R.id.btnLeerTexto)
+
             dbHelper = Database(this)
 
 
@@ -122,16 +120,13 @@ class PersonajeCreado : AppCompatActivity() {
                 txtMascota += mascotas!!.get(it)?.toString()
             }
             datos.text=(txtMascota +datos.text.toString()+ personajeTxt)
-
+            cadena=datos.text.toString()
             val idImagen = intent.getIntExtra("img", 0)
             img.setImageResource(idImagen)
-
-            textToSpeech.speak(
-            datos.text,
-            TextToSpeech.QUEUE_FLUSH,
-            null,
-            null
-        )
+            btnLeerTexto.setOnClickListener {
+                leerDatos(cadena!!)
+            }
+            textToSpeech.stop()
         Log.d("DatosPersonaje", "$personaje")
         Log.d("DatosMascota 1", "${mascotas!![0]}")
 
@@ -143,6 +138,7 @@ class PersonajeCreado : AppCompatActivity() {
             }
 
             btnEmpezar.setOnClickListener {
+                textToSpeech.stop()
                 val intent = Intent(this, Aventura::class.java)
                 intent.putExtra("personaje", personaje)
                 intent.putParcelableArrayListExtra("mascotas", mascotas)
@@ -151,6 +147,64 @@ class PersonajeCreado : AppCompatActivity() {
                 startActivity(intent)
             }
     }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            val result = textToSpeech.setLanguage(Locale.getDefault())
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                // Idioma no disponible, establecer un idioma de respaldo
+                val backupLocale = Locale.US
+                val backupResult = textToSpeech.setLanguage(backupLocale)
+                if (backupResult == TextToSpeech.LANG_MISSING_DATA || backupResult == TextToSpeech.LANG_NOT_SUPPORTED) {
+                    // Si el idioma de respaldo también está ausente o no es compatible, mostrar un mensaje de error
+                    Toast.makeText(this, "El idioma no es compatible con Text-to-Speech", Toast.LENGTH_SHORT).show()
+                } else {
+                    // Si el idioma de respaldo está configurado correctamente, leer los datos del personaje
+                    leerDatos(cadena!!)
+                }
+            } else {
+                // Si el TextToSpeech se inicializa correctamente con el idioma predeterminado, leer los datos del personaje
+                leerDatos(cadena!!)
+            }
+        } else {
+            Toast.makeText(this, "Error al inicializar Text-to-Speech", Toast.LENGTH_SHORT).show()
+        }
+
+
+    }
+
+
+
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun leerDatos(cadena:String) {
+        // Obtener los datos del personaje y las mascotas
+        val textoParaLeer = "Hola"
+
+        // Verificar si el idioma español está disponible
+        val localeSpanish = Locale("es", "ES")
+        val result = textToSpeech.setLanguage(localeSpanish)
+
+        if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+            // Si el idioma español no está disponible, mostrar un mensaje de error
+          //  Toast.makeText(this, "El idioma español no está disponible para Text-to-Speech", Toast.LENGTH_SHORT).show()
+        } else {
+            // Si el idioma español está disponible, leer el texto proporcionado en español
+            textToSpeech.speak(cadena.toString(), TextToSpeech.QUEUE_FLUSH, null, null)
+        }
+    }
+
+    override fun onDestroy() {
+        // Liberar los recursos del TextToSpeech
+        if (textToSpeech != null) {
+            textToSpeech.stop()
+            textToSpeech.shutdown()
+        }
+        super.onDestroy()
+    }
+
+    // Importante: Liberar los recursos del TextToSpeech cuando se detiene la actividad
 
 
 

@@ -534,6 +534,38 @@ class Personaje(
 
 
     }
+    fun sumarMonedas(monedasAgregar: Int) {
+        val moneda = Articulo(
+            Articulo.TipoArticulo.ORO,
+            Articulo.Nombre.MONEDA,
+            0,
+            15,
+            R.drawable.moneda,
+            1,
+            Articulo.Rareza.COMUN
+        )
+
+        var monedas = monedasAgregar
+
+        while (monedas >= 15) {
+            mochila?.addArticulo(moneda)
+            monedas -= 15
+        }
+
+        if (monedas > 0) {
+            mochila?.addArticulo(
+                Articulo(
+                    Articulo.TipoArticulo.ORO,
+                    Articulo.Nombre.MONEDA,
+                    0,
+                    monedas,
+                    R.drawable.moneda,
+                    1,
+                    Articulo.Rareza.COMUN
+                )
+            )
+        }
+    }
     fun quitarMonedas() {
         val monedas = getMochila()!!.getContenido().filter { it.getNombre() == Articulo.Nombre.MONEDA }
         for (moneda in monedas) {
@@ -557,7 +589,7 @@ class Personaje(
 
     override fun toString(): String {
 
-        return "Personaje: Nombre: $nombre, Nivel: $nivel, Salud: $salud, Ataque: $ataque, Defensa: $defensa, Suerte: $suerte, Raza: $raza, Clase: $clase, Estado Vital: $estadoVital, Mana: $mana, Mochila: ${mochila.toString()}  Grimorio: $libro.toString()"
+        return "Personaje: Nombre: $nombre, Nivel: $nivel, Salud: $salud, Ataque: $ataque, Defensa: $defensa, Suerte: $suerte, Raza: $raza, Clase: $clase, Estado Vital: $estadoVital, Mana: $mana, Mochila: ${mochila.toString()}  Libro: $libro"
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
