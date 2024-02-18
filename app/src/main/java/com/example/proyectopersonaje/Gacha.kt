@@ -46,8 +46,8 @@ class Gacha : AppCompatActivity() {
         val popupView = layoutInflater.inflate(R.layout.popup_recompensa, null)
         val popupWindow = PopupWindow(popupView, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT, true)
         val textViewRecompensa = popupView.findViewById<TextView>(R.id.textViewRecompensa)
-        personaje!!.getMochila().addArticulo(Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,1,15,R.drawable.ciudad,1,Articulo.Rareza.RARO))
-        personaje!!.getMochila().addArticulo(Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,1,15,R.drawable.ciudad,1,Articulo.Rareza.RARO))
+        personaje!!.getMochila()!!.addArticulo(Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,1,15,R.drawable.ciudad,1,Articulo.Rareza.RARO))
+        personaje!!.getMochila()!!.addArticulo(Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,1,15,R.drawable.ciudad,1,Articulo.Rareza.RARO))
         btnContinuar.setOnClickListener {
             val intent = Intent(this, Aventura::class.java)
             intent.putExtra("personaje", personaje)
@@ -113,7 +113,7 @@ class Gacha : AppCompatActivity() {
                                 R.drawable.objetocuatro,
                                 1,Articulo.Rareza.entries[(0..3).random()]
                             )
-                            personaje.getMochila().addArticulo(recompensa)
+                            personaje.getMochila()!!.addArticulo(recompensa)
                             textViewRecompensa.text = "¡Enhorabuena! Has recibido un articulo $recompensa"
                             recompensaImageView.setImageResource(recompensa.getUrl())
                         }
@@ -128,7 +128,7 @@ class Gacha : AppCompatActivity() {
                                 R.drawable.objetodos,
                                 1,Articulo.Rareza.entries[(0..3).random()]
                             )
-                            personaje.getMochila().addArticulo(recompensa)
+                            personaje.getMochila()!!.addArticulo(recompensa)
                             textViewRecompensa.text = "¡Enhorabuena! Has recibido un articulo $recompensa"
                             recompensaImageView.setImageResource(recompensa.getUrl())
                         }
@@ -143,7 +143,7 @@ class Gacha : AppCompatActivity() {
                                 R.drawable.objetoocho,
                                 1,Articulo.Rareza.entries[(0..3).random()]
                             )
-                            personaje.getMochila().addArticulo(recompensa)
+                            personaje.getMochila()!!.addArticulo(recompensa)
                             textViewRecompensa.text = "¡Enhorabuena! Has recibido un articulo $recompensa"
                             recompensaImageView.setImageResource(recompensa.getUrl())
                         }

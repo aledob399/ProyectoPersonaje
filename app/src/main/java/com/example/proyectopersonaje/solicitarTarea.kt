@@ -1,31 +1,50 @@
 package com.example.proyectopersonaje
-import android.app.Activity
-import android.os.AsyncTask
+
+import android.app.Activity;
+import android.os.AsyncTask;
 import com.google.cloud.dialogflow.v2.*
 
-// Cambié el nombre de la clase a SolicitarTarea para seguir las convenciones de nombres de clases en Kotlin
-class solicitarTarea(private val actividad: Activity, private val sesion: SessionName, private val sesionesCliente: SessionsClient, private val entradaConsulta: QueryInput) : AsyncTask<Void, Void, DetectIntentResponse>() {
 
-    // Modifiqué el constructor para usar los parámetros directamente como argumentos de la clase
+class solicitarTarea : AsyncTask<Void, Void, DetectIntentResponse> {
 
-    // Cambié el nombre de los métodos a camelCase para seguir las convenciones de nombres de métodos en Kotlin
+    // Declaramos estas variables
+    var actividad: Activity? = null
+    private var sesion: SessionName? = null
+    private var sesionesCliente: SessionsClient? = null
+    private var entradaConsulta: QueryInput? = null
+
+    // Usamos las variables en un constructor
+    constructor(actividad: Activity, sesion: SessionName, sesionesCliente: SessionsClient, entradaConsulta: com.google.cloud.dialogflow.v2.QueryInput){
+        this.actividad = actividad
+        this.sesion = sesion
+        this.sesionesCliente = sesionesCliente
+        this.entradaConsulta = entradaConsulta
+    }
+
+    // Ejecutamos las tareas de fondo con el método de Android 'doInBackground'
     override fun doInBackground(vararg params: Void?): DetectIntentResponse? {
+
+        // Usamos 'try' para realizar las tareas de fondo
         try {
             val detectarIntentosolicitarTarea = DetectIntentRequest.newBuilder()
                 .setSession(sesion.toString())
                 .setQueryInput(entradaConsulta)
                 .build()
-            return sesionesCliente.detectIntent(detectarIntentosolicitarTarea)
-        } catch (e: Exception) {
+            return sesionesCliente?.detectIntent(detectarIntentosolicitarTarea)
+        }
+        // Si hay algún error, devolvemos una exception en 'catch'
+        catch (e: Exception) {
             e.printStackTrace()
         }
         return null
     }
 
+    // El método de Android 'onPostExecute' ejecuta determinados hilos de la interface luego que se ejecutó
+    // el método anterior llamado 'doInBackground'
     override fun onPostExecute(result: DetectIntentResponse?) {
-        // Verificamos si la actividad es una instancia de DialogFlow antes de llamar al método validar()
-        if (actividad is DialogFlow) {
-            actividad.validar(result)
-        }
+        //Pasamos el resultado al método validar() que se encuentra en la actividad principal 'MainActivity'
+        (actividad as DialogFlow).validar(result)
     }
+
+
 }

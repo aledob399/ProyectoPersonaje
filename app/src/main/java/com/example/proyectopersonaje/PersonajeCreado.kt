@@ -2,6 +2,7 @@ package com.example.proyectopersonaje
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.util.Log
@@ -9,6 +10,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import java.util.Locale
@@ -21,6 +23,7 @@ class PersonajeCreado : AppCompatActivity() {
     private lateinit var firebaseAuth:FirebaseAuth
     private lateinit var textToSpeech:TextToSpeech
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
@@ -58,20 +61,20 @@ class PersonajeCreado : AppCompatActivity() {
                 mascotas!!.add(Mascota("Inicial",Mascota.tipoMascota.entries[(0..3).random()]))
                 do{
                     val magia=Magia(Magia.TipoMagia.entries[(0..3).random()],Magia.Nombre.entries[(0..11).random()],20)
-                    personaje!!.getLibro().aprenderMagia(magia)
-                }while (personaje!!.getLibro().getContenido().isEmpty())
-                Toast.makeText(this, personaje!!.getLibro().getContenido().toString(), Toast.LENGTH_SHORT).show()
+                    personaje!!.getLibro()!!.aprenderMagia(magia)
+                }while (personaje!!.getLibro()!!.getContenido().isEmpty())
+                Toast.makeText(this, personaje!!.getLibro()!!.getContenido().toString(), Toast.LENGTH_SHORT).show()
                 val objeto1 =
                     Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.ESPADA, 2, 34, R.drawable.objetodos,1,Articulo.Rareza.COMUN)
                 val objeto2 =
                     Articulo(Articulo.TipoArticulo.PROTECCION, Articulo.Nombre.ESCUDO, 2, 34, R.drawable.objetocuatro,1,Articulo.Rareza.RARO)
 
-                personaje!!.getMochila().addArticulo(objeto1)
-                personaje!!.getMochila().addArticulo(objeto2)
+                personaje!!.getMochila()!!.addArticulo(objeto1)
+                personaje!!.getMochila()!!.addArticulo(objeto2)
                 dbHelper.insertarPersonaje(personaje!!, idUsuarioAuth)
                 dbHelper.insertarMascotas(mascotas!!,idUsuarioAuth)
-                dbHelper.insertarMagias(personaje!!.getLibro().getContenido(),idUsuarioAuth)
-                dbHelper.insertarArticulos(personaje!!.getMochila().getContenido(), idUsuarioAuth)
+                dbHelper.insertarMagias(personaje!!.getLibro()!!.getContenido(),idUsuarioAuth)
+                dbHelper.insertarArticulos(personaje!!.getMochila()!!.getContenido(), idUsuarioAuth)
 
                 Toast.makeText(this, "Personaje insertado exitosamente", Toast.LENGTH_SHORT).show()
 
@@ -82,7 +85,7 @@ class PersonajeCreado : AppCompatActivity() {
                     personaje = dbHelper.obtenerPersonaje(idUsuarioAuth!!)
                      personaje?.getMochila()?.setContenido(dbHelper.obtenerArticulos(idUsuarioAuth).getContenido())
                     mascotas=dbHelper.obtenerMascotas(idUsuarioAuth!!)
-                    personaje!!.getLibro().setContenido(dbHelper.obtenerMagias(idUsuarioAuth))
+                    personaje!!.getLibro()!!.setContenido(dbHelper.obtenerMagias(idUsuarioAuth))
                     if (personaje == null) {
 
                         Toast.makeText(this, "No se encontró ningún personaje asociado a este usuario", Toast.LENGTH_SHORT).show()

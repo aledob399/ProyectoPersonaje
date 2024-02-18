@@ -6,7 +6,6 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import android.widget.Toast
 
 import com.google.firebase.auth.FirebaseAuth
 
@@ -172,7 +171,7 @@ class DatabaseHelper(context: Context) :
     fun insertarPersonaje(personaje: Personaje,idUsuarioAuth: String) {
         val db = writableDatabase
 
-        val articulos = personaje.getMochila().getContenido()
+        val articulos = personaje.getMochila()!!.getContenido()
 
         // Begin transaction
         db.beginTransaction()
@@ -251,7 +250,7 @@ class DatabaseHelper(context: Context) :
             val estadoVitalFinal: Personaje.EstadoVital = obtenerEstadoVitalEnum(estadoVital)
             val claseFinal: Personaje.Clase = obtenerClaseEnum(clase)
 
-            personaje = Personaje(nombre, razaFinal, claseFinal, estadoVitalFinal)
+          //  personaje = Personaje(nombre, razaFinal, claseFinal, estadoVitalFinal)
           //  personaje.getMochila().setContenido(obtenerArticulos(idUsuarioAuth).getContenido())
 /*
             personaje.setExperiencia(experiencia)

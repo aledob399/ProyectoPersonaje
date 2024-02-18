@@ -56,8 +56,8 @@ class Objeto : AppCompatActivity() {
 
         btnRecoger.setOnClickListener {
 
-            if(personaje!!.getMochila().getPesoMochila()>mochilaDb.getContenido().get(numRand).getPeso()){
-                personaje!!.getMochila().addArticulo(mochilaDb.getContenido().get(numRand))
+            if(personaje!!.getMochila()!!.getPesoMochila()>mochilaDb.getContenido().get(numRand).getPeso()){
+                personaje!!.getMochila()!!.addArticulo(mochilaDb.getContenido().get(numRand))
                 Toast.makeText(this, "Objeto recogido correctamente", Toast.LENGTH_SHORT).show()
             }else Toast.makeText(this, "El objeto no se puede recoger", Toast.LENGTH_SHORT).show()
         }

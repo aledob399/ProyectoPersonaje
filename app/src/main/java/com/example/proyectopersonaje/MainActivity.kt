@@ -81,8 +81,8 @@ class MainActivity : AppCompatActivity() {
                         val articulos=dbHelper.obtenerArticulos(idUsuarioAuth.toString())
                         val magias=dbHelper.obtenerMagias(idUsuarioAuth.toString())
                         if (personaje != null) {
-                            personaje.getLibro().setContenido(magias)
-                            personaje.getMochila().setContenido(articulos.getContenido())
+                            personaje.getLibro()!!.setContenido(magias)
+                            personaje.getMochila()!!.setContenido(articulos.getContenido())
                         }
                         val intent = Intent(this, PersonajeCreado::class.java)
 

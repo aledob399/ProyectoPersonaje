@@ -42,8 +42,8 @@ class Aventura : AppCompatActivity() {
 
         var mascotas = intent.getParcelableArrayListExtra<Mascota>("mascotas")!!
         if(creado){
-            personaje!!.getMochila().setContenido(dbHelper.obtenerArticulos(idUsuarioAuth).getContenido())
-            personaje.getLibro().setContenido(dbHelper.obtenerMagias(idUsuarioAuth))
+            personaje!!.getMochila()!!.setContenido(dbHelper.obtenerArticulos(idUsuarioAuth).getContenido())
+            personaje.getLibro()!!.setContenido(dbHelper.obtenerMagias(idUsuarioAuth))
             mascotas=dbHelper.obtenerMascotas(idUsuarioAuth)
         }
         Log.d("DatosPersonaje", "$personaje")
@@ -111,8 +111,8 @@ class Aventura : AppCompatActivity() {
                             dbHelper.borrarArticulos(idUsuarioAuth)
                             dbHelper.borrarMagias(idUsuarioAuth)
                             dbHelper.insertarPersonaje(personaje,idUsuarioAuth)
-                            dbHelper.insertarArticulos(personaje.getMochila().getContenido(),idUsuarioAuth)
-                            dbHelper.insertarMagias(personaje.getLibro().getContenido(),idUsuarioAuth)
+                            dbHelper.insertarArticulos(personaje.getMochila()!!.getContenido(),idUsuarioAuth)
+                            dbHelper.insertarMagias(personaje.getLibro()!!.getContenido(),idUsuarioAuth)
 
                             Toast.makeText(this, "Personaje actualizado con éxito", Toast.LENGTH_SHORT).show()
                         }

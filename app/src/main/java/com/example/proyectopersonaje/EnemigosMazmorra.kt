@@ -5,14 +5,11 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 
 import android.view.View
 import android.view.WindowManager
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -21,7 +18,6 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import com.bumptech.glide.Glide
-import io.grpc.Context
 
 //bencdiciones y maldiciones y recompensas
 //popup al ganar y encontrar cosas,cambiar de rival
@@ -223,26 +219,30 @@ class EnemigosMazmorra : AppCompatActivity() {
 
 
                         var magia: Magia? =null
-                        var p= Personaje("julian",Personaje.Raza.Elfo,Personaje.Clase.Brujo,Personaje.EstadoVital.Adulto)
+                        var p= Personaje("julian",Personaje.Raza.Elfo,Personaje.Clase.Brujo,Personaje.EstadoVital.Adulto,Libro(4,4,4,4,ArrayList<Magia>()),
+                            Mochila(100)
+                        )
                         do{
                              magia=Magia(Magia.TipoMagia.entries[(0..3).random()],Magia.Nombre.entries[(0..11).random()],20)
-                            p!!.getLibro().aprenderMagia(magia)
-                        }while (p!!.getLibro().getContenido().isEmpty())
-                        personaje.getLibro().aprenderMagia(magia!!)
+                            p!!.getLibro()!!.aprenderMagia(magia)
+                        }while (p!!.getLibro()!!.getContenido().isEmpty())
+                        personaje.getLibro()!!.aprenderMagia(magia!!)
                         textViewRecompensa.text = "¡Has derrotado a un enemigo! Has desbloqueado una nueva magia: ${magia}"
 
                     }
                     3->{
-                        var p= Personaje("julian",Personaje.Raza.Elfo,Personaje.Clase.Brujo,Personaje.EstadoVital.Adulto)
+                        var p= Personaje("julian",Personaje.Raza.Elfo,Personaje.Clase.Brujo,Personaje.EstadoVital.Adulto,Libro(4,4,4,4,ArrayList<Magia>()),
+                            Mochila(100)
+                        )
                         var arti: Articulo? =null
                         do{
                             arti=Articulo(Articulo.TipoArticulo.entries[(0..3).random()],Articulo.Nombre.entries[(0..9).random()],(0..9).random(),(0..45).random(),R.drawable.moneda,1,Articulo.Rareza.entries[(0..3).random()])
-                            p.getMochila().addArticulo(arti)
-                        }while(p.getMochila().getContenido().isEmpty())
-                        val n=personaje.getMochila().getContenido().size
+                            p.getMochila()!!.addArticulo(arti)
+                        }while(p.getMochila()!!.getContenido().isEmpty())
+                        val n=personaje.getMochila()!!.getContenido().size
 
-                        personaje.getMochila().addArticulo(arti!!)
-                        if(personaje.getMochila().getContenido().size>n){
+                        personaje.getMochila()!!.addArticulo(arti!!)
+                        if(personaje.getMochila()!!.getContenido().size>n){
                             textViewRecompensa.text = "¡Has derrotado a un enemigo! Has conseguido un nuevo objeto: ${arti}"
                         }else{
                             textViewRecompensa.text = "¡Has derrotado a un enemigo! No puededes meter mas objetos en la mochila"
@@ -423,7 +423,7 @@ class EnemigosMazmorra : AppCompatActivity() {
                 }
             }
             mazmorra.borrarBendiciones()
-            val magias = personaje.getLibro().getContenido()
+            val magias = personaje.getLibro()!!.getContenido()
             botonesMagia.forEach{boton->
                 magias.forEach{magia ->
                     if(boton.text==magia.getNombre().name){
@@ -735,26 +735,26 @@ class EnemigosMazmorra : AppCompatActivity() {
 
 
                             var magia: Magia? =null
-                            var p= Personaje("julian",Personaje.Raza.Elfo,Personaje.Clase.Brujo,Personaje.EstadoVital.Adulto)
+                            var p= Personaje("julian",Personaje.Raza.Elfo,Personaje.Clase.Brujo,Personaje.EstadoVital.Adulto,Libro(4,4,4,4,ArrayList<Magia>()),Mochila(100))
                             do{
                                 magia=Magia(Magia.TipoMagia.entries[(0..3).random()],Magia.Nombre.entries[(0..11).random()],20)
-                                p!!.getLibro().aprenderMagia(magia!!)
-                            }while (p!!.getLibro().getContenido().isEmpty())
-                            personaje.getLibro().aprenderMagia(magia!!)
+                                p!!.getLibro()!!.aprenderMagia(magia!!)
+                            }while (p!!.getLibro()!!.getContenido().isEmpty())
+                            personaje.getLibro()!!.aprenderMagia(magia!!)
                             textViewRecompensa.text = "¡Has derrotado a un enemigo! Has desbloqueado una nueva magia: ${magia}"
 
                         }
                         3->{
-                            var p= Personaje("julian",Personaje.Raza.Elfo,Personaje.Clase.Brujo,Personaje.EstadoVital.Adulto)
+                            var p= Personaje("julian",Personaje.Raza.Elfo,Personaje.Clase.Brujo,Personaje.EstadoVital.Adulto,Libro(4,4,4,4,ArrayList<Magia>()),Mochila(100))
                             var arti: Articulo? =null
                             do{
                                 arti=Articulo(Articulo.TipoArticulo.entries[(0..3).random()],Articulo.Nombre.entries[(0..9).random()],(0..9).random(),(0..45).random(),R.drawable.moneda,1,Articulo.Rareza.entries[(0..3).random()])
-                                p.getMochila().addArticulo(arti!!)
-                            }while(p.getMochila().getContenido().isEmpty())
-                            val n=personaje.getMochila().getContenido().size
+                                p.getMochila()!!.addArticulo(arti!!)
+                            }while(p.getMochila()!!.getContenido().isEmpty())
+                            val n=personaje.getMochila()!!.getContenido().size
 
-                            personaje.getMochila().addArticulo(arti!!)
-                            if(personaje.getMochila().getContenido().size>n){
+                            personaje.getMochila()!!.addArticulo(arti!!)
+                            if(personaje.getMochila()!!.getContenido().size>n){
                                 textViewRecompensa.text = "¡Has derrotado a un enemigo! Has conseguido un nuevo objeto: ${arti}"
                             }else{
                                 textViewRecompensa.text = "¡Has derrotado a un enemigo! No puededes meter mas objetos en la mochila"

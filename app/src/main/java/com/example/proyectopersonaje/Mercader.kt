@@ -115,13 +115,13 @@ class Mercader : AppCompatActivity() {
 
         mochilaDb.setContenido(dbHelper.getArticulos())
         var moneda=Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,0,15,R.drawable.moneda,1,Articulo.Rareza.COMUN)
-        personaje!!.getMochila().addArticulo(moneda)
-        personaje!!.getMochila().addArticulo(moneda)
-        personaje!!.getMochila().addArticulo(moneda)
-        personaje!!.getMochila().addArticulo(moneda)
-        personaje!!.getMochila().addArticulo(moneda)
-        personaje!!.getMochila().addArticulo(moneda)
-        personaje!!.getMochila().addArticulo(moneda)
+        personaje!!.getMochila()!!.addArticulo(moneda)
+        personaje!!.getMochila()!!.addArticulo(moneda)
+        personaje!!.getMochila()!!.addArticulo(moneda)
+        personaje!!.getMochila()!!.addArticulo(moneda)
+        personaje!!.getMochila()!!.addArticulo(moneda)
+        personaje!!.getMochila()!!.addArticulo(moneda)
+        personaje!!.getMochila()!!.addArticulo(moneda)
         var articuloActual = dbHelper.getArticulos().get(numRand)
         btnComerciar.setOnClickListener {
 
@@ -185,7 +185,7 @@ class Mercader : AppCompatActivity() {
                 btnIzquierda.visibility = View.VISIBLE
                 btnDerecha.visibility = View.VISIBLE
                 objetoPersonaje.setImageResource(
-                    personaje.getMochila().getContenido().get(0).getUrl()
+                    personaje.getMochila()!!.getContenido().get(0).getUrl()
                 )
 
                 cambiarImagenYMostrarPrecio(
@@ -204,7 +204,7 @@ class Mercader : AppCompatActivity() {
         }
         btnIzquierda.setOnClickListener {
             if (posicionObjeto == 0) {
-                posicionObjeto = personaje!!.getMochila().getContenido().size
+                posicionObjeto = personaje!!.getMochila()!!.getContenido().size
             } else {
                 posicionObjeto--
             }
@@ -214,7 +214,7 @@ class Mercader : AppCompatActivity() {
         }
 
         btnDerecha.setOnClickListener {
-            if (posicionObjeto == personaje!!.getMochila().getContenido().size - 1) {
+            if (posicionObjeto == personaje!!.getMochila()!!.getContenido().size - 1) {
                 posicionObjeto = 0
             } else {
                 posicionObjeto++

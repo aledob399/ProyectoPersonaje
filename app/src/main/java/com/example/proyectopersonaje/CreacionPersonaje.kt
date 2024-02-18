@@ -137,8 +137,8 @@ class CreacionPersonaje : AppCompatActivity() {
                 "Mago"->Personaje.Clase.Mago
                 else -> Personaje.Clase.Mago
             }
-
-            val p = Personaje(nombre,razaFinal, claseFinal, estadoVitalFinal)
+            val libro=Libro(4,4,4,4,ArrayList<Magia>())
+            val p = Personaje(nombre,razaFinal, claseFinal, estadoVitalFinal,libro,Mochila(100))
 
             val intent = Intent(this, PersonajeCreado::class.java)
 

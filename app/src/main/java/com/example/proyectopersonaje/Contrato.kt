@@ -22,7 +22,7 @@ class Contrato : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_contrato)
         val personaje=intent.getParcelableExtra<Personaje>("personaje")
-        personaje!!.getMochila().setContenido(intent.getParcelableExtra<Mochila>("mochila")!!.getContenido())
+        //personaje!!.getMochila()!!.setContenido(intent.getParcelableExtra<Mochila>("mochila")!!.getContenido())
         val mascotas = intent.getParcelableArrayListExtra<Mascota>("mascotas")
         val btnContinuar=findViewById<Button>(R.id.btnContinuar)
         val btnQuitarTodos=findViewById<Button>(R.id.btnQuitarTodo)
@@ -39,13 +39,13 @@ class Contrato : AppCompatActivity() {
             Articulo(Articulo.TipoArticulo.ARMA, Articulo.Nombre.ESPADA, 2, 34, R.drawable.objetodos,1,Articulo.Rareza.COMUN)
         val objeto2 =
             Articulo(Articulo.TipoArticulo.PROTECCION, Articulo.Nombre.ESCUDO, 2, 34, R.drawable.objetocuatro,1,Articulo.Rareza.RARO)
-        personaje!!.getMochila().addArticulo(objeto1)
-        personaje!!.getMochila().addArticulo(objeto2)
+        //personaje!!.getMochila()!!.addArticulo(objeto1)
+      //  personaje!!.getMochila()!!.addArticulo(objeto2)
         Log.d("DatosPersonaje", "$personaje")
         Log.d("DatosMascota 1", "${mascotas!![0]}")
         var nuevoArticulo: Articulo? =null
         val articulosAEliminar=ArrayList<Articulo>()
-        for (articulo in personaje!!.getMochila().getContenido()) {
+        for (articulo in personaje!!.getMochila()!!.getContenido()) {
             val imageButton = ImageButton(this)
             imageButton.layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -76,7 +76,7 @@ class Contrato : AppCompatActivity() {
         }
         btnContratoFinal.setOnClickListener {
             for (a in articulosAEliminar) {
-                personaje.getMochila().borrarArticulo(a)
+                personaje.getMochila()!!.borrarArticulo(a)
             }
             objetosText.text="Objetos intercambiados con extio"
 
@@ -89,7 +89,7 @@ class Contrato : AppCompatActivity() {
                 rarezaAleatoria <= 90 -> Articulo.Rareza.EPICO
                 else -> Articulo.Rareza.LEGENDARIO
             }
-            var numeroObj=personaje.getMochila().getContenido().size
+            var numeroObj=personaje.getMochila()!!.getContenido().size
             do{
 
 
@@ -109,8 +109,8 @@ class Contrato : AppCompatActivity() {
                 else -> {urlArticuloAleatorio=R.drawable.objetodos}
             }
                 nuevoArticulo = Articulo(tipoArticuloAleatorio, nombreArticuloAleatorio, pesoArticuloAleatorio, precioArticuloAleatorio, urlArticuloAleatorio, 1, rarezaArticulo)
-                personaje.getMochila().addArticulo(nuevoArticulo!!)
-            }while(numeroObj==personaje.getMochila().getContenido().size)
+                personaje.getMochila()!!.addArticulo(nuevoArticulo!!)
+            }while(numeroObj==personaje.getMochila()!!.getContenido().size)
             textViewRecompensa.text=nuevoArticulo.toString()
             popupWindow.width = LinearLayout.LayoutParams.WRAP_CONTENT
             popupWindow.height = LinearLayout.LayoutParams.WRAP_CONTENT

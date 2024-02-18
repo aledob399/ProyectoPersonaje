@@ -7,7 +7,9 @@ class Personaje(
     private var nombre: String?,
     private val raza: Raza,
     private var clase: Clase,
-    private var estadoVital: EstadoVital
+    private var estadoVital: EstadoVital,
+    private val libro: Libro?,
+    private var mochila: Mochila?
 ) : Parcelable {
     private var salud: Int = 0
     private var ataque: Int = 0
@@ -15,7 +17,7 @@ class Personaje(
     private var nivel: Int
     private var suerte: Int
     private var defensa: Int = 0
-    private val libro: Libro = Libro(4, 4, 4, 4) // 4 páginas de cada tipo de magia
+
     private var mana: Int = 0
 
     // Enumeración para el tipo de raza y clase
@@ -23,14 +25,34 @@ class Personaje(
     enum class Clase { Brujo, Mago, Guerrero }
     enum class EstadoVital{Anciano, Joven, Adulto}
 
-    private var mochila = Mochila(10) // Ejemplo de peso máximo de la mochila
+     // Ejemplo de peso máximo de la mochila
     // Atributos para el equipo del personaje
     private var arma: Articulo? = null
     private var proteccion: Articulo? = null
 
+    constructor(parcel: Parcel) : this(
+        parcel.readString(),
+        parcel.readSerializable() as Raza,
+        parcel.readSerializable() as Clase,
+        parcel.readSerializable() as EstadoVital,
+        parcel.readParcelable(Libro::class.java.classLoader),
+        parcel.readParcelable(Mochila::class.java.classLoader)
+    ) {
+        salud = parcel.readInt()
+        ataque = parcel.readInt()
+        experiencia = parcel.readInt()
+        nivel = parcel.readInt()
+        suerte = parcel.readInt()
+        defensa = parcel.readInt()
+        mana = parcel.readInt()
+        arma = parcel.readParcelable(Articulo::class.java.classLoader)
+        proteccion = parcel.readParcelable(Articulo::class.java.classLoader)
+    }
+
 
     // Inicialización de los atributos tras la construcción del objeto Personaje
     init {
+
         calcularSalud()
         calcularAtaque()
         calcularDefensa()
@@ -189,7 +211,7 @@ class Personaje(
             else -> 100 // Valor por defecto si el nivel está fuera del rango especificado
         }
     }
-    fun getLibro(): Libro {
+    fun getLibro(): Libro? {
         return libro
     }
     fun getArma(): Articulo? {
@@ -201,9 +223,9 @@ class Personaje(
 
 
     fun usarMagia(nombre: Magia.Nombre): Int {
-        val magiaEncontrada = libro.buscarMagia(nombre)
+        val magiaEncontrada = libro!!.buscarMagia(nombre)
         if (magiaEncontrada != -1) {
-            val magia = libro.getContenido()[magiaEncontrada]
+            val magia = libro!!.getContenido()[magiaEncontrada]
             val tipoMagia = magia.getTipoMagia()
             val manaNecesario = magia.getMana()
 
@@ -430,7 +452,7 @@ class Personaje(
                     // Aumentar el ataque del personaje según el nombre del arma
                     ataque += articulo.getAumentoAtaque()
                     println("Has equipado el arma: $articulo")
-                    mochila.getContenido().remove(articulo)
+                    mochila!!.getContenido().remove(articulo)
                 } else {
                     println("No se puede equipar el artículo. Tipo de arma no válido.")
                 }
@@ -442,7 +464,7 @@ class Personaje(
                         // Aumentar la defensa del personaje solo si la protección es un escudo o una armadura
                         defensa += articulo.getAumentoDefensa()
                         println("Has equipado la protección: $articulo")
-                        mochila.getContenido().remove(articulo)
+                        mochila!!.getContenido().remove(articulo)
                     }
                     else -> {
                         println("No se puede equipar el artículo. Tipo de protección no válido.")
@@ -462,13 +484,13 @@ class Personaje(
                         // Aumentar la vida del personaje al usar una poción
                         salud += articulo.getAumentoVida()
                         println("Has usado la poción y aumentado tu vida. Vida actual: $salud")
-                        mochila.getContenido().remove(articulo)
+                        mochila!!.getContenido().remove(articulo)
                     }
                     Articulo.Nombre.IRA -> {
                         // Aumentar el ataque del personaje al usar un objeto de ira
                         ataque += articulo.getAumentoAtaque()
                         println("Has canalizado tu ira y aumentado tu ataque. Ataque actual: $ataque")
-                        mochila.getContenido().remove(articulo)
+                        mochila!!.getContenido().remove(articulo)
                     }
                     else -> {
                         println("No se puede usar el objeto. Tipo de objeto no válido.")
@@ -482,9 +504,9 @@ class Personaje(
     }
     fun misMonedas():Int{
         var monedas=0
-        repeat(getMochila().getContenido().size){
-            if(getMochila().getContenido()[it].getNombre()==Articulo.Nombre.MONEDA){
-                monedas += getMochila().getContenido()[it].getPrecio()
+        repeat(getMochila()!!.getContenido().size){
+            if(getMochila()!!.getContenido()[it].getNombre()==Articulo.Nombre.MONEDA){
+                monedas += getMochila()!!.getContenido()[it].getPrecio()
             }
         }
         return monedas
@@ -499,11 +521,11 @@ class Personaje(
             monedas -= monedasGastar
             quitarMonedas()
             while(monedas>=15){
-                getMochila().addArticulo(moneda)
+                getMochila()!!.addArticulo(moneda)
                 monedas -= 15
             }
             if(monedas>0){
-                getMochila().addArticulo(Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,0,monedas,R.drawable.moneda,1,Articulo.Rareza.COMUN))
+                getMochila()!!.addArticulo(Articulo(Articulo.TipoArticulo.ORO,Articulo.Nombre.MONEDA,0,monedas,R.drawable.moneda,1,Articulo.Rareza.COMUN))
             }
 
         }
@@ -513,23 +535,23 @@ class Personaje(
 
     }
     fun quitarMonedas() {
-        val monedas = getMochila().getContenido().filter { it.getNombre() == Articulo.Nombre.MONEDA }
+        val monedas = getMochila()!!.getContenido().filter { it.getNombre() == Articulo.Nombre.MONEDA }
         for (moneda in monedas) {
             removerArticulo(moneda)
         }
     }
     fun removerArticulo(articulo: Articulo) {
-        mochila.getContenido().remove(articulo)
+        mochila!!.getContenido().remove(articulo)
     }
 
     fun removerArticuloNombre(nombre:Articulo.Nombre){
-        repeat(getMochila().getContenido().size){
-            if(getMochila().getContenido().get(it).getNombre()==nombre){
-                getMochila().getContenido().removeAt(it)
+        repeat(getMochila()!!.getContenido().size){
+            if(getMochila()!!.getContenido().get(it).getNombre()==nombre){
+                getMochila()!!.getContenido().removeAt(it)
             }
         }
     }
-    fun getMochila(): Mochila {
+    fun getMochila(): Mochila? {
         return this.mochila
     }
 
@@ -538,29 +560,13 @@ class Personaje(
         return "Personaje: Nombre: $nombre, Nivel: $nivel, Salud: $salud, Ataque: $ataque, Defensa: $defensa, Suerte: $suerte, Raza: $raza, Clase: $clase, Estado Vital: $estadoVital, Mana: $mana, Mochila: ${mochila.toString()}  Grimorio: $libro.toString()"
     }
 
-    constructor(parcel: Parcel) : this(
-        parcel.readString(),
-        parcel.readSerializable() as Raza,
-        parcel.readSerializable() as Clase,
-        parcel.readSerializable() as EstadoVital
-    ) {
-        salud = parcel.readInt()
-        ataque = parcel.readInt()
-        experiencia = parcel.readInt()
-        nivel = parcel.readInt()
-        suerte = parcel.readInt()
-        defensa = parcel.readInt()
-        mana = parcel.readInt()
-        arma = parcel.readParcelable(Articulo::class.java.classLoader)
-        proteccion = parcel.readParcelable(Articulo::class.java.classLoader)
-        mochila= parcel.readParcelable(Mochila::class.java.classLoader)!!
-    }
-
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(nombre)
         parcel.writeSerializable(raza)
         parcel.writeSerializable(clase)
         parcel.writeSerializable(estadoVital)
+        parcel.writeParcelable(libro, flags)
+        parcel.writeParcelable(mochila, flags)
         parcel.writeInt(salud)
         parcel.writeInt(ataque)
         parcel.writeInt(experiencia)
@@ -570,7 +576,6 @@ class Personaje(
         parcel.writeInt(mana)
         parcel.writeParcelable(arma, flags)
         parcel.writeParcelable(proteccion, flags)
-        parcel.writeParcelable(mochila, flags)
     }
 
     override fun describeContents(): Int {
@@ -603,23 +608,46 @@ class Personaje(
  *                                  entrada o -1 si no lo encuentra
  *
  **********************************************************************************************************************/
+
+
 class Mochila(private var pesoMochila: Int) : Parcelable {
-    private var contenido=ArrayList<Articulo>()
+    private var contenido = ArrayList<Articulo>()
 
     constructor(parcel: Parcel) : this(parcel.readInt()) {
+        parcel.readTypedList(contenido, Articulo.CREATOR)
+    }
 
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(pesoMochila)
+        parcel.writeTypedList(contenido)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Mochila> {
+        override fun createFromParcel(parcel: Parcel): Mochila {
+            return Mochila(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Mochila?> {
+            return arrayOfNulls(size)
+        }
     }
 
     fun getPesoMochila(): Int {
-        var suma=0
-        repeat(contenido.size){
-            suma=contenido.get(it).getPeso()
+        var suma = 0
+        repeat(contenido.size) {
+            suma += contenido[it].getPeso()
         }
-        return pesoMochila-suma
+        return pesoMochila - suma
     }
-    fun setContenido(nuevaMochila:ArrayList<Articulo>) {
+
+    fun setContenido(nuevaMochila: ArrayList<Articulo>) {
         contenido = nuevaMochila
     }
+
     fun borrarArticulo(articulo: Articulo) {
         if (contenido.contains(articulo)) {
             contenido.remove(articulo)
@@ -629,6 +657,7 @@ class Mochila(private var pesoMochila: Int) : Parcelable {
             println("El artículo no se encuentra en la mochila.")
         }
     }
+
     fun addArticulo(articulo: Articulo) {
         if (articulo.getPeso() <= pesoMochila) {
             when (articulo.getTipoArticulo()) {
@@ -673,22 +702,24 @@ class Mochila(private var pesoMochila: Int) : Parcelable {
                         else -> println("Nombre del artículo no válido para el tipo PROTECCION.")
                     }
                 }
-
                 else -> {}
             }
         } else {
             println("El peso del artículo excede el límite de la mochila.")
         }
     }
+
     fun getContenido(): ArrayList<Articulo> {
-        if(contenido.isEmpty()){
+        if (contenido.isEmpty()) {
             return ArrayList<Articulo>()
-        }else return contenido
+        } else return contenido
 
     }
+
     fun findObjeto(nombre: Articulo.Nombre): Int {
         return contenido.indexOfFirst { it.getNombre() == nombre }
     }
+
     override fun toString(): String {
         return if (contenido.isEmpty()) {
             "Mochila vacía"
@@ -696,25 +727,8 @@ class Mochila(private var pesoMochila: Int) : Parcelable {
             "Artículos en la mochila: ${contenido.joinToString("\n")}"
         }
     }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeInt(pesoMochila)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<Mochila> {
-        override fun createFromParcel(parcel: Parcel): Mochila {
-            return Mochila(parcel)
-        }
-
-        override fun newArray(size: Int): Array<Mochila?> {
-            return arrayOfNulls(size)
-        }
-    }
 }
+
 /***********************************************************************************************************************
  *  CLASE: Articulo
  *  CONSTRUCTOR:
@@ -735,6 +749,8 @@ class Mochila(private var pesoMochila: Int) : Parcelable {
  *
  **********************************************************************************************************************/
 
+
+
 class Articulo(
     private var tipoArticulo: TipoArticulo,
     private var nombre: Nombre,
@@ -742,7 +758,6 @@ class Articulo(
     private var precio: Int,
     private var url: Int,
     private var unidades: Int,
-
     private var rareza: Rareza
 ) : Parcelable {
 
@@ -752,26 +767,26 @@ class Articulo(
     private var durabilidad: Int = 0
 
     constructor(parcel: Parcel) : this(
-        TODO("tipoArticulo"),
-        TODO("nombre"),
+        parcel.readSerializable() as TipoArticulo,
+        parcel.readSerializable() as Nombre,
         parcel.readInt(),
         parcel.readInt(),
         parcel.readInt(),
         parcel.readInt(),
-        TODO("rareza")
+        parcel.readSerializable() as Rareza
     ) {
         durabilidad = parcel.readInt()
     }
 
     init {
-        durabilidad=when(rareza){
-            Articulo.Rareza.COMUN->50
-            Articulo.Rareza.RARO->100
-            Articulo.Rareza.EPICO->150
-            Articulo.Rareza.LEGENDARIO->200
-            else -> 501
+        durabilidad = when (rareza) {
+            Rareza.COMUN -> 50
+            Rareza.RARO -> 100
+            Rareza.EPICO -> 150
+            Rareza.LEGENDARIO -> 200
         }
     }
+
     fun getPeso(): Int {
         return peso
     }
@@ -844,10 +859,13 @@ class Articulo(
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeSerializable(tipoArticulo)
+        parcel.writeSerializable(nombre)
         parcel.writeInt(peso)
         parcel.writeInt(precio)
         parcel.writeInt(url)
         parcel.writeInt(unidades)
+        parcel.writeSerializable(rareza)
         parcel.writeInt(durabilidad)
     }
 
@@ -864,6 +882,7 @@ class Articulo(
             return arrayOfNulls(size)
         }
     }
+
 }
 
 /***********************************************************************************************************************
@@ -1276,8 +1295,11 @@ class Enemigo(private var nivel: Int) : Parcelable {
 
 
 
+
+
 class Magia(private val tipoMagia: TipoMagia, private val nombre: Nombre, private val mana: Int) :
     Parcelable {
+
     enum class TipoMagia {
         AIRE,
         FUEGO,
@@ -1301,11 +1323,10 @@ class Magia(private val tipoMagia: TipoMagia, private val nombre: Nombre, privat
     }
 
     constructor(parcel: Parcel) : this(
-        TODO("tipoMagia"),
-        TODO("nombre"),
+        parcel.readSerializable() as TipoMagia,
+        parcel.readSerializable() as Nombre,
         parcel.readInt()
-    ) {
-    }
+    )
 
     fun getMana(): Int {
         return mana
@@ -1320,31 +1341,27 @@ class Magia(private val tipoMagia: TipoMagia, private val nombre: Nombre, privat
     }
 
     fun getMagiaNegra(): Int {
-        var valorAtaque = 0
-        when (nombre) {
-            Nombre.TORNADO -> if (tipoMagia == TipoMagia.AIRE) valorAtaque = 100
-            Nombre.VENDAVAL -> if (tipoMagia == TipoMagia.AIRE) valorAtaque = 70
-            Nombre.HURACAN -> if (tipoMagia == TipoMagia.AIRE) valorAtaque = 150
-            Nombre.ALIENTO -> if (tipoMagia == TipoMagia.FUEGO) valorAtaque = 50
-            Nombre.DESCARGA -> if (tipoMagia == TipoMagia.FUEGO) valorAtaque = 70
-            Nombre.PROPULSION -> if (tipoMagia == TipoMagia.FUEGO) valorAtaque = 100
-            Nombre.FATUO -> if (tipoMagia == TipoMagia.FUEGO) valorAtaque = 200
-            Nombre.MURO -> if (tipoMagia == TipoMagia.TIERRA) valorAtaque = 20
-            Nombre.TEMBLOR -> if (tipoMagia == TipoMagia.TIERRA) valorAtaque = 80
-            Nombre.TERREMOTO -> if (tipoMagia == TipoMagia.TIERRA) valorAtaque = 300
-            else -> {valorAtaque = 300}
+        return when (nombre) {
+            Nombre.TORNADO -> if (tipoMagia == TipoMagia.AIRE) 100 else 0
+            Nombre.VENDAVAL -> if (tipoMagia == TipoMagia.AIRE) 70 else 0
+            Nombre.HURACAN -> if (tipoMagia == TipoMagia.AIRE) 150 else 0
+            Nombre.ALIENTO -> if (tipoMagia == TipoMagia.FUEGO) 50 else 0
+            Nombre.DESCARGA -> if (tipoMagia == TipoMagia.FUEGO) 70 else 0
+            Nombre.PROPULSION -> if (tipoMagia == TipoMagia.FUEGO) 100 else 0
+            Nombre.FATUO -> if (tipoMagia == TipoMagia.FUEGO) 200 else 0
+            Nombre.MURO -> if (tipoMagia == TipoMagia.TIERRA) 20 else 0
+            Nombre.TEMBLOR -> if (tipoMagia == TipoMagia.TIERRA) 80 else 0
+            Nombre.TERREMOTO -> if (tipoMagia == TipoMagia.TIERRA) 300 else 0
+            else -> 0
         }
-        return valorAtaque
     }
 
     fun getMagiaBlanca(): Int {
-        var aumentoVida = 0
-        when (nombre) {
-            Nombre.SANAR -> if (tipoMagia == TipoMagia.BLANCA) aumentoVida = 100
-            Nombre.CURAR -> if (tipoMagia == TipoMagia.BLANCA) aumentoVida = 200
-            else -> {aumentoVida = 200}
+        return when (nombre) {
+            Nombre.SANAR -> if (tipoMagia == TipoMagia.BLANCA) 100 else 0
+            Nombre.CURAR -> if (tipoMagia == TipoMagia.BLANCA) 200 else 0
+            else -> 0
         }
-        return aumentoVida
     }
 
     override fun toString(): String {
@@ -1352,6 +1369,8 @@ class Magia(private val tipoMagia: TipoMagia, private val nombre: Nombre, privat
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeSerializable(tipoMagia)
+        parcel.writeSerializable(nombre)
         parcel.writeInt(mana)
     }
 
@@ -1370,22 +1389,27 @@ class Magia(private val tipoMagia: TipoMagia, private val nombre: Nombre, privat
     }
 }
 
+
+
+
+
 class Libro(
     private val paginasLibroVerde: Int,
     private val paginasLibroRojo: Int,
     private val paginasLibroMarron: Int,
-    private val paginasLibroBlanco: Int
+    private val paginasLibroBlanco: Int,
+    private var contenido: ArrayList<Magia>
 ) : Parcelable {
-    private var contenido: ArrayList<Magia> = ArrayList()
 
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
         parcel.readInt(),
         parcel.readInt(),
-        parcel.readInt()
-    ) {
-
-    }
+        parcel.readInt(),
+        ArrayList<Magia>().apply {
+            parcel.readList(this, Magia::class.java.classLoader)
+        }
+    )
 
     fun getPaginasGrimorioVerde(): Double {
         return (paginasLibroVerde * 2 - contenido.count { it.getTipoMagia() == Magia.TipoMagia.AIRE }).toDouble()
@@ -1414,29 +1438,19 @@ class Libro(
             Magia.TipoMagia.BLANCA -> getPaginasGrimorioBlanco()
         }
 
-        if (paginasDisponibles >= 1 && tipoMagia == Magia.TipoMagia.BLANCA &&
-            (nombreMagia == Magia.Nombre.SANAR || nombreMagia == Magia.Nombre.CURAR)) {
-            contenido.add(nuevaMagia)
-            println("¡Magia aprendida y añadida al libro!")
-        } else {
-            println("No se puede aprender la magia o no hay suficientes páginas disponibles en el libro.")
+        val magiaAprendida = when {
+            paginasDisponibles >= 1 && tipoMagia == Magia.TipoMagia.BLANCA &&
+                    (nombreMagia == Magia.Nombre.SANAR || nombreMagia == Magia.Nombre.CURAR) -> true
+            paginasDisponibles >= 1 && tipoMagia == Magia.TipoMagia.AIRE &&
+                    (nombreMagia == Magia.Nombre.HURACAN || nombreMagia == Magia.Nombre.TORNADO || nombreMagia == Magia.Nombre.ALIENTO || nombreMagia == Magia.Nombre.VENDAVAL) -> true
+            paginasDisponibles >= 1 && tipoMagia == Magia.TipoMagia.FUEGO &&
+                    (nombreMagia == Magia.Nombre.FATUO || nombreMagia == Magia.Nombre.DESCARGA || nombreMagia == Magia.Nombre.PROPULSION) -> true
+            paginasDisponibles >= 1 && tipoMagia == Magia.TipoMagia.TIERRA &&
+                    (nombreMagia == Magia.Nombre.MURO || nombreMagia == Magia.Nombre.TEMBLOR || nombreMagia == Magia.Nombre.TERREMOTO) -> true
+            else -> false
         }
-        if (paginasDisponibles >= 1 && tipoMagia == Magia.TipoMagia.AIRE &&
-            (nombreMagia == Magia.Nombre.HURACAN|| nombreMagia == Magia.Nombre.TORNADO || nombreMagia == Magia.Nombre.ALIENTO || nombreMagia == Magia.Nombre.VENDAVAL )) {
-            contenido.add(nuevaMagia)
-            println("¡Magia aprendida y añadida al libro!")
-        } else {
-            println("No se puede aprender la magia o no hay suficientes páginas disponibles en el libro.")
-        }
-        if (paginasDisponibles >= 1 && tipoMagia == Magia.TipoMagia.FUEGO &&
-            (nombreMagia == Magia.Nombre.FATUO|| nombreMagia == Magia.Nombre.DESCARGA || nombreMagia == Magia.Nombre.PROPULSION )) {
-            contenido.add(nuevaMagia)
-            println("¡Magia aprendida y añadida al libro!")
-        } else {
-            println("No se puede aprender la magia o no hay suficientes páginas disponibles en el libro.")
-        }
-        if (paginasDisponibles >= 1 && tipoMagia == Magia.TipoMagia.TIERRA &&
-            (nombreMagia == Magia.Nombre.MURO|| nombreMagia == Magia.Nombre.TEMBLOR || nombreMagia == Magia.Nombre.TERREMOTO )) {
+
+        if (magiaAprendida) {
             contenido.add(nuevaMagia)
             println("¡Magia aprendida y añadida al libro!")
         } else {
@@ -1447,10 +1461,10 @@ class Libro(
     fun getContenido(): ArrayList<Magia> {
         return contenido
     }
-    fun setContenido(nuevoContenido:ArrayList<Magia>) {
-        contenido=nuevoContenido
-    }
 
+    fun setContenido(nuevoContenido: ArrayList<Magia>) {
+        contenido = nuevoContenido
+    }
 
     fun buscarMagia(nombre: Magia.Nombre): Int {
         return contenido.indexOfFirst { it.getNombre() == nombre }
@@ -1470,6 +1484,7 @@ class Libro(
         parcel.writeInt(paginasLibroRojo)
         parcel.writeInt(paginasLibroMarron)
         parcel.writeInt(paginasLibroBlanco)
+        parcel.writeList(contenido)
     }
 
     override fun describeContents(): Int {
@@ -1486,6 +1501,3 @@ class Libro(
         }
     }
 }
-
-
-
