@@ -1,1 +1,13 @@
-// Tus Credenciales 
+{
+  "type": "service_account",
+  "project_id": "manin-k9ho",
+  "private_key_id": "e75cdab25a1ab5733f7b76207ee1ae24c3eb6cf2",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQD1YtpRQfN0A4so\nWWtf1X4k/4K+XmjwGJtY5H2RQijpvXMV9mQ0qxQM8AB/kneFQPz1EF/z6bamlI7r\n60szNl5+U+auR9szyPrZrLwHYOfPk6RJEHpzmpOJIsxw6tyFZPqwEgdA7hKR4vat\n/JIOJ9YeQOCUV4jb9+LClZB+PpZok8eMnUOa+dgozT28YwtDFMgpen6XGKfcOVXu\nwrUuuU6iaoCGJzEGyfMp4uOxvcFmUENUCSz5CFAZRy/aXB5RzzinwgiH3Wa1HFwg\nx+gfJ92NUoclZv0V83Ijz820k1QynyeoTwoQfsXen9EbsQK2db8XUMv3Ewd2TMXt\nJgpzQcFzAgMBAAECggEAcR0KSh6+nKHticH+bwS4y1FE8YAPm22cXpOlFkqLFYQR\nAvS7KFQcQAJ6GFRp5/EXKdhMguEfIxaj8zhZR9guIsmGMpxI/UwN5j1rx3LyKIuE\nVXHVIGkGzVZPK1X4JT1xGayVz2ZvBPS8hWNB6GiQmQ2K+JaJLezMiKntG2S6bKWb\naFcK+/wcqxf3XRPOTnS8wzDDo8//2fPOv8Uh+J+52gDJ9ihGFsnPs8DCeIBdFH/7\nKB+xoVMwZbkJd65Oxyac/7BNThNG2a4dPm7Al7xdkERc7HgqgcQ/MSFdCd3glAdB\nuRAlhrCWdMptwukOzJPozIG8qnZMCBF/J8w4P0TTsQKBgQD8zzJqXyQ0l22D0f7W\na44ES1fDsV2MS3ZTjTwtj70PTY2leuojXDpYKsvwNA43TbyLcwJlRuJj9S8ErP9r\nGR0qLV37gyD9jD4UWmyQn4VjzYxOq+4H1zr34NXYCT7OrjYLCBu0Hx8LylXV97Q6\nRGF4AphzGYzHLQwZDFnwCuhrxQKBgQD4e6wSADxoAJTfEuMnApUgcD+nP+5t3ZK3\n6jZeJrmE2sfXI0km9e4Ad856vhTGCKu4N5KnfGp6xJSBmydCUXqM7L6/kBPn1osk\nd6rJFIPW6DaCFvYYDoxE3RjavtAI94o6+hxmaMWXflv1TJIureH/hdf6qp8PEOMy\nUOFBAKsz1wKBgQDZ6RcBzWR92JDTcS0CUc8mMHNEARwrk9g4iKL4es9x411W6C3t\nsM+xs6H6OESQsvb0FHxaI9F8a5jNpPi8rfcPpe8+nnbPVhUkohS2TGpD7qckINqZ\n85GmnCx3fPCgYlW/CIwopDK0jQGT32GAX/TL5yDVBY7tGA03ggf7+ssAKQKBgEk8\nija0AxnUMgydkH3K8REihGBTI38WM0wpp+SQHVXe9c+fAsyM550TsrPSmmTT4Wjm\nWD8tGGUe03ZvuF5/jVND4+SqHnPSdChHbPrfJQyOXKJzCg2FHCqfz9eJLd+2tfM0\nDHLSpopEH+5opx1C+r1JQaML7t2N6KjH1dxGyi75AoGBAL+4SFNO5utQsBbpqd2k\nbMT/+Xi1Fm217SMKAYFha6WQSuBHg9ng8aoDWjwE80y4aOdSYZgkuYGUTKTdd6zt\nJe1Jv+MckmLm1+khRmAFKWNQWE6FwoLDSivkqdyrANVLt0IKfGfwJaIl/uMYTlG8\n3/lsZswCoANUa1LFlvJNJT0k\n-----END PRIVATE KEY-----\n",
+  "client_email": "dialogflowmanin@manin-k9ho.iam.gserviceaccount.com",
+  "client_id": "106266822646741746422",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/dialogflowmanin%40manin-k9ho.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

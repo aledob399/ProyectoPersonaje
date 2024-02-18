@@ -1,7 +1,6 @@
 package com.example.proyectopersonaje
 
 
-import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.media.MediaPlayer
@@ -9,7 +8,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.speech.tts.TextToSpeech
-
 import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
@@ -21,7 +19,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import java.util.Locale
-import java.util.logging.Handler
 
 
 class Aventura : AppCompatActivity(),TextToSpeech.OnInitListener {
@@ -137,9 +134,9 @@ class Aventura : AppCompatActivity(),TextToSpeech.OnInitListener {
                     R.id.two -> {
                         drawerLayout.closeDrawer(GravityCompat.END)
                         // Llamada para actualizar el personaje
-                        val intent=Intent(this,DialogFlow::class.java)
+                        val intent=Intent(this,ChatbotActivity::class.java)
                         intent.putExtra("personaje",personaje)
-                        intent.putExtra("mochila",personaje!!.getMochila())
+
                         intent.putParcelableArrayListExtra("mascotas", mascotas)
 
                         startActivity(intent)
@@ -220,7 +217,7 @@ class Aventura : AppCompatActivity(),TextToSpeech.OnInitListener {
                 4 -> {
 
                     btn.setImageResource(R.drawable.cuatro)
-                    val intent = Intent(this,Mazmorras::class.java)
+                    val intent = Intent(this,Mercader::class.java)
                     pos = musica.currentPosition
                     intent.putExtra("personaje",personaje)
                     intent.putExtra("mochila",personaje!!.getMochila())
@@ -234,7 +231,7 @@ class Aventura : AppCompatActivity(),TextToSpeech.OnInitListener {
                 5 -> {
 
                     btn.setImageResource(R.drawable.cinco)
-                    val intent = Intent(this,Mazmorras::class.java)
+                    val intent = Intent(this,Contrato::class.java)
                     pos = musica.currentPosition
                     intent.putExtra("mochila",personaje!!.getMochila())
                     intent.putExtra("personaje",personaje)
@@ -248,7 +245,7 @@ class Aventura : AppCompatActivity(),TextToSpeech.OnInitListener {
                 6 -> {
 
                     btn.setImageResource(R.drawable.seis)
-                    val intent = Intent(this,Mazmorras::class.java)
+                    val intent = Intent(this,Mascotas::class.java)
                     pos = musica.currentPosition
                     intent.putExtra("personaje",personaje)
                     intent.putExtra("mochila",personaje!!.getMochila())

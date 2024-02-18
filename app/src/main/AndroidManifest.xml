@@ -14,7 +14,7 @@
         android:theme="@style/Theme.ProyectoPersonaje"
         tools:targetApi="31">
         <activity
-            android:name=".DialogFlow"
+            android:name=".ChatbotActivity"
             android:exported="false" />
         <activity
             android:name=".EnemigosMazmorra"

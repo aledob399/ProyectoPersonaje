@@ -5,8 +5,8 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/fondoaqua"
     tools:context=".MainActivity">
-
     <TextView
         android:id="@+id/encabezado"
         android:layout_width="0dp"
@@ -22,14 +22,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
     <EditText
         android:id="@+id/email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="219dp"
+        android:layout_height="52dp"
         android:layout_marginStart="87dp"
         android:layout_marginTop="27dp"
         android:layout_marginEnd="114dp"
+        android:background="@color/white"
         android:ems="10"
         android:hint="Email"
         android:inputType="text"
@@ -37,15 +37,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/encabezado" />
-
     <EditText
+
         android:id="@+id/contraseña"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="214dp"
+        android:layout_height="51dp"
         android:layout_marginStart="86dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="115dp"
         android:layout_marginBottom="33dp"
+        android:background="@color/white"
         android:ems="10"
         android:hint="Contraseña"
         android:inputType="text"
@@ -53,14 +54,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email" />
-
     <Button
         android:id="@+id/acceder"
         style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton.Icon"
         android:layout_width="155dp"
         android:layout_height="45dp"
         android:layout_marginStart="10dp"
-
         android:layout_marginEnd="44dp"
         android:layout_marginBottom="428dp"
         android:text="Acceder"
@@ -68,7 +67,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/registrarse" />
-
     <Button
         android:id="@+id/registrarse"
         style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton.Icon"
@@ -82,6 +80,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/acceder"
         app:layout_constraintStart_toStartOf="parent" />
-
-
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="400dp"
+        android:layout_height="255dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.813"
+        app:srcCompat="@drawable/crystal" />
 </androidx.constraintlayout.widget.ConstraintLayout>

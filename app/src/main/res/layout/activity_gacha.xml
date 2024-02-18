@@ -5,14 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:visibility="visible"
+    android:background="@drawable/fondocasino"
     tools:context=".Gacha">
-
     <ImageButton
         android:id="@+id/btnMusica"
         style="@android:style/Widget.DeviceDefault.ImageButton"
         android:layout_width="120dp"
         android:layout_height="111dp"
-
         android:layout_marginStart="252dp"
         android:layout_marginEnd="21dp"
         android:layout_marginBottom="16dp"
@@ -21,7 +20,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@android:drawable/ic_media_play" />
-
     <ImageButton
         android:id="@+id/btnLeerTexto"
         android:layout_width="69dp"
@@ -33,7 +31,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@android:drawable/ic_btn_speak_now" />
-
     <TextView
         android:id="@+id/encabezado"
         android:layout_width="match_parent"
@@ -49,7 +46,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
     <ImageView
         android:id="@+id/ruletaImageView"
         android:layout_width="319dp"
@@ -59,11 +55,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
     <Button
         android:id="@+id/btnTirar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="88dp"
+        android:layout_height="42dp"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="265dp"
         android:layout_marginBottom="152dp"
@@ -72,7 +67,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
-
     <Button
         android:id="@+id/btnContinuar"
         android:layout_width="wrap_content"
@@ -90,17 +84,14 @@
         android:id="@+id/imageView9"
         android:layout_width="54dp"
         android:layout_height="61dp"
-        android:layout_marginStart="289dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="508dp"
+        android:layout_marginStart="288dp"
+        android:layout_marginTop="220dp"
+        android:layout_marginEnd="51dp"
         android:rotation="-90"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.433"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/encabezado"
-        app:layout_constraintVertical_bias="1.0"
         tools:srcCompat="@drawable/flecha" />
 
     <ImageView
@@ -116,7 +107,6 @@
         app:layout_constraintHorizontal_bias="0.923"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/campo" />
-
     <ImageView
         android:id="@+id/recompensa"
         android:layout_width="190dp"
@@ -130,5 +120,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/encabezado"
         app:srcCompat="@drawable/cinco" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
+ 

@@ -4,14 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EnemigosMazmorra">
-
+    tools:context=".EnemigosMazmorra"
+    android:background="@drawable/fondomazmorra">
     <ImageButton
         android:id="@+id/btnMusica"
         style="@android:style/Widget.DeviceDefault.ImageButton"
         android:layout_width="120dp"
         android:layout_height="111dp"
-
         android:layout_marginStart="10dp"
         android:layout_marginEnd="21dp"
         android:layout_marginBottom="116dp"
@@ -21,7 +20,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@android:drawable/ic_media_play" />
-
     <ImageButton
         android:id="@+id/btnLeerTexto"
         android:layout_width="69dp"
@@ -35,7 +33,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@android:drawable/ic_btn_speak_now" />
-
     <TextView
         android:id="@+id/encabezado"
         android:layout_width="match_parent"
@@ -51,7 +48,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
     <LinearLayout
         android:id="@+id/layout_botones_abajo_derecha"
         android:layout_width="wrap_content"
@@ -64,7 +60,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
-
         <!-- Primer fila de botones -->
         <LinearLayout
             android:id="@+id/layout_magias"
@@ -72,32 +67,27 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:visibility="visible">
-
             <Button
                 android:id="@+id/ataqueMascota"
                 android:layout_width="106dp"
                 android:layout_height="58dp"
                 android:text="Mascota" />
-
             <Button
                 android:id="@+id/ataqueArma"
                 android:layout_width="106dp"
                 android:layout_height="58dp"
                 android:text="Ataque" />
         </LinearLayout>
-
         <!-- Segunda fila de botones -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
             <Button
                 android:id="@+id/huir"
                 android:layout_width="106dp"
                 android:layout_height="58dp"
                 android:text="Huir" />
-
             <Button
                 android:id="@+id/ataqueLibro"
                 android:layout_width="106dp"
@@ -105,9 +95,6 @@
                 android:text="Magia" />
         </LinearLayout>
     </LinearLayout>
-
-
-
 
     <ImageView
         android:id="@+id/imageView7"
@@ -120,8 +107,7 @@
         app:layout_constraintHorizontal_bias="0.593"
         app:layout_constraintStart_toEndOf="@+id/versus"
         app:layout_constraintTop_toBottomOf="@+id/encabezado"
-        app:srcCompat="@drawable/campo" />
-
+        app:srcCompat="@drawable/recluta" />
     <ImageView
         android:id="@+id/imageView8"
         android:layout_width="166dp"
@@ -133,8 +119,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/versus"
-        app:srcCompat="@drawable/campo" />
-
+        app:srcCompat="@drawable/backsprite" />
     <ProgressBar
         android:id="@+id/barraVidaEnemigo"
         style="@android:style/Widget.ProgressBar.Horizontal"
@@ -152,7 +137,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/versus"
         app:layout_constraintVertical_bias="0.0" />
-
     <ProgressBar
         android:id="@+id/barraVidaPersonaje"
         style="@android:style/Widget.ProgressBar.Horizontal"
@@ -168,7 +152,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/imageView8"
         app:layout_constraintTop_toBottomOf="@+id/imageView7" />
-
     <ProgressBar
         android:id="@+id/barraVidaMascota"
         style="@android:style/Widget.ProgressBar.Horizontal"
@@ -184,7 +167,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView7"
         app:layout_constraintVertical_bias="1.0" />
-
     <ImageView
         android:id="@+id/versus"
         android:layout_width="92dp"
@@ -196,7 +178,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/encabezado"
         app:srcCompat="@drawable/cinco" />
-
     <TextView
         android:id="@+id/vidaEnemigo"
         android:layout_width="wrap_content"
@@ -208,7 +189,6 @@
         app:layout_constraintEnd_toStartOf="@+id/imageView7"
         app:layout_constraintTop_toBottomOf="@+id/encabezado"
         app:layout_constraintVertical_bias="0.0" />
-
     <TextView
         android:id="@+id/vidaMascota"
         android:layout_width="68dp"
@@ -222,7 +202,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView7" />
-
     <ImageView
         android:id="@+id/mascota"
         android:layout_width="89dp"
@@ -234,7 +213,6 @@
         app:layout_constraintStart_toEndOf="@+id/imageView8"
         app:layout_constraintTop_toBottomOf="@+id/imageView7"
         app:srcCompat="@drawable/mascota_fuego" />
-
     <ImageView
         android:id="@+id/ataqueAPersonaje"
         android:layout_width="81dp"
@@ -248,7 +226,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/barraVidaEnemigo"
         tools:srcCompat="@tools:sample/avatars" />
-
     <ImageView
         android:id="@+id/ataqueAEnemigo"
         android:layout_width="81dp"
@@ -262,7 +239,6 @@
         app:layout_constraintHorizontal_bias="0.825"
         app:layout_constraintStart_toStartOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
-
     <ImageView
         android:id="@+id/ataqueAMascota"
         android:layout_width="69dp"
@@ -276,7 +252,6 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/imageView8"
         tools:srcCompat="@tools:sample/avatars" />
-
     <TextView
         android:id="@+id/dañoAEnemigo"
         android:layout_width="89dp"
@@ -290,7 +265,6 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/encabezado" />
-
     <TextView
         android:id="@+id/dañoAPersonaje"
         android:layout_width="89dp"
@@ -304,7 +278,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/encabezado" />
-
     <TextView
         android:id="@+id/dañoAMascota"
         android:layout_width="89dp"
@@ -318,7 +291,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/encabezado" />
-
     <TextView
         android:id="@+id/vidaPersonaje"
         android:layout_width="wrap_content"
@@ -331,7 +303,6 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mascota" />
-
     <LinearLayout
         android:id="@+id/magias"
         android:layout_width="171dp"
@@ -344,84 +315,72 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/vidaMascota"
         app:layout_constraintStart_toEndOf="@+id/dañoAPersonaje">
-
         <Button
             android:id="@+id/TORNADO"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="TORNADO"
             android:visibility="gone" />
-
         <Button
             android:id="@+id/VENDAVAL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="VENDAVAL"
             android:visibility="gone" />
-
         <Button
             android:id="@+id/HURACAN"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="HURACAN"
             android:visibility="gone" />
-
         <Button
             android:id="@+id/ALIENTO"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="ALIENTO"
             android:visibility="gone" />
-
         <Button
             android:id="@+id/DESCARGA"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="DESCARGA"
             android:visibility="gone" />
-
         <Button
             android:id="@+id/PROPULSION"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="PROPULSION"
             android:visibility="gone" />
-
         <Button
             android:id="@+id/FATUO"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="FATUO"
             android:visibility="gone" />
-
         <Button
             android:id="@+id/MURO"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="MURO"
             android:visibility="gone" />
-
         <Button
             android:id="@+id/TEMBLOR"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="TEMBLOR"
             android:visibility="gone" />
-
         <Button
             android:id="@+id/TERREMOTO"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="TERREMOTO"
             android:visibility="gone" />
-
         <Button
             android:id="@+id/SANAR"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="SANAR"
             android:visibility="gone" />
-
         <Button
             android:id="@+id/CURAR"
             android:layout_width="match_parent"
@@ -429,7 +388,6 @@
             android:text="CURAR"
             android:visibility="gone" />
     </LinearLayout>
-
     <ImageView
         android:id="@+id/popUp"
         android:layout_width="288dp"
@@ -443,7 +401,6 @@
         app:layout_constraintTop_toBottomOf="@+id/versus"
         app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/campo" />
-
     <Button
         android:id="@+id/btnAtras"
         android:layout_width="127dp"
@@ -456,5 +413,4 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView8" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -101,6 +101,8 @@ class EnemigosMazmorra : AppCompatActivity(),TextToSpeech.OnInitListener {
 
      */
            // val mascotas=ArrayList<Mascota>()
+            personaje!!.setNivel(10)
+        personaje.getLibro()!!.aprenderMagia(Magia(Magia.TipoMagia.BLANCA,Magia.Nombre.SANAR,5))
             val magiasDisponibles = listOf("TORNADO", "VENDAVAL", "HURACAN", "ALIENTO", "DESCARGA", "PROPULSION", "FATUO", "MURO", "TEMBLOR", "TERREMOTO", "SANAR", "CURAR")
             val botonesMagia = listOf<Button>(
                 findViewById(R.id.TORNADO),
